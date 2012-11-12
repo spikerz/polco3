@@ -25,3 +25,12 @@ gem "omniauth-twitter"
 gem "quiet_assets", ">= 1.0.1", :group => :development
 gem "therubyracer", ">= 0.10.2", :group => :assets, :platform => :ruby
 gem "hub", ">= 1.10.2", :require => nil, :group => [:development]
+
+# tim gems
+gem "twitter-bootstrap-rails"
+gem "simple_form"
+gem "kaminari"
+gem "inherited_resources"
+gem "has_scope"
+gem "kaminari-bootstrap"
+gem "less-rails"
