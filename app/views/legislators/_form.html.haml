@@ -1,0 +1,24 @@
+= simple_form_for @legislator, :html => { :class => 'form-horizontal' } do |f|
+  = f.input :first_name
+  = f.input :last_name
+  = f.input :middle_name
+  = f.input :religion
+  = f.input :pvs_id
+  = f.input :os_id
+  = f.input :metavid_id
+  = f.input :bioguide_id
+  = f.input :youtube_id
+  = f.input :title
+  = f.input :nickname
+  = f.input :user_approval
+  = f.input :district
+  = f.input :state
+  = f.input :party
+  = f.input :sponsored_count
+  = f.input :cosponsored_count
+  = f.input :full_name
+  = f.input :govtrack_id
+  = f.input :start_date
+  .form-actions
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), legislators_path, :class => 'btn'

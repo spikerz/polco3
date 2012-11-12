@@ -1,0 +1,27 @@
+= simple_form_for @bill, :html => { :class => 'form-horizontal' } do |f|
+  = f.input :congress
+  = f.input :bill_number
+  = f.input :bill_type
+  = f.input :last_updated
+  = f.input :bill_state
+  = f.input :introduced_date
+  = f.input :title
+  = f.input :titles
+  = f.input :summary
+  = f.input :bill_actions
+  = f.input :bill_html
+  = f.input :ident
+  = f.input :cosponsors_count
+  = f.input :govtrack_id
+  = f.input :govtrack_name
+  = f.input :summary_word_count
+  = f.input :text_word_count
+  = f.input :text_updated_on
+  = f.input :hidden
+  = f.input :roll_time
+  = f.input :sponsor_id
+  = f.input :cosponsor_ids
+  = f.input :subject_ids
+  .form-actions
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), bills_path, :class => 'btn'

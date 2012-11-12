@@ -1,0 +1,10 @@
+= simple_form_for @polco_group, :html => { :class => 'form-horizontal' } do |f|
+  = f.input :name
+  = f.input :type
+  = f.input :description
+  = f.input :vote_count
+  = f.input :follower_count
+  = f.input :member_count
+  .form-actions
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), polco_groups_path, :class => 'btn'

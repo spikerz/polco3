@@ -1,0 +1,37 @@
+- model_class = Comment
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
+
+%p
+  %strong= model_class.human_attribute_name(:_type) + ':'
+  %br
+  = @comment._type
+%p
+  %strong= model_class.human_attribute_name(:_id) + ':'
+  %br
+  = @comment._id
+%p
+  %strong= model_class.human_attribute_name(:author) + ':'
+  %br
+  = @comment.author
+%p
+  %strong= model_class.human_attribute_name(:author_email) + ':'
+  %br
+  = @comment.author_email
+%p
+  %strong= model_class.human_attribute_name(:comment_type) + ':'
+  %br
+  = @comment.comment_type
+%p
+  %strong= model_class.human_attribute_name(:content) + ':'
+  %br
+  = @comment.content
+%p
+  %strong= model_class.human_attribute_name(:user_ip) + ':'
+  %br
+  = @comment.user_ip
+
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), comments_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_comment_path(@comment), :class => 'btn'
+  = link_to t('.destroy', :default => t("helpers.links.destroy")), comment_path(@comment), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

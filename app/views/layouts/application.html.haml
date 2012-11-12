@@ -28,24 +28,22 @@
           %a.brand(href="#") Polco3
           .container.nav-collapse
             %ul.nav
-              %li= link_to "Link 1", "/path1"
-              %li= link_to "Link 2", "/path2"
-              %li= link_to "Link 3", "/path3"
+              %li= link_to "bill", bills_path
+              %li= link_to "comment", comments_path
+              %li= link_to "legislator", legislators_path
+              %li= link_to "legislator vote", legislator_votes_path
+              %li= link_to "polco group", polco_groups_path
+              %li= link_to "roll", rolls_path
+              %li= link_to "subject", subjects_path
+              %li= link_to "vote", votes_path
+
 
     .container
 
       .row
-        .span9
+        .span12
           = bootstrap_flash
           = yield
-        .span3
-          .well.sidebar-nav
-            %h3 Sidebar
-            %ul.nav.nav-list
-              %li.nav-header Sidebar
-              %li= link_to "Link 1", "/path1"
-              %li= link_to "Link 2", "/path2"
-              %li= link_to "Link 3", "/path3"
     
       %footer
         %p &copy; Company 2012

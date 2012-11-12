@@ -1,0 +1,109 @@
+- model_class = Bill
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
+
+%p
+  %strong= model_class.human_attribute_name(:_type) + ':'
+  %br
+  = @bill._type
+%p
+  %strong= model_class.human_attribute_name(:_id) + ':'
+  %br
+  = @bill._id
+%p
+  %strong= model_class.human_attribute_name(:congress) + ':'
+  %br
+  = @bill.congress
+%p
+  %strong= model_class.human_attribute_name(:bill_number) + ':'
+  %br
+  = @bill.bill_number
+%p
+  %strong= model_class.human_attribute_name(:bill_type) + ':'
+  %br
+  = @bill.bill_type
+%p
+  %strong= model_class.human_attribute_name(:last_updated) + ':'
+  %br
+  = @bill.last_updated
+%p
+  %strong= model_class.human_attribute_name(:bill_state) + ':'
+  %br
+  = @bill.bill_state
+%p
+  %strong= model_class.human_attribute_name(:introduced_date) + ':'
+  %br
+  = @bill.introduced_date
+%p
+  %strong= model_class.human_attribute_name(:title) + ':'
+  %br
+  = @bill.title
+%p
+  %strong= model_class.human_attribute_name(:titles) + ':'
+  %br
+  = @bill.titles
+%p
+  %strong= model_class.human_attribute_name(:summary) + ':'
+  %br
+  = @bill.summary
+%p
+  %strong= model_class.human_attribute_name(:bill_actions) + ':'
+  %br
+  = @bill.bill_actions
+%p
+  %strong= model_class.human_attribute_name(:bill_html) + ':'
+  %br
+  = @bill.bill_html
+%p
+  %strong= model_class.human_attribute_name(:ident) + ':'
+  %br
+  = @bill.ident
+%p
+  %strong= model_class.human_attribute_name(:cosponsors_count) + ':'
+  %br
+  = @bill.cosponsors_count
+%p
+  %strong= model_class.human_attribute_name(:govtrack_id) + ':'
+  %br
+  = @bill.govtrack_id
+%p
+  %strong= model_class.human_attribute_name(:govtrack_name) + ':'
+  %br
+  = @bill.govtrack_name
+%p
+  %strong= model_class.human_attribute_name(:summary_word_count) + ':'
+  %br
+  = @bill.summary_word_count
+%p
+  %strong= model_class.human_attribute_name(:text_word_count) + ':'
+  %br
+  = @bill.text_word_count
+%p
+  %strong= model_class.human_attribute_name(:text_updated_on) + ':'
+  %br
+  = @bill.text_updated_on
+%p
+  %strong= model_class.human_attribute_name(:hidden) + ':'
+  %br
+  = @bill.hidden
+%p
+  %strong= model_class.human_attribute_name(:roll_time) + ':'
+  %br
+  = @bill.roll_time
+%p
+  %strong= model_class.human_attribute_name(:sponsor_id) + ':'
+  %br
+  = @bill.sponsor_id
+%p
+  %strong= model_class.human_attribute_name(:cosponsor_ids) + ':'
+  %br
+  = @bill.cosponsor_ids
+%p
+  %strong= model_class.human_attribute_name(:subject_ids) + ':'
+  %br
+  = @bill.subject_ids
+
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), bills_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_bill_path(@bill), :class => 'btn'
+  = link_to t('.destroy', :default => t("helpers.links.destroy")), bill_path(@bill), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

@@ -1,0 +1,22 @@
+= simple_form_for @roll, :html => { :class => 'form-horizontal' } do |f|
+  = f.input :chamber
+  = f.input :session
+  = f.input :file_name
+  = f.input :result
+  = f.input :required
+  = f.input :type
+  = f.input :bill_type
+  = f.input :the_question
+  = f.input :bill_category
+  = f.input :aye
+  = f.input :nay
+  = f.input :nv
+  = f.input :present
+  = f.input :year
+  = f.input :congress
+  = f.input :vote_count
+  = f.input :original_time
+  = f.input :updated_time
+  .form-actions
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), rolls_path, :class => 'btn'

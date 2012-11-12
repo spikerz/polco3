@@ -1,0 +1,68 @@
+uninitialized constant PolcoGroup::VotingMethods
+uninitialized constant Roll::VotingLogic
+uninitialized constant Vote::VOTE_VALUES
+               votes GET    /votes(.:format)                     votes#index
+                     POST   /votes(.:format)                     votes#create
+            new_vote GET    /votes/new(.:format)                 votes#new
+           edit_vote GET    /votes/:id/edit(.:format)            votes#edit
+                vote GET    /votes/:id(.:format)                 votes#show
+                     PUT    /votes/:id(.:format)                 votes#update
+                     DELETE /votes/:id(.:format)                 votes#destroy
+            subjects GET    /subjects(.:format)                  subjects#index
+                     POST   /subjects(.:format)                  subjects#create
+         new_subject GET    /subjects/new(.:format)              subjects#new
+        edit_subject GET    /subjects/:id/edit(.:format)         subjects#edit
+             subject GET    /subjects/:id(.:format)              subjects#show
+                     PUT    /subjects/:id(.:format)              subjects#update
+                     DELETE /subjects/:id(.:format)              subjects#destroy
+               rolls GET    /rolls(.:format)                     rolls#index
+                     POST   /rolls(.:format)                     rolls#create
+            new_roll GET    /rolls/new(.:format)                 rolls#new
+           edit_roll GET    /rolls/:id/edit(.:format)            rolls#edit
+                roll GET    /rolls/:id(.:format)                 rolls#show
+                     PUT    /rolls/:id(.:format)                 rolls#update
+                     DELETE /rolls/:id(.:format)                 rolls#destroy
+            comments GET    /comments(.:format)                  comments#index
+                     POST   /comments(.:format)                  comments#create
+         new_comment GET    /comments/new(.:format)              comments#new
+        edit_comment GET    /comments/:id/edit(.:format)         comments#edit
+             comment GET    /comments/:id(.:format)              comments#show
+                     PUT    /comments/:id(.:format)              comments#update
+                     DELETE /comments/:id(.:format)              comments#destroy
+        polco_groups GET    /polco_groups(.:format)              polco_groups#index
+                     POST   /polco_groups(.:format)              polco_groups#create
+     new_polco_group GET    /polco_groups/new(.:format)          polco_groups#new
+    edit_polco_group GET    /polco_groups/:id/edit(.:format)     polco_groups#edit
+         polco_group GET    /polco_groups/:id(.:format)          polco_groups#show
+                     PUT    /polco_groups/:id(.:format)          polco_groups#update
+                     DELETE /polco_groups/:id(.:format)          polco_groups#destroy
+    legislator_votes GET    /legislator_votes(.:format)          legislator_votes#index
+                     POST   /legislator_votes(.:format)          legislator_votes#create
+ new_legislator_vote GET    /legislator_votes/new(.:format)      legislator_votes#new
+edit_legislator_vote GET    /legislator_votes/:id/edit(.:format) legislator_votes#edit
+     legislator_vote GET    /legislator_votes/:id(.:format)      legislator_votes#show
+                     PUT    /legislator_votes/:id(.:format)      legislator_votes#update
+                     DELETE /legislator_votes/:id(.:format)      legislator_votes#destroy
+         legislators GET    /legislators(.:format)               legislators#index
+                     POST   /legislators(.:format)               legislators#create
+      new_legislator GET    /legislators/new(.:format)           legislators#new
+     edit_legislator GET    /legislators/:id/edit(.:format)      legislators#edit
+          legislator GET    /legislators/:id(.:format)           legislators#show
+                     PUT    /legislators/:id(.:format)           legislators#update
+                     DELETE /legislators/:id(.:format)           legislators#destroy
+               bills GET    /bills(.:format)                     bills#index
+                     POST   /bills(.:format)                     bills#create
+            new_bill GET    /bills/new(.:format)                 bills#new
+           edit_bill GET    /bills/:id/edit(.:format)            bills#edit
+                bill GET    /bills/:id(.:format)                 bills#show
+                     PUT    /bills/:id(.:format)                 bills#update
+                     DELETE /bills/:id(.:format)                 bills#destroy
+                root        /                                    home#index
+               users GET    /users(.:format)                     users#index
+           edit_user GET    /users/:id/edit(.:format)            users#edit
+                user GET    /users/:id(.:format)                 users#show
+                     PUT    /users/:id(.:format)                 users#update
+                            /auth/:provider/callback(.:format)   sessions#create
+              signin        /signin(.:format)                    sessions#new
+             signout        /signout(.:format)                   sessions#destroy
+        auth_failure        /auth/failure(.:format)              sessions#failure

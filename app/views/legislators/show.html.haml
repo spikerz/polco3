@@ -1,0 +1,97 @@
+- model_class = Legislator
+.page-header
+  %h1=t '.title', :default => model_class.model_name.human
+
+%p
+  %strong= model_class.human_attribute_name(:_type) + ':'
+  %br
+  = @legislator._type
+%p
+  %strong= model_class.human_attribute_name(:_id) + ':'
+  %br
+  = @legislator._id
+%p
+  %strong= model_class.human_attribute_name(:first_name) + ':'
+  %br
+  = @legislator.first_name
+%p
+  %strong= model_class.human_attribute_name(:last_name) + ':'
+  %br
+  = @legislator.last_name
+%p
+  %strong= model_class.human_attribute_name(:middle_name) + ':'
+  %br
+  = @legislator.middle_name
+%p
+  %strong= model_class.human_attribute_name(:religion) + ':'
+  %br
+  = @legislator.religion
+%p
+  %strong= model_class.human_attribute_name(:pvs_id) + ':'
+  %br
+  = @legislator.pvs_id
+%p
+  %strong= model_class.human_attribute_name(:os_id) + ':'
+  %br
+  = @legislator.os_id
+%p
+  %strong= model_class.human_attribute_name(:metavid_id) + ':'
+  %br
+  = @legislator.metavid_id
+%p
+  %strong= model_class.human_attribute_name(:bioguide_id) + ':'
+  %br
+  = @legislator.bioguide_id
+%p
+  %strong= model_class.human_attribute_name(:youtube_id) + ':'
+  %br
+  = @legislator.youtube_id
+%p
+  %strong= model_class.human_attribute_name(:title) + ':'
+  %br
+  = @legislator.title
+%p
+  %strong= model_class.human_attribute_name(:nickname) + ':'
+  %br
+  = @legislator.nickname
+%p
+  %strong= model_class.human_attribute_name(:user_approval) + ':'
+  %br
+  = @legislator.user_approval
+%p
+  %strong= model_class.human_attribute_name(:district) + ':'
+  %br
+  = @legislator.district
+%p
+  %strong= model_class.human_attribute_name(:state) + ':'
+  %br
+  = @legislator.state
+%p
+  %strong= model_class.human_attribute_name(:party) + ':'
+  %br
+  = @legislator.party
+%p
+  %strong= model_class.human_attribute_name(:sponsored_count) + ':'
+  %br
+  = @legislator.sponsored_count
+%p
+  %strong= model_class.human_attribute_name(:cosponsored_count) + ':'
+  %br
+  = @legislator.cosponsored_count
+%p
+  %strong= model_class.human_attribute_name(:full_name) + ':'
+  %br
+  = @legislator.full_name
+%p
+  %strong= model_class.human_attribute_name(:govtrack_id) + ':'
+  %br
+  = @legislator.govtrack_id
+%p
+  %strong= model_class.human_attribute_name(:start_date) + ':'
+  %br
+  = @legislator.start_date
+
+.form-actions
+  = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'
+  = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_path(@legislator), :class => 'btn'
+  = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

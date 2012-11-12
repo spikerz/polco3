@@ -1,0 +1,7 @@
+= simple_form_for @vote, :html => { :class => 'form-horizontal' } do |f|
+  %fieldset
+    = f.input :value
+    = f.input :chamber
+  .form-actions
+    = f.button :submit, :class => 'btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), votes_path, :class => 'btn'
