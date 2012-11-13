@@ -1,0 +1,7 @@
+- title 'Senate Bills'
+
+- if @user = current_user
+  = render partial: 'bills', locals: {the_bills: @not_voted_on_bills, title: '5 most popular bills that the user hasn’t vote on and haven’t been roll called', bill_type: 'not_voted_on'}
+  = render partial: 'bills', locals: {the_bills: @voted_on_bills, title: 'You voted on', bill_type: 'voted_on'}
+- else
+  = render partial: 'bills', locals: {the_bills: @bills, title: 'most popular bills', bill_type: 'the_bills'}

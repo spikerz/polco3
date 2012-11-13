@@ -34,3 +34,7 @@ gem "inherited_resources"
 gem "has_scope"
 gem "kaminari-bootstrap"
 gem "less-rails"
+gem "faker", :group => [:test, :development]
+gem 'gon'
+gem 'feedzirra'
+gem 'sax-machine'

@@ -16,7 +16,6 @@
     %link(href="images/apple-touch-icon.png" rel="apple-touch-icon-precomposed")
     %link(href="images/favicon.ico" rel="shortcut icon")
 
-
   %body
     .navbar.navbar-fixed-top
       .navbar-inner
@@ -25,17 +24,24 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          %a.brand(href="#") Polco3
+          %a.brand(href="#") Polco
           .container.nav-collapse
             %ul.nav
               %li= link_to "bill", bills_path
-              %li= link_to "comment", comments_path
               %li= link_to "legislator", legislators_path
               %li= link_to "legislator vote", legislator_votes_path
               %li= link_to "polco group", polco_groups_path
               %li= link_to "roll", rolls_path
               %li= link_to "subject", subjects_path
               %li= link_to "vote", votes_path
+              %li.selected= link_to "House Bills", represent_house_bills_path
+              %li= link_to "District + Reps", represent_legislators_districts_path
+              - if current_user
+                %li= link_to "H Representation", results_path(:house)
+              %li= link_to "Senate Bills", represent_senate_bills_path
+              %li= link_to "States", represent_states_path
+              - if current_user
+                %li= link_to "S Representation", results_path(:senate)
 
 
     .container
@@ -43,10 +49,14 @@
       .row
         .span12
           = bootstrap_flash
+          - if content_for?(:title)
+            %section{id: yield(:title)}
+              .page-header
+                %h1= yield(:title)
           = yield
     
       %footer
-        %p &copy; Company 2012
+        %p &copy; Nick, Tom, and Tim 2012
     /
       Javascripts
       \==================================================

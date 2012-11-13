@@ -1,0 +1,25 @@
+- title "districts"
+
+%h2 Districts
+
+.well
+  %table.table.table-striped
+    %tr
+      %th district
+      %th Rep. Name
+      %th &nbsp;
+      %th Rep. Party
+    - @districts.each do |district|
+      - legislator = district.the_rep
+      %tr
+        %td= link_to district.name, district
+        - unless legislator == "Vacant"
+          %td= link_to legislator.full_name, legislator
+          %td= image_tag legislator.image_location_small
+          %td= legislator.party
+        - else
+          %td{colspan:3} Vacant
+
+= paginate @districts
+
+= render partial: "bills_with_results", locals: {bills: @bills}

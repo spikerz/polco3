@@ -1,0 +1,22 @@
+- if bills.size > 0
+
+  %h2 Bills with Results
+
+  .well
+    %table.table.table-striped
+      %tr
+        %th Bill
+        %th For
+        %th Against
+        %th Abstain
+        %th Result
+      - bills.each do |bill|
+        %tr
+          %td= link_to bill.bill_title, bill_path(bill)
+          - bill_result = bill.rolls.last.tally
+          %td= bill_result[:ayes]
+          %td= bill_result[:nays]
+          %td= bill_result[:abstains]
+          %td= bill.passed? ? "Yes" : "No"
+
+  = paginate bills

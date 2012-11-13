@@ -31,12 +31,14 @@ class Bill
   index({ roll_time: 1}, {unique: true})
 
   # scopes . . .
+  scope :house_bills, where(title: /^h/).desc(:vote_count)
+  scope :senate_bills, where(title: /^s/).desc(:vote_count)
   scope :introduced_house_bills, where(title: /^h/).and(bill_state: /^INTRODUCED|REPORTED|REFERRED$/).desc(:introduced_date)
   scope :introduced_senate_bills, where(title: /^s/).and(bill_state: /^INTRODUCED|REPORTED|REFERRED$/).desc(:introduced_date)
   scope :rolled_bills, where(:roll_time.ne => nil).descending(:roll_time)
 
   belongs_to :sponsor, :class_name => "Legislator"
-  has_and_belongs_to_many :cosponsors, :order => :state, :class_name => "Legislator"
+  has_and_belongs_to_many :cosponsors, :class_name => "Legislator"
   has_and_belongs_to_many :subjects
 
   validates_presence_of :govtrack_name

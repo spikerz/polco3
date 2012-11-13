@@ -1,0 +1,19 @@
+-title "States and Senators"
+
+%h3 States
+
+%table.table.table-striped
+  %tr
+    %th State
+    %th Senior Senator
+    %th Junior Senator
+  - @states.each do |state|
+    %tr
+      %td= link_to state.name, state
+      - senators = state.senators_hash
+      %td= link_to senators[:senior_senator].last_name, senators[:senior_senator]
+      %td= link_to senators[:junior_senator].last_name, senators[:junior_senator]
+
+= paginate @states
+
+= render partial: "bills_with_results", locals: {bills: @bills}

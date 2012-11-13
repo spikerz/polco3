@@ -19,7 +19,7 @@
   = f.input :text_updated_on
   = f.input :hidden
   = f.input :roll_time
-  = f.input :sponsor_id
+  = f.input :sponsor_id, collection: Legislator.all, label_method: :full_name
   = f.input :cosponsor_ids
   = f.input :subject_ids
   .form-actions

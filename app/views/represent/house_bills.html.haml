@@ -1,0 +1,7 @@
+- title 'House Bills'
+
+- if @user = current_user
+  = render partial: 'bills', locals: {the_bills: @voted_on_bills, title: 'You voted on', bill_type: 'voted_on'}
+  = render partial: 'bills', locals: {the_bills: @not_voted_on_bills, title: 'Most popular bills you haven\'t voted on:', bill_type: 'not_voted_on'}
+- else
+  = render partial: 'bills', locals: {the_bills: @bills, title: 'most popular bills', bill_type: 'the_bills'}

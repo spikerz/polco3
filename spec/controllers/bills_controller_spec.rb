@@ -24,7 +24,7 @@ describe BillsController do
   # Bill. As you add validations to Bill, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {}
+    {govtrack_id: '111', govtrack_name: 'howdy'}
   end
 
   # This should return the minimal set of values that should be in the session

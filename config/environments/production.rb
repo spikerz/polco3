@@ -1,3 +1,6 @@
+DATA_PATH = "#{Rails.root}/data"
+PHOTO_PATH = "http://s3.amazonaws.com/Polco/pics"
+
 Polco3::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
