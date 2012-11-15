@@ -1,0 +1,18 @@
+%h3 Activity
+%table.table.table-striped
+  %tr
+    %th District
+    %th Pie chart
+    - if bill.rolled?
+      %th= "Rep Vote"
+    %th Rep Name
+    %th Party
+  - districts.each do |d|
+    - if rep = d.the_rep
+      %tr
+      %td= link_to d.name, d
+      %td= pie_chart(d.get_votes_tally(bill))
+      - if bill.rolls.size > 0
+        %td= bill.find_member_vote(rep)
+        %td= link_to rep.full_name, rep
+        %td= rep.party

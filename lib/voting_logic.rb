@@ -16,8 +16,9 @@ module VotingLogic
       v.polco_groups << user.common_groups
       v.polco_groups << user.state
       v.polco_groups << user.district
+      #v.polco_group_ids = (user.custom_groups + user.common_groups + user.state + user.district).map(&:id)
       # update all groups
-      # I don't like this, but the increments work
+      # I don't like this, but the increments work  -- locator for flight NXZORQ
       user.state.inc(:vote_count,1)
       user.district.inc(:vote_count,1)
       user.custom_groups.each do |jg|
@@ -27,7 +28,7 @@ module VotingLogic
       v.save
       self.inc(:vote_count,1)
     else
-      Rails.logger.warn "already voted on #{user.name} with #{self.roll_title}"
+      Rails.logger.warn "already voted on #{self}"
       puts "already voted on"
       false
     end
@@ -45,13 +46,15 @@ module VotingLogic
 
   def find_member_vote(member)
     # how did the member vote last on this roll?
-    roll = self.rolls.first
-    if !roll.legislator_votes.empty? && self.rolled?
-      if l = roll.legislator_votes.where(legislator_id: member.id).first
+    #roll = self.rolls.first
+    if !self.legislator_votes.empty? #&& self.rolled?
+      if l = self.legislator_votes.where(legislator_id: member.id).first
         l.value.to_sym
       else
         "not found"
       end
+    else
+      "no votes"
     end
   end
 

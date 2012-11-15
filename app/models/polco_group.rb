@@ -3,6 +3,8 @@ class PolcoGroup
   include Mongoid::Timestamps
   include VotingMethods
 
+  attr_accessible :name, :type, :description, :vote_count, :follower_count, :member_count, :owner_id, :member_ids, :common_member_ids, :follower_ids, :vote_ids
+
   field :name, :type => String
   field :type, :type => Symbol, :default => :custom
   field :description, :type => String
@@ -24,12 +26,13 @@ class PolcoGroup
   has_and_belongs_to_many :members, :class_name => "User", :inverse_of => :custom_groups # uniq: true
   has_and_belongs_to_many :common_members, :class_name => "User", :inverse_of => :common_groups # uniq: true
   has_and_belongs_to_many :followers, :class_name => "User", :inverse_of => :followed_groups #, uniq: true
+  has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
 
   # you can only join and follow a group once
   #validates_uniqueness_of :members, message: "User has already joined this group"
   #validates_uniqueness_of :followers, message: "User has already joined this group"
 
-  has_and_belongs_to_many :votes, index: true
+
 
   def get_tally
     # TODO what does this mean in the context of a group?
@@ -46,8 +49,8 @@ class PolcoGroup
   #before_save :update_followers_and_members
 
   # some validations
-  validates_uniqueness_of :name, :scope => :type
-  validates_inclusion_of :type, :in => [:custom, :state, :district, :common, :country], :message => 'Only valid groups are custom, state, district, common, country'
+  #validates_uniqueness_of :name, :scope => :type
+  #validates_inclusion_of :type, :in => [:custom, :state, :district, :common, :country], :message => 'Only valid groups are custom, state, district, common, country'
 
   scope :states, where(type: :state)
   scope :districts, where(type: :district).desc(:member_count)
@@ -88,23 +91,24 @@ class PolcoGroup
     l || "Vacant"
   end
 
-  def get_bills
-    # TODO -- set this to the proper relation
-    # produces bills
-    Vote.where(polco_group_id: self.id).desc(:updated_at).all.to_a
-  end
+  # not used
+  #def get_bills
+  #  # TODO -- set this to the proper relation
+  #  # produces bills
+  #  Vote.where(polco_group_id: self.id).desc(:updated_at).all.to_a
+  #end
 
-  def build_group_tally
-    self.votes.map(&:bill).uniq
-  end
+  #def build_group_tally
+  #  self.votes.map(&:bill).uniq
+  #end
 
-  def get_votes_tally(bill)
+  def get_votes_tally(roll)
     # TODO -- need to make this specific to a bill, not all votes of the polco group
-    process_votes(self.votes.where(bill_id: bill.id).all.to_a)
+    process_votes(self.votes.where(bill_id: roll.id).all.to_a)
   end
 
-  def format_votes_tally(bill)
-    v = process_votes(self.votes.where(bill_id: bill.id).all.to_a)
+  def format_votes_tally(roll)
+    v = process_votes(self.votes.where(roll_id: roll.id).all.to_a)
     "#{v[:ayes]}, #{v[:nays]}, #{v[:abstains]}"
   end
 

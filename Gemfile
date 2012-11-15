@@ -38,3 +38,4 @@ gem "faker", :group => [:test, :development]
 gem 'gon'
 gem 'feedzirra'
 gem 'sax-machine'
+gem 'httparty'

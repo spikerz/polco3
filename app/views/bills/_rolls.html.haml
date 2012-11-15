@@ -1,0 +1,18 @@
+%table.table.zebra-striped
+  %tr
+    %th File Name
+    %th Action
+    %th For
+    %th Against
+    %th Abstain
+    %th Present
+    %th Result
+  - rolls.each do |roll|
+    %tr
+      %td= link_to roll.file_name, roll
+      %td= roll.the_question
+      %td= roll.aye
+      %td= roll.nay
+      %td= roll.nv
+      %td= roll.present
+      %td= roll.result

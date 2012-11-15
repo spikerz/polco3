@@ -96,30 +96,34 @@ class Legislator
     file_data = File.new("#{DATA_PATH}/people.xml", 'r')
     feed = Feedzirra::Parser::GovTrackPeople.parse(file_data).people
     feed.each do |person|
-      role = Legislator.find_most_recent_role(person)
-      if !role[:startdate].nil? && role[:startdate] >= 10.years.ago.to_date
-        leg = Legislator.find_or_create_by(:bioguide_id => person.bioguide_id,
-                                           :first_name => person.first_name,
-                                           :last_name => person.last_name,
-                                           :middle_name => person.middle_name,
-                                           :religion => person.religion,
-                                           :pvs_id => person.pvs_id,
-                                           :os_id => person.os_id,
-                                           :metavid_id => person.metavid_id,
-                                           :bioguide_id => person.bioguide_id,
-                                           :youtube_id => person.youtube_id,
-                                           :title => person.title,
-                                           :district => person.district,
-                                           :state => person.state,
-                                           :party => role[:party],
-                                           :start_date => role[:startdate],
-                                           :full_name => person.full_name,
-                                           :govtrack_id => person.govtrack_id
-        )
-        leg.save
-      end
+      self.load_legislator(person)
     end
     file_data.close
+  end
+
+  def self.load_legislator(person)
+    role = Legislator.find_most_recent_role(person)
+    if !role[:startdate].nil? && role[:startdate] >= 10.years.ago.to_date
+      leg = Legislator.find_or_create_by(:bioguide_id => person.bioguide_id,
+                                         :first_name => person.first_name,
+                                         :last_name => person.last_name,
+                                         :middle_name => person.middle_name,
+                                         :religion => person.religion,
+                                         :pvs_id => person.pvs_id,
+                                         :os_id => person.os_id,
+                                         :metavid_id => person.metavid_id,
+                                         :bioguide_id => person.bioguide_id,
+                                         :youtube_id => person.youtube_id,
+                                         :title => person.title,
+                                         :district => person.district,
+                                         :state => person.state,
+                                         :party => role[:party],
+                                         :start_date => role[:startdate],
+                                         :full_name => person.full_name,
+                                         :govtrack_id => person.govtrack_id
+      )
+      leg.save
+    end
   end
 
   def district_name

@@ -7,11 +7,15 @@ class Vote
   field :value, :type => Symbol # can be :aye, :nay, :abstain, :present
   field :chamber, :type => Symbol # can be :house, :senate
 
-  has_and_belongs_to_many :polco_groups, index: true
+  has_and_belongs_to_many :polco_groups, index: true #, inverse_of: :votes
+
   belongs_to :user, index: true
   belongs_to :roll, index: true
 
-  before_save :save_chamber
+  attr_accessible :value, :chamber, :polco_group_ids, :user_id, :roll_id, :followed_group_ids, :state_id, :district_id
+  #  value: :aye, chamber: :senate, polco_group_ids: ["50a4508bf11aac56bd00000c"], user_id: nil, roll_id: "50a450f9f11aac56bd00000f">
+
+  after_create :save_chamber # or before_save ??
 
   # what we don't want is a repeated vote, so that would be a bill_id, polco_group and user_id
   validates_uniqueness_of :user_id, :scope => [:polco_group_id, :bill_id], :message => "this vote already exists"

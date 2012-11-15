@@ -1,0 +1,12 @@
+= simple_form_for(@vote, url: add_vote_path) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :chamber, as: :hidden, input_html: { value: bill.chamber }
+    = f.input :user_id, as: :hidden, input_html: { value: current_user.id }
+    = f.input :bill_id, as: :hidden, input_html: { value: bill.id }
+    = f.input :value, :collection => VOTE_VALUES.map{|v| [v,v]}, :label_method => :last,    |
+      :value_method => :first, :as => :radio_buttons, :item_wrapper_class => 'inline' |
+
+  .form-actions
+    = f.button :submit

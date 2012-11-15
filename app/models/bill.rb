@@ -41,7 +41,7 @@ class Bill
   has_and_belongs_to_many :cosponsors, :class_name => "Legislator"
   has_and_belongs_to_many :subjects
 
-  validates_presence_of :govtrack_name
+  #validates_presence_of :govtrack_name
 
   has_many :rolls
 
@@ -250,9 +250,10 @@ class Bill
 
   # TODO -- need to write ways to get titles and actions for views (but not what we store in the db)
 
-  #def activity?
-  #  self.votes.size > 0 || self.rolled?
-  #end
+  def activity?
+    #self.votes.size > 0 || self.rolled?
+    self.rolled?
+  end
 
   def rolled?
     !self.roll_time.nil?

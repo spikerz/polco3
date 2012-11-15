@@ -26,10 +26,12 @@ class Roll
   field :updated_time, type: Time     #
   # still here for speed . . . (might delete)
   #field :legislator_votes, type: Hash
+  scope :most_popular, desc(:vote_count).limit(10)
 
   # associations
   belongs_to :bill
   has_many :legislator_votes
+  has_many :votes
 
   # [:aye, :nay, :abstain, :present]
   VAL = {'+' => :aye, '-' => :nay, 'P' => :present, '0' => :abstain}
@@ -78,6 +80,7 @@ class Roll
     feed = Feedzirra::Parser::RollCall.parse(File.new("#{DATA_PATH}/rolls/#{roll_name}", 'r'))
     base = roll_name.gsub(/\.xml/,'')
     puts "Processing #{base}"
+    # we want to make sure a bill exists for this role
     if bill = Bill.where(govtrack_id: "#{feed.bill_type}#{feed.congress}-#{feed.bill_number}").first
         roll = Roll.find_or_create_by(file_name: base)
         bill.roll_time = Date.parse(feed.updated_time)

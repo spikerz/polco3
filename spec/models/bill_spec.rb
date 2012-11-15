@@ -5,7 +5,7 @@ describe Bill do
   context "can work with external data" do
 
     before :each do
-      load_legislators
+      Legislator.update_legislators
     end
 
     it "should be able to pull in a bill and update it" do
@@ -35,6 +35,48 @@ describe Bill do
       b.sponsor.full_name.should eq("Chad Whiddle")
       # the the legislator should be sponsoring this bill
       s.bills.first.should eq(b)
+    end
+
+    it "should be able to get latest action" do
+      b = FactoryGirl.create(:bill)
+      b.get_latest_action.should eql({:date => "2011-02-17", :description => "Message on Senate action sent to the House."})
+    end
+
+    it "should show the latest status for a bill" do
+      b = FactoryGirl.create(:bill)
+      b.bill_actions = [['2011-08-14', 'augustine'], ['2011-05-12', 'Cyril'], ['2001-09-15', 'Pelagius']]
+      b.bill_state = 'REFERRED'
+      b.get_latest_action[:description].should eq("augustine")
+      b.bill_state.should eq('REFERRED')
+    end
+
+    it "should be able to describe it's status" do
+      b = FactoryGirl.create(:bill, bill_state: "VETOED:OVERRIDE_FAIL_SECOND:SENATE")
+      b.status_description.should eq("Veto override passed in the House (the originating chamber) but failed in the Senate.")
+    end
+
+    it "should show if it has passed" do
+      b = FactoryGirl.create(:bill, bill_state: 'ENACTED:SIGNED')
+      b.passed?.should eq(true)
+      b_failed = FactoryGirl.create(:bill, bill_state: 'PROV_KILL:CLOTUREFAILED')
+      b_failed.passed?.should eq(false)
+    end
+
+    it "should have a long and a short title" do
+      b = FactoryGirl.create(:bill)
+      titles = b.titles
+      titles.should_not be_nil
+      b.long_title.should eql("This is the official title.")
+      b.short_title.should eql("This is the short title")
+    end
+
+    it "should be able to get a list of subjects for a bill" do
+      #b = FactoryGirl.create(:bill)
+      load_legislators
+      b = Bill.find_or_create_by(:title => "h3605", :govtrack_name => "h3605")
+      b.update_bill # should modify this to work offline vcr ? with HTTParty.get govtrack
+      b.subjects.size.should eql(15)
+      b.subjects.last.name.should eql("Trade restrictions")
     end
 
     it "should have cosponsors" do
