@@ -2,30 +2,30 @@ class RepresentController < ApplicationController
 
   def house_bills
     if @user = current_user
-      @voted_on_bills = @user.bills_voted_on(:house).page(params[:voted_on]).per(5)
-      @not_voted_on_bills = @user.bills_not_voted_on(:house).page(params[:not_voted_on]).per(3)
+      @voted_on_rolls = @user.rolls_voted_on(:house).page(params[:voted_on]).per(5)
+      @not_voted_on_rolls = @user.rolls_not_voted_on(:house).page(params[:not_voted_on]).per(3)
     else
-      @bills = Bill.introduced_house_bills.page params[:the_bills]
+      @bills = Bill.introduced_house_bills.page params[:the_rolls]
     end
   end
 
   def senate_bills
     if @user = current_user
-      @voted_on_bills = @user.bills_voted_on(:senate).page(params[:voted_on]).per(3)
-      @not_voted_on_bills = @user.bills_not_voted_on(:senate).page(params[:not_voted_on]).per(5)
+      @voted_on_rolls = @user.rolls_voted_on(:senate).page(params[:voted_on]).per(3)
+      @not_voted_on_rolls = @user.rolls_not_voted_on(:senate).page(params[:not_voted_on]).per(5)
     else
-      @bills = Bill.introduced_senate_bills.page(params[:the_bills]).per(10)
+      @bills = Bill.introduced_senate_bills.page(params[:the_rolls]).per(10)
     end
   end
 
   def legislators_districts
     @districts = PolcoGroup.districts.page(params[:page]).per(10)
-    @bills = Bill.house_bills.rolled_bills.page(params[:page]).per(10)
+    @rolls = Roll.house_rolls.page(params[:page]).per(10)
   end
 
   def states
     @states = PolcoGroup.states.page(params[:page]).per(10)
-    @bills = Bill.senate_bills.rolled_bills.page(params[:page]).per(10)
+    @rolls = Roll.senate_rolls.page(params[:page]).per(10)
   end
 
   def results
@@ -46,11 +46,11 @@ class RepresentController < ApplicationController
     if @user = current_user
       if params[:chamber] == "house"
         @chamber = "house"
-        @bills = @user.bills_voted_on(:house)
+        @bills = @user.rolls_voted_on(:house)
       else
         @chamber = "senate"
         @pg_state = @user.state
-        @bills = @user.bills_voted_on(:senate) # .page(params[:page])
+        @bills = @user.rolls_voted_on(:senate) # .page(params[:page])
       end
     else
       flash[:notice] = 'You need to be logged in'

@@ -43,26 +43,26 @@ class User
 
   # eieio
   # i don't think bills could be voted on . . .
-  def bills_voted_on(chamber)
-    Bill.any_in(_id: Vote.where(user_id: self.id).and(chamber: chamber).map(&:bill_id)).desc(:introduced_date)
+  def rolls_voted_on(chamber)
+    Roll.any_in(_id: Vote.where(user_id: self.id).and(chamber: chamber).map(&:roll_id)).desc(:introduced_date)
   end
 
   # eieio -- same logic
-  def bills_not_voted_on(chamber)
-    ids = Vote.where(user_id: self.id).map{|v| v.bill.id }
+  def rolls_not_voted_on(chamber)
+    ids = Vote.where(user_id: self.id).map{|v| v.roll.id }
     if chamber == :house
-      Bill.where(title: /^h/).not_in(_id: ids).desc(:vote_count)
+      Roll.house_rolls.not_in(_id: ids).desc(:vote_count)
     else
-      Bill.where(title: /^s/).not_in(_id: ids).desc(:vote_count)
+      Roll.senate_rolls.not_in(_id: ids).desc(:vote_count)
     end
     #Bill.find(Bill.all.map(&:id)-Vote.where(user_id: self.id).map{|v| v.bill.id })
   end
 
   # eieio
-  def find_10_bills_not_voted_on
-    ids = Vote.where(user_id: self.id).map{|v| v.bill.id }
-    Bill.not_in(_id: ids).limit(10)
-  end
+  #def find_10_rolls_not_voted_on
+  #  ids = Vote.where(user_id: self.id).map{|v| v.bill.id }
+  #  Bill.not_in(_id: ids).limit(10)
+  #end
 
   def us_state
     self.state.name if self.state

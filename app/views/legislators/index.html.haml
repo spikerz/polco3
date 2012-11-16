@@ -1,11 +1,13 @@
 - model_class = Legislator
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human.pluralize
+
+- title 'Legislators'
+
+= paginate @legislators
+
 %table.table.table-striped
   %thead
     %tr
-      %th Full Name
-      %th= model_class.human_attribute_name(:middle_name)
+      %th Name
       %th= model_class.human_attribute_name(:religion)
       %th= model_class.human_attribute_name(:title)
       %th= model_class.human_attribute_name(:nickname)
@@ -32,3 +34,5 @@
           = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_path(legislator), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
 = link_to t('.new', :default => t("helpers.links.new")), new_legislator_path, :class => 'btn btn-primary'
+
+= paginate @legislators

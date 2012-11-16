@@ -1,10 +1,13 @@
 - model_class = Vote
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human.pluralize
+
+- title "Your Votes"
+
+= paginate @votes
+
 %table.table.table-striped
   %thead
     %tr
-      %th= model_class.human_attribute_name(:id)
+      %th Vote
       %th= model_class.human_attribute_name(:value)
       %th= model_class.human_attribute_name(:chamber)
       %th= model_class.human_attribute_name(:created_at)
@@ -12,7 +15,7 @@
   %tbody
     - @votes.each do |vote|
       %tr
-        %td= link_to vote.id, vote_path(vote)
+        %td= link_to vote.roll.title, vote_path(vote)
         %td= vote.value
         %td= vote.chamber
         %td=l vote.created_at
@@ -21,3 +24,5 @@
           = link_to t('.destroy', :default => t("helpers.links.destroy")), vote_path(vote), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
 = link_to t('.new', :default => t("helpers.links.new")), new_vote_path, :class => 'btn btn-primary'
+
+= paginate @votes

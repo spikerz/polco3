@@ -1,7 +1,7 @@
 - title 'House Bills'
 
 - if @user = current_user
-  = render partial: 'bills', locals: {the_bills: @voted_on_bills, title: 'You voted on', bill_type: 'voted_on'}
-  = render partial: 'bills', locals: {the_bills: @not_voted_on_bills, title: 'Most popular bills you haven\'t voted on:', bill_type: 'not_voted_on'}
+  = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, title: 'Most popular rolls you haven\'t voted on:', roll_type: 'not_voted_on'}
+  = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, title: 'You voted on', roll_type: 'voted_on'}
 - else
-  = render partial: 'bills', locals: {the_bills: @bills, title: 'most popular bills', bill_type: 'the_bills'}
+  = render partial: 'rolls', locals: {the_rolls: @rolls, title: 'most popular rolls', roll_type: 'the_rolls'}

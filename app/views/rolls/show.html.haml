@@ -1,15 +1,13 @@
 - model_class = Roll
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human
+- title "Roll: #{@roll.title}"
+- bill = @roll.bill
 
-%p
-  %strong= model_class.human_attribute_name(:_type) + ':'
-  %br
-  = @roll._type
-%p
-  %strong= model_class.human_attribute_name(:_id) + ':'
-  %br
-  = @roll._id
+%h2
+  = bill.long_title
+
+.well
+  = bill.summary
+
 %p
   %strong= model_class.human_attribute_name(:chamber) + ':'
   %br
@@ -71,17 +69,9 @@
   %br
   = @roll.congress
 %p
-  %strong= model_class.human_attribute_name(:vote_count) + ':'
+  %strong Polco Votes
   %br
   = @roll.vote_count
-%p
-  %strong= model_class.human_attribute_name(:original_time) + ':'
-  %br
-  = @roll.original_time
-%p
-  %strong= model_class.human_attribute_name(:updated_time) + ':'
-  %br
-  = @roll.updated_time
 
 .form-actions
   = link_to t('.back', :default => t("helpers.links.back")), rolls_path, :class => 'btn'

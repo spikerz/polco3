@@ -5,7 +5,7 @@
 .well
   %table.table.table-striped
     %tr
-      %th district
+      %th District
       %th Rep. Name
       %th &nbsp;
       %th Rep. Party
@@ -22,4 +22,4 @@
 
 = paginate @districts
 
-= render partial: "bills_with_results", locals: {bills: @bills}
+= render partial: "rolls_with_results", locals: {rolls: @rolls}

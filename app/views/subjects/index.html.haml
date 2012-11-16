@@ -1,6 +1,9 @@
 - model_class = Subject
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human.pluralize
+
+- title 'Subjects'
+
+= paginate @subjects
+
 %table.table.table-striped
   %thead
     %tr
@@ -15,3 +18,5 @@
           = link_to t('.destroy', :default => t("helpers.links.destroy")), subject_path(subject), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
 = link_to t('.new', :default => t("helpers.links.new")), new_subject_path, :class => 'btn btn-primary'
+
+= paginate @subjects

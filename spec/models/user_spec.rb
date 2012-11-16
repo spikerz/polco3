@@ -45,10 +45,10 @@ describe User do
   #  u = FactoryGirl.create(:user)
   #  create_20_and_vote_on_10(u)
   #  (u.bills_voted_on(:house).size + u.bills_voted_on(:senate).size).should eq(10)
-  #  (u.bills_not_voted_on(:house).size + u.bills_not_voted_on(:senate).size).should eq(10)
+  #  (u.rolls_not_voted_on(:house).size + u.rolls_not_voted_on(:senate).size).should eq(10)
   #  (u.bills_voted_on(:house)+u.bills_voted_on(:senate)).should include(Bill.first)
-  #  not_voted_on_bills = Bill.all.to_a - Vote.all.map{|v| v.bill}
-  #  (u.bills_not_voted_on(:house)+u.bills_not_voted_on(:senate)).map(&:id).should include(not_voted_on_bills.first.id)
+  #  not_voted_on_rolls = Bill.all.to_a - Vote.all.map{|v| v.bill}
+  #  (u.rolls_not_voted_on(:house)+u.rolls_not_voted_on(:senate)).map(&:id).should include(not_voted_on_rolls.first.id)
   #end
 
 end

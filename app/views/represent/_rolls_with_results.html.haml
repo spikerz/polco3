@@ -1,0 +1,22 @@
+- if rolls.size > 0
+
+  %h2 Rolls with Results
+
+  .well
+    %table.table.table-striped
+      %tr
+        %th Roll
+        %th For
+        %th Against
+        %th Abstain
+        %th Result
+      - rolls.each do |roll|
+        %tr
+          %td= link_to roll.title, roll_path(roll)
+          - roll_result = roll.tally
+          %td= roll_result[:ayes]
+          %td= roll_result[:nays]
+          %td= roll_result[:abstains]
+          %td= roll.bill.passed? ? "Yes" : "No"
+
+  = paginate rolls

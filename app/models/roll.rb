@@ -27,6 +27,8 @@ class Roll
   # still here for speed . . . (might delete)
   #field :legislator_votes, type: Hash
   scope :most_popular, desc(:vote_count).limit(10)
+  scope :house_rolls, where(chamber: :house).desc(:vote_count)
+  scope :senate_rolls, where(chamber: :senate).desc(:vote_count)
 
   # associations
   belongs_to :bill
@@ -63,6 +65,14 @@ class Roll
     # the purpose of this is to build a table that links legislators to votes
     self.legislator_votes.each do |vote|
       LegislatorVote.create(bill_id: self.bill.id, legislator_id: vote.first, value: vote.last)
+    end
+  end
+
+  def title
+    if self.bill
+      self.bill.ident
+    else
+      "no bill"
     end
   end
 

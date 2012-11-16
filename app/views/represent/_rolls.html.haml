@@ -1,0 +1,7 @@
+- unless the_rolls.nil?
+  %h2= title
+  %ul
+    = render partial: 'roll', collection: the_rolls
+  = paginate the_rolls, :param_name => roll_type
+- else
+  %p No rolls
