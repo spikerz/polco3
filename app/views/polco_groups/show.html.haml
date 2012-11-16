@@ -1,19 +1,7 @@
 - model_class = PolcoGroup
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human
 
-%p
-  %strong= model_class.human_attribute_name(:_type) + ':'
-  %br
-  = @polco_group._type
-%p
-  %strong= model_class.human_attribute_name(:_id) + ':'
-  %br
-  = @polco_group._id
-%p
-  %strong= model_class.human_attribute_name(:name) + ':'
-  %br
-  = @polco_group.name
+- title @polco_group.name
+
 %p
   %strong= model_class.human_attribute_name(:type) + ':'
   %br

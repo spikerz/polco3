@@ -96,6 +96,7 @@ describe RollsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Roll.any_instance.stub(:save).and_return(false)
+        Roll.any_instance.stub(:errors).and_return(['error'])
         post :create, {:roll => {}}, valid_session
         response.should render_template("new")
       end
@@ -140,6 +141,7 @@ describe RollsController do
         roll = Roll.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Roll.any_instance.stub(:save).and_return(false)
+        Roll.any_instance.stub(:errors).and_return(['error'])
         put :update, {:id => roll.to_param, :roll => {}}, valid_session
         response.should render_template("edit")
       end

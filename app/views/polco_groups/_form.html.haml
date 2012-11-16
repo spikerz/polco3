@@ -1,6 +1,6 @@
 = simple_form_for @polco_group, :html => { :class => 'form-horizontal' } do |f|
   = f.input :name
-  = f.input :type
+  = f.input :type, collection: GROUP_TYPES
   = f.input :description
   = f.input :vote_count
   = f.input :follower_count

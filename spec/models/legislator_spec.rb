@@ -33,7 +33,7 @@ describe Legislator do
   it "should be able to read in all legislators" do
     Legislator.update_legislators
     # should be at least the number of reps (435) + the number of senators
-    Legislator.all.size.should eq (836)
+    Legislator.all.size.should eq (835)
   end
 
   it "We should be able to read their full state name" do

@@ -96,6 +96,7 @@ describe PolcoGroupsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         PolcoGroup.any_instance.stub(:save).and_return(false)
+        PolcoGroup.any_instance.stub(:errors).and_return(['error'])
         post :create, {:polco_group => {}}, valid_session
         response.should render_template("new")
       end
@@ -140,6 +141,7 @@ describe PolcoGroupsController do
         polco_group = PolcoGroup.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         PolcoGroup.any_instance.stub(:save).and_return(false)
+        PolcoGroup.any_instance.stub(:errors).and_return(['error'])
         put :update, {:id => polco_group.to_param, :polco_group => {}}, valid_session
         response.should render_template("edit")
       end

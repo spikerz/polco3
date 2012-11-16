@@ -96,6 +96,7 @@ describe LegislatorsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Legislator.any_instance.stub(:save).and_return(false)
+        Legislator.any_instance.stub(:errors).and_return(['error'])
         post :create, {:legislator => {}}, valid_session
         response.should render_template("new")
       end
@@ -140,6 +141,7 @@ describe LegislatorsController do
         legislator = Legislator.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Legislator.any_instance.stub(:save).and_return(false)
+        Legislator.any_instance.stub(:errors).and_return(['error'])
         put :update, {:id => legislator.to_param, :legislator => {}}, valid_session
         response.should render_template("edit")
       end

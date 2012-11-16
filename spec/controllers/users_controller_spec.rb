@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UsersController do
 
   before do
-    @user = create(:user)
+    @user = FactoryGirl.create(:user)
   end
 
   describe "Get 'show' for non-logged in user" do
@@ -16,7 +16,7 @@ describe UsersController do
 
   describe "Get 'show' for another user" do
     it "redirects user to root path with access denied" do
-      @user2 = create(:user)
+      @user2 = FactoryGirl.create(:user)
       session[:user_id] = @user.id
       get 'show', :id => @user2
       response.should redirect_to(root_path)
@@ -50,6 +50,8 @@ describe UsersController do
   describe "PUT update" do
     it "with an error renders edit template" do
       session[:user_id] = @user.id
+      User.any_instance.stub(:errors).and_return(['error'])
+      User.any_instance.stub(:valid?).and_return(false)
       put 'update', :id => @user, :user => {:name => ''}
       response.should render_template(:edit)
     end

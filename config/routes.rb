@@ -22,6 +22,8 @@
   resources :legislator_votes # necessary?
   resources :votes
 
+  resources :identities
+
   # what bills are active?
   get "represent/house_bills"
   get "represent/senate_bills"

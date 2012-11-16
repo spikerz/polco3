@@ -1,0 +1,30 @@
+- title "Register"
+
+= form_tag "/auth/identity/register", class: 'form-horizontal' do
+  - if @identity && @identity.errors.any?
+    .error_messages
+      %h2
+        = pluralize(@identity.errors.count, "error")
+        prohibited this account from being saved:
+      %ul
+        - @identity.errors.full_messages.each do |msg|
+          %li= msg
+  %fieldset
+    .control-group
+      = label_tag :name, nil, class: 'control-label'
+      .controls
+        = text_field_tag :name, @identity.try(:name)
+    .control-group
+      = label_tag :email, nil, class: 'control-label'
+      .controls
+        = text_field_tag :email, @identity.try(:email)
+    .control-group
+      = label_tag :password, nil, class: 'control-label'
+      .controls
+        = password_field_tag :password
+    .control-group
+      = label_tag :password_confirmation, nil, class: 'control-label'
+      .controls
+        = password_field_tag :password_confirmation
+  .form-actions
+    = submit_tag "Register", class: 'btn btn-primary'

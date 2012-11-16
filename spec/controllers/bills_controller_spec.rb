@@ -96,6 +96,7 @@ describe BillsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Bill.any_instance.stub(:save).and_return(false)
+        Bill.any_instance.stub(:errors).and_return(['error'])
         post :create, {:bill => {}}, valid_session
         response.should render_template("new")
       end
@@ -140,6 +141,7 @@ describe BillsController do
         bill = Bill.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Bill.any_instance.stub(:save).and_return(false)
+        Bill.any_instance.stub(:errors).and_return(['error'])
         put :update, {:id => bill.to_param, :bill => {}}, valid_session
         response.should render_template("edit")
       end

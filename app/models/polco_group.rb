@@ -32,8 +32,6 @@ class PolcoGroup
   #validates_uniqueness_of :members, message: "User has already joined this group"
   #validates_uniqueness_of :followers, message: "User has already joined this group"
 
-
-
   def get_tally
     # TODO what does this mean in the context of a group?
     process_votes(self.votes)

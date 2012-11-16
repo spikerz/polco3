@@ -22,14 +22,14 @@ describe SessionsController do
   
   describe "creates new user" do
   	it "redirects new users with blank email to fill in their email" do
-  		@user = create(:user)
+  		@user = FactoryGirl.create(:user)
   		visit '/signin'
   		page.should have_content('Logged in as Bob')
   		page.should have_content('Please enter your email address')
   		current_path.should == edit_user_path(@user)
   	end
   	it "redirects users with email back to root_url" do
-  		@user = create(:user, :email => "Tester@testing.com")
+  		@user = FactoryGirl.create(:user, :email => "Tester@testing.com")
   		visit '/signin'
   		page.should have_content('Signed in!')
   		current_path.should == '/'

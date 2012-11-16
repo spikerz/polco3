@@ -2,7 +2,9 @@
 
 FactoryGirl.define do
   factory :vote do
-    value ""
-    chamber ""
+    value :aye
+    chamber :house
+    user {FactoryGirl.create(:random_user)}
+    roll {FactoryGirl.create(:roll)}
   end
 end
