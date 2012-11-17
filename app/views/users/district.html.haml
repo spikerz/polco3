@@ -1,0 +1,21 @@
+- title 'Confirm district'
+
+= render :partial => 'users/district_includes/show_the_reps', |
+  :locals => {                                                |
+          :district => @district,                             |
+          :state => @state,                                   |
+          :senior_senator => @senior_senator,                 |
+          :junior_senator => @junior_senator,                 |
+          :representative => @representative,                 |
+          :district => @district,                             |
+          :coords => @coords                                  |
+  }                                                           |
+
+= form_tag 'save_geocode' do
+  = hidden_field_tag 'us_state', @state
+  = hidden_field_tag 'district', @district
+  = hidden_field_tag 'junior_senator', @junior_senator.id
+  = hidden_field_tag 'senior_senator', @senior_senator.id
+  = hidden_field_tag 'representative', @representative.id
+  .actions
+    = submit_tag 'You Got it Right -- Go!', class: 'btn btn-primary'

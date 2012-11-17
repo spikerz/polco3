@@ -1,0 +1,44 @@
+- title "Input address"
+%p Is this your district?
+= @address_attempt
+.well
+  = form_tag 'district' do
+    %p
+      Based on your ip address, your district is:
+      %b= @district
+      in the state of #{@state.to_us_state}.
+    #users-district-display{:style => "width:500px; height:300px", data: {district: @district} }
+    = hidden_field_tag :location, @coords
+    %p Is this correct?
+    .actions
+      = submit_tag 'Yes', class: 'btn btn-primary'
+%p If not, you can input your address below:
+/ float left
+%p
+  Input your address, #{@user.name.titlecase}
+.row
+  .span5.well
+    = form_tag 'district' do
+      .field
+        = label_tag :street_address
+        = text_field_tag :street_address, nil, :size => 40
+      .field
+        = label_tag :city
+        = text_field_tag :city, nil, :size => 40
+      .field
+        = label_tag :state
+        = text_field_tag :state
+      .field
+        = label_tag :zip
+        = text_field_tag :zip
+      .clear
+      .actions
+        = submit_tag 'Submit Address', class: 'btn btn-primary'
+  .span5.well
+    = form_tag 'district' do
+      .field
+        = label_tag :zip_code
+        = text_field_tag :zip_code, nil, :size => 20
+      .clear
+      .actions
+        = submit_tag 'Submit Zip Code', class: 'btn btn-primary'

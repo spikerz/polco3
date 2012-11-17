@@ -34,7 +34,7 @@
   # H3. and S3 house results -- how represented are you in the house?
   match "/represent/:chamber" => "represent#results", as: :results
   # helper to add vote
-  post "bills/add_vote", as: :add_vote
+  post "rolls/add_vote", as: :add_vote
 
   root :to => "home#index"
   resources :users, :only => [:index, :show, :edit, :update ]

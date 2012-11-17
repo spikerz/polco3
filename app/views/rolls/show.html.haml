@@ -2,6 +2,10 @@
 - title "Roll: #{@roll.title}"
 - bill = @roll.bill
 
+- present @roll do |roll_presenter|
+  .well
+    = roll_presenter.vote_region
+
 %h2
   = bill.long_title
 

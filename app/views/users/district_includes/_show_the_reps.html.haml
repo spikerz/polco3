@@ -1,0 +1,21 @@
+/ representative information
+%p
+  Based on this address, your district is:
+  %b= district
+  in the state of #{state.to_us_state}
+#users-district-display{:style => "width:500px; height:300px"}
+.row
+  .span3
+    %h3 Senior Senator
+    = senior_senator.full_title
+    %p= image_tag senior_senator.image_location_medium
+  .span3
+    %h3 Junior Senator
+    = junior_senator.full_title
+    %p= image_tag junior_senator.image_location_medium
+  .span3
+    %h3 Representative
+    = representative.full_title
+    %p= image_tag representative.image_location_medium
+%p
+  If this isn't correct, you can change that #{link_to 'here', users_geocode_path}

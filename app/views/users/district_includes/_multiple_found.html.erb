@@ -1,0 +1,25 @@
+<!-- this case is an error. no successful
+    address was found, they need to try
+    again, so they shouldn't reach here,
+    but be redirected to the previous page
+ -->
+
+ <div class="component_float_left_500">
+    <p>The address you provided is:</p>
+      <%= @address %>
+  </div>
+  <div class="component_float_right_500">
+    <p>This maps to the following addresses:</p>
+      <%= form_tag "geocode" do %>
+         <% @addresses.each_with_index do |addy, index| %>
+            <div class="field">
+              <%= radio_button_tag :address, addy %>
+            </div>
+         <% end %><!-- address -->
+      <div class='actions'>
+        <%= submit_tag 'Confirm address' %>
+      </div>
+      <% end %>
+  </div>
+
+<div class="clear_both"></div>

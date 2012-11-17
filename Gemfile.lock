@@ -84,6 +84,7 @@ GEM
       nokogiri (> 0.0.0)
       sax-machine (>= 0.0.12)
     ffi (1.1.5)
+    geocoder (1.1.5)
     gherkin (2.11.5)
       json (>= 1.4.6)
     gon (4.0.1)
@@ -262,6 +263,7 @@ DEPENDENCIES
   factory_girl_rails (>= 4.1.0)
   faker
   feedzirra
+  geocoder
   gon
   haml (>= 3.1.7)
   haml-rails (>= 0.3.5)

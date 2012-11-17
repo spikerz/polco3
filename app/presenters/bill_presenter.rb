@@ -14,18 +14,6 @@ class BillPresenter < BasePresenter
     h.content_tag(:div, "Sponsored by #{h.link_to(bill.sponsor.full_name, legislator_path(bill.sponsor.id))}".html_safe) if bill.sponsor
   end
 
-  def vote_region
-    if user = current_user
-      unless vote = bill.voted_on?(user)
-        h.render(partial: "vote_region", locals: {bill: bill})
-      else
-        h.content_tag(:div, "You voted #{vote} on this bill already.")
-      end
-    else
-       "#{link_to('log in', signin_path)} to vote".html_safe
-    end
-  end
-
   def status
     bill.bill_state
   end

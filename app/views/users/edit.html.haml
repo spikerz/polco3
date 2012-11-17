@@ -1,5 +1,7 @@
-= form_for(@user) do |f|
-  = f.label :email
-  = f.text_field :email
-  %br/
-  = f.submit "Sign in"
+-title 'Editing User'
+
+= render 'form'
+
+= link_to 'Show', @user
+\|
+= link_to 'Back', users_path
