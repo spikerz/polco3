@@ -77,7 +77,7 @@ class User
     self.senators.push(junior_senator)
     self.senators.push(senior_senator)
     self.representative = representative
-    self.district = district
+    self.district = PolcoGroup.find_district(district).first
     self.add_baseline_groups(us_state, district)
     self.geocoded = true
     #self.role = :registered # 7 = registered (or 6?)
@@ -118,19 +118,16 @@ class User
     members
   end
 
-  def self.build_coords2(input, district_name)
-    input = get_district_center(district_name) unless input
+  def self.build_coords(input, district_name)
+    input = DISTRICT_CENTERS[district_name] unless input
     "#{input.first},#{input.last}"
   end
 
-  def self.build_coords(input)
+  def self.build_coords_simple(input)
     #input = get_district_center(district_name) unless input
     "#{input.first},#{input.last}"
   end
 
-  def self.get_district_center(district_name)
-    DISTRICT_CENTERS[district_name]
-  end
 
   def get_districts_by_zipcode(zipcode)
     feed_url = "#{GOVTRACK_URL}perl/district-lookup.cgi?zipcode=#{zipcode}"

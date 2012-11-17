@@ -1,95 +1,41 @@
-- model_class = Legislator
-.page-header
-  %h1=t '.title', :default => model_class.model_name.human
+- title @legislator.full_title
 
-%p
-  %strong= model_class.human_attribute_name(:_type) + ':'
-  %br
-  = @legislator._type
-%p
-  %strong= model_class.human_attribute_name(:_id) + ':'
-  %br
-  = @legislator._id
-%p
-  %strong= model_class.human_attribute_name(:first_name) + ':'
-  %br
-  = @legislator.first_name
-%p
-  %strong= model_class.human_attribute_name(:last_name) + ':'
-  %br
-  = @legislator.last_name
-%p
-  %strong= model_class.human_attribute_name(:middle_name) + ':'
-  %br
-  = @legislator.middle_name
-%p
-  %strong= model_class.human_attribute_name(:religion) + ':'
-  %br
-  = @legislator.religion
-%p
-  %strong= model_class.human_attribute_name(:pvs_id) + ':'
-  %br
-  = @legislator.pvs_id
-%p
-  %strong= model_class.human_attribute_name(:os_id) + ':'
-  %br
-  = @legislator.os_id
-%p
-  %strong= model_class.human_attribute_name(:metavid_id) + ':'
-  %br
-  = @legislator.metavid_id
-%p
-  %strong= model_class.human_attribute_name(:bioguide_id) + ':'
-  %br
-  = @legislator.bioguide_id
-%p
-  %strong= model_class.human_attribute_name(:youtube_id) + ':'
-  %br
-  = @legislator.youtube_id
-%p
-  %strong= model_class.human_attribute_name(:title) + ':'
-  %br
-  = @legislator.title
-%p
-  %strong= model_class.human_attribute_name(:nickname) + ':'
-  %br
-  = @legislator.nickname
-%p
-  %strong= model_class.human_attribute_name(:user_approval) + ':'
-  %br
-  = @legislator.user_approval
-%p
-  %strong= model_class.human_attribute_name(:district) + ':'
-  %br
-  = @legislator.district
-%p
-  %strong= model_class.human_attribute_name(:state) + ':'
-  %br
-  = @legislator.state
-%p
-  %strong= model_class.human_attribute_name(:party) + ':'
-  %br
-  = @legislator.party
-%p
-  %strong= model_class.human_attribute_name(:sponsored_count) + ':'
-  %br
-  = @legislator.sponsored_count
-%p
-  %strong= model_class.human_attribute_name(:cosponsored_count) + ':'
-  %br
-  = @legislator.cosponsored_count
-%p
-  %strong= model_class.human_attribute_name(:full_name) + ':'
-  %br
-  = @legislator.full_name
-%p
-  %strong= model_class.human_attribute_name(:govtrack_id) + ':'
-  %br
-  = @legislator.govtrack_id
-%p
-  %strong= model_class.human_attribute_name(:start_date) + ':'
-  %br
-  = @legislator.start_date
+.well
+  = image_tag @legislator.image_location_medium
+
+.well
+  = "#{@legislator.title} #{@legislator.last_name}"
+  is a
+  = "#{@legislator.job}."
+
+- if @latest_votes
+  .well
+    %h3 RECENT LEGISLATIVE ACTIVITY
+    %table.table.zebra-striped
+      %tr
+        %th Title
+        %th Vote
+      - @latest_votes.each do |lv|
+        %tr
+          %th= link_to lv.bill.title, lv.bill
+          %th= lv.value
+- else
+  No activity yet
+
+.well
+  %h3 COMMITTEE MEMBERSHIP
+
+.well
+  %h3 BILL SPONSORSHIP & COSPONSORSHIP
+
+
+- # who is this person
+- # Tim Booher
+- # Senator from Wisconsin since 2012
+- # Democrat
+- # what bills has he sponsored?
+- # how has he voted?
+- # any other info available online?
 
 .form-actions
   = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'

@@ -56,6 +56,7 @@ class PolcoGroup
   scope :most_followed, desc(:follower_count)
   scope :most_members, desc(:member_count)
   scope :most_votes, desc(:vote_count)
+  scope :find_district, ->(district_name) { where(type: :district).and(name: district_name) }
 
   # time to create the ability to follow
   before_update :update_counters

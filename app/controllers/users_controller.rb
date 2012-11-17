@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     # TODO REMOVE!
     # i don't like this but it is a good way to get a default address
     address_attempt = [38.7909, -77.0947] if address_attempt.all? { |a| a == 0 }
-    @coords = User.build_coords(address_attempt)
+    @coords = User.build_coords_simple(address_attempt)
     district = @user.get_district_from_coords(address_attempt).first
     @district, @state = district.district, district.us_state
     @lat = params[:lat] || "19.71844"
@@ -75,7 +75,11 @@ class UsersController < ApplicationController
       @senior_senator = members[:senior_senator]
       @junior_senator = members[:junior_senator]
       @representative = members[:representative]
-      @coords = User.build_coords2(coords, @district)
+      #@coords = User.build_coords(coords, @district)
+      json = JSON(File.read("#{Rails.root}/public/district_data/#{@district}.json"))
+      gon.coords = json["coords"]
+      gon.extents = json["extents"]
+      gon.centroid = json["centroid"]
     end
   end
 

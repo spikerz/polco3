@@ -1,10 +1,16 @@
 source 'https://rubygems.org'
+
+ruby '1.9.3'
+
 gem 'rails', '3.2.8'
+
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
+  gem 'chosen-rails'
 end
+
 gem 'jquery-rails'
 gem "thin", ">= 1.5.0"
 gem "mongoid", ">= 3.0.11"
@@ -35,9 +41,13 @@ gem "has_scope"
 gem "kaminari-bootstrap"
 gem "less-rails"
 gem "faker", :group => [:test, :development]
-gem 'gon'
 gem 'feedzirra'
 gem 'sax-machine'
 gem 'httparty'
 gem 'omniauth-identity'
 gem 'geocoder'
+
+# would like to remove
+gem 'gon'
+
+gem 'heroku'
