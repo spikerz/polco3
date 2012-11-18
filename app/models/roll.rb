@@ -40,7 +40,7 @@ class Roll
   VAL = {'+' => :aye, '-' => :nay, 'P' => :present, '0' => :abstain}
 
   def create_legislator_votes(roll_call, bill)
-    votes_hash = Hash.new
+    #votes_hash = Hash.new
     roll_call.each do |v|
       if l = Legislator.where(govtrack_id: v.member_id).first
         unless LegislatorVote.where(bill_id: bill.id).and(legislator_id: l.id).and(roll_id: self.id).exists?

@@ -151,7 +151,7 @@ class Bill
     end
     bill = Feedzirra::Parser::GovTrackBill.parse(file_data)
     # check for changes
-    if (bill && (self.introduced_date.nil? || (bill.introduced_date.to_date > self.introduced_date) || force_update))
+    if bill && (self.introduced_date.nil? || (bill.introduced_date.to_date > self.introduced_date) || force_update)
       # front-matter
       puts "updating #{self.govtrack_name}"
       self.congress = bill.congress
@@ -250,11 +250,6 @@ class Bill
   end
 
   # TODO -- need to write ways to get titles and actions for views (but not what we store in the db)
-
-  def activity?
-    #self.votes.size > 0 || self.rolled?
-    self.rolled?
-  end
 
   def rolled?
     !self.roll_time.nil?

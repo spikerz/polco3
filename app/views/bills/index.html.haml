@@ -19,7 +19,7 @@
   %tbody
     - @bills.each do |bill|
       %tr
-        %td= link_to bill.short_title, bill_path(bill)
+        %td= link_to bill.bill_title, bill_path(bill)
         %td= bill.congress
         %td= bill.bill_number
         %td= bill.bill_type

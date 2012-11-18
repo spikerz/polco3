@@ -47,11 +47,12 @@ class PolcoGroup
   #before_save :update_followers_and_members
 
   # some validations
-  #validates_uniqueness_of :name, :scope => :type
-  #validates_inclusion_of :type, :in => [:custom, :state, :district, :common, :country], :message => 'Only valid groups are custom, state, district, common, country'
+  validates_uniqueness_of :name, :scope => :type
+  validates_inclusion_of :type, :in => [:custom, :state, :district, :common, :country], :message => 'Only valid groups are custom, state, district, common, country'
 
   scope :states, where(type: :state)
   scope :districts, where(type: :district).desc(:member_count)
+  scope :districts_with_activity, where(type: :district).and(:vote_count.gt => 0).desc(:member_count)
   scope :customs, where(type: :custom)
   scope :most_followed, desc(:follower_count)
   scope :most_members, desc(:member_count)
@@ -72,6 +73,11 @@ class PolcoGroup
     puts "is the model valid #{self.valid?}"
   end
 
+  def has_activity?(roll)
+    # does the group have any polco activity?
+    self.votes.where(roll_id: roll.id).size > 0
+  end
+
   def the_rep
     # this method finds the rep of a district
     if self.type == :district && self.name
@@ -90,20 +96,9 @@ class PolcoGroup
     l || "Vacant"
   end
 
-  # not used
-  #def get_bills
-  #  # TODO -- set this to the proper relation
-  #  # produces bills
-  #  Vote.where(polco_group_id: self.id).desc(:updated_at).all.to_a
-  #end
-
-  #def build_group_tally
-  #  self.votes.map(&:bill).uniq
-  #end
-
   def get_votes_tally(roll)
-    # TODO -- need to make this specific to a bill, not all votes of the polco group
-    process_votes(self.votes.where(bill_id: roll.id).all.to_a)
+    # messy!
+    process_votes(self.votes.where(roll_id: roll.id).all.to_a)
   end
 
   def format_votes_tally(roll)

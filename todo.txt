@@ -1,15 +1,12 @@
 - add notice (done)
+- fix 6 views (done)
 
-- fix 6 views
-
+- error: http://localhost:3000/bills/50a70013d6f45f7b4a00040a
+- update bill view
+- polymorphic for districts and state
+- update districts view
 tests:
 --------
 - we should see activity for the bills (is this the result of a single role)
 -
-
-- do senators vote on rolls or bills (must be rolls)?
--- develop specs
--- build test suite first
---
-- polymorphic for districts and state
 - more formal junior and senior senator . . .

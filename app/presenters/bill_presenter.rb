@@ -24,8 +24,9 @@ class BillPresenter < BasePresenter
 
   def activity
     # show all the activity for all the districts for this bill
-    districts = PolcoGroup.districts.where(:vote_count.gt => 0).desc(:member_count)
-    render(partial: "districts", locals: {bill: bill, districts: districts}) if bill.activity? && districts.all.size > 0
+    # what about senate bills?
+    districts = PolcoGroup.districts
+    render(partial: "district_results", locals: {bill: bill, districts: districts}) if districts.all.size > 0
   end
 
   def rolls
