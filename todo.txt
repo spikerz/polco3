@@ -1,0 +1,15 @@
+- add notice (done)
+
+- fix 6 views
+
+tests:
+--------
+- we should see activity for the bills (is this the result of a single role)
+-
+
+- do senators vote on rolls or bills (must be rolls)?
+-- develop specs
+-- build test suite first
+--
+- polymorphic for districts and state
+- more formal junior and senior senator . . .

@@ -12,19 +12,21 @@ module VotingLogic
       v = Vote.new
       v.value = value
       v.user = user
+      v.chamber = self.chamber
+      v.roll = self
+      # now store the groups
       v.polco_groups << user.custom_groups
       v.polco_groups << user.common_groups
       v.polco_groups << user.state
       v.polco_groups << user.district
       #v.polco_group_ids = (user.custom_groups + user.common_groups + user.state + user.district).map(&:id)
       # update all groups
-      # I don't like this, but the increments work  -- locator for flight NXZORQ
+      # I don't like this, but the increments work
       user.state.inc(:vote_count,1)
       user.district.inc(:vote_count,1)
       user.custom_groups.each do |jg|
         jg.inc(:vote_count,1)
       end
-      v.roll = self
       v.save
       self.inc(:vote_count,1)
     else

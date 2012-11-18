@@ -3,6 +3,6 @@ class LegislatorVote
   field :value, :type => String
   belongs_to :legislator
   belongs_to :roll
-  belongs_to :bill
+  #belongs_to :bill
 
 end

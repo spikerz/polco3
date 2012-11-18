@@ -6,8 +6,8 @@ FactoryGirl.define do
     result "Passed"
     required "1/2"
     type "On the Resolution"
-    bill_type "hr"
-    the_question "On Agreeing to the Resolution: H RES 26 Providing for consideration of H.R. 2, to repeal the job-killing health care law and health care-related provisions in the Health Care and Education Reconciliation Act of 2010; and providing for consideration of H.Res. 9, instructing certain committees to report legislation replacing the job-killing health care law"
+    bill_type {BILL_TYPES[rand(0..7)]}
+    the_question {Faker::Lorem.paragraphs(1)}
     bill_category "passage"
     aye 236
     nay 181
@@ -20,4 +20,47 @@ FactoryGirl.define do
     # add bill
     bill
   end
+
+  factory :house_roll, class: Roll do
+    chamber "house"
+    session 112
+    result "Passed"
+    required "1/2"
+    type "On the Resolution"
+    bill_type {BILL_TYPES[rand(0..7)]}
+    the_question {Faker::Lorem.paragraphs(1)}
+    bill_category {ROLL_CATEGORIES.keys[rand(0..11)].to_s}
+    aye 225
+    nay 182
+    nv 17
+    present 3
+    year 2011
+    congress "112"
+    original_time Time.parse("2011-01-07 16 04 00 UTC")
+    updated_time Time.parse("2011-12-05 15 49 06 UTC")
+    # add bill
+    bill
+  end
+
+  factory :senate_roll, class: Roll do
+    chamber "senate"
+    session 112
+    result "Passed"
+    required "1/2"
+    type "On the Resolution"
+    bill_type {BILL_TYPES[rand(0..7)]}
+    the_question {Faker::Lorem.paragraphs(1)}
+    bill_category {ROLL_CATEGORIES.keys[rand(0..11)].to_s}
+    aye 50
+    nay 48
+    nv 1
+    present 1
+    year 2011
+    congress "112"
+    original_time Time.parse("2011-01-07 16 04 00 UTC")
+    updated_time Time.parse("2011-12-05 15 49 06 UTC")
+    # add bill
+    bill
+  end
+
 end

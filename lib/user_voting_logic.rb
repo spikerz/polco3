@@ -2,7 +2,8 @@ module UserVotingLogic
   # eieio
   # i don't think rolls could be voted on . . .
   def rolls_voted_on(chamber)
-    Roll.any_in(_id: Vote.where(user_id: self.id).and(chamber: chamber).map(&:roll_id))
+    roll_ids = Vote.where(user_id: self.id).and(chamber: chamber.to_sym).map(&:roll_id)
+    Roll.any_in(_id: roll_ids)
   end
 
   # eieio used?
@@ -40,22 +41,18 @@ module UserVotingLogic
   # eieio
   # this needs to run off of roll
   def reps_vote_on(house_roll)
-    if house_roll.rolled?
-      if leg = self.representative
-        house_roll.find_member_vote(leg).to_s
-      end
-    else
-      "Vote has not yet occured"
+    if leg = self.representative
+      house_roll.find_member_vote(leg).to_s
     end
   end
 
   # eieio
   # this needs to run on roll
-  def senators_vote_on(b)
+  def senators_vote_on(r)
     unless self.senators.empty?
       votes = []
       self.senators.each do |senator|
-        if vote = LegislatorVote.where(legislator_id: senator.id).and(roll_id: b.id).first
+        if vote = LegislatorVote.where(legislator_id: senator.id).and(roll_id: r.id).first
         votes.push({name: vote.legislator.full_name, value: vote.value})
         end
       end

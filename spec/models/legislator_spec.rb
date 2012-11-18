@@ -49,16 +49,16 @@ describe Legislator do
   end
 
   it "should show senators votes on a bill" do
-    b = FactoryGirl.create(:bill)
+    r = FactoryGirl.create(:roll)
     s1 = FactoryGirl.create(:legislator, first_name: "chad")
     s2 = FactoryGirl.create(:legislator, first_name: "ryan")
     u = FactoryGirl.create(:user)
-    LegislatorVote.create(legislator_id: s1.id, value: :aye, bill: b.id)
-    LegislatorVote.create(legislator_id: s2.id, value: :nay, bill: b.id)
+    LegislatorVote.create(legislator_id: s1.id, value: :aye, roll_id: r.id)
+    LegislatorVote.create(legislator_id: s2.id, value: :nay, roll_id: r.id)
     u.senators << [s1, s2]
     u.save
     u.reload
-    u.senators_vote_on(b).should eq([{:name=>"chad Ackerman", :value=>"aye"}, {:name=>"ryan Ackerman", :value=>"nay"}])
+    u.senators_vote_on(r).should eq([{:name=>"chad Ackerman", :value=>"aye"}, {:name=>"ryan Ackerman", :value=>"nay"}])
   end
 
 end

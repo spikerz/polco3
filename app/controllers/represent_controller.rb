@@ -46,11 +46,11 @@ class RepresentController < ApplicationController
     if @user = current_user
       if params[:chamber] == "house"
         @chamber = "house"
-        @bills = @user.rolls_voted_on(:house)
+        @rolls = @user.rolls_voted_on(:house)
       else
         @chamber = "senate"
         @pg_state = @user.state
-        @bills = @user.rolls_voted_on(:senate) # .page(params[:page])
+        @rolls = @user.rolls_voted_on(:senate) # .page(params[:page])
       end
     else
       flash[:notice] = 'You need to be logged in'

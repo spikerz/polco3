@@ -21,7 +21,7 @@
   %body
     .navbar.navbar-fixed-top
       .navbar-inner
-        .container
+        #container.container
           %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
             %span.icon-bar
             %span.icon-bar
@@ -44,7 +44,6 @@
                 %li= link_to "sign in", signin_path
 
     .container
-
       .row
         .span9
           = bootstrap_flash

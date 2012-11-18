@@ -1,5 +1,6 @@
 class Bill
   include Mongoid::Document
+  # DOCUMENTATION: http://www.govtrack.us/developers/api#endpoint_bill
 
   # initial fields
   field :congress, :type => Integer

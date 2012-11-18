@@ -2,6 +2,9 @@ class SessionsController < ApplicationController
 
   def new
 #    redirect_to '/auth/twitter'
+    if user_signed_in?
+      redirect_to root_url, notice: 'Signed in!'
+    end
   end
 
   def create

@@ -14,6 +14,17 @@ describe User do
 
   # A user should not be able to remove their baseline groups (on the site .. .)
 
+  it "should be able to get a list of rolls voted on" do
+    u = FactoryGirl.create(:user)
+    house_rolls = FactoryGirl.create_list(:house_roll,10)
+    senate_rolls = FactoryGirl.create_list(:senate_roll,10)
+    (house_rolls + senate_rolls).each do |r|
+      r.vote_on(u,VOTE_VALUES[rand(0..3)])
+    end
+    u.rolls_voted_on(:house).size.should eq(10)
+    u.rolls_voted_on(:senate).size.should eq(10)
+  end
+
   # can a user follow a group they also join? so far, yes
 
   it "should only be able to follow a group once" do

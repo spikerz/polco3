@@ -1,0 +1,262 @@
+{
+  "allowed_detail_http_methods": [
+    "get"
+  ],
+  "allowed_list_http_methods": [
+    "get"
+  ],
+  "default_format": "application/json",
+  "default_limit": 20,
+  "fields": {
+    "category": {
+      "blank": false,
+      "default": "No default provided.",
+      "enum_values": {
+        "amendment": {
+          "description": "Votes on accepting or rejecting amendments to bills and resolutions.",
+          "label": "Amendment"
+        },
+        "cloture": {
+          "description": "Votes to end debate and move to a vote, i.e. to end a filibuster.",
+          "label": "Cloture"
+        },
+        "conviction": {
+          "description": "'Guilty or Not Guilty' votes in the Senate to convict an office holder of impeachment.",
+          "label": "Impeachment Conviction"
+        },
+        "nomination": {
+          "description": "Senate votes on presidential nominations.",
+          "label": "Nomination"
+        },
+        "other": {
+          "description": "A variety of uncategorized votes.",
+          "label": "Other"
+        },
+        "passage": {
+          "description": "Votes on passing or failing bills and resolutions and on agreeing to conference reports.",
+          "label": "Passage"
+        },
+        "passage_part": {
+          "description": "Votes on the passage of parts of legislation.",
+          "label": "Passage (Part)"
+        },
+        "passage_suspension": {
+          "description": "Fast-tracked votes on the passage of bills requiring a 2/3rds majority.",
+          "label": "Passage under Suspension"
+        },
+        "procedural": {
+          "description": "A variety of procedural votes such as quorum calls.",
+          "label": "Procedural"
+        },
+        "ratification": {
+          "description": "Senate votes to ratify treaties.",
+          "label": "Treaty Ratification"
+        },
+        "unknown": {
+          "description": "A variety of uncategorized votes.",
+          "label": "Unknown Category"
+        },
+        "veto_override": {
+          "description": "Votes to override a presidential veto.",
+          "label": "Veto Override"
+        }
+      },
+      "help_text": "The type of the vote.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "chamber": {
+      "blank": false,
+      "default": "No default provided.",
+      "enum_values": {
+        "house": {
+          "description": null,
+          "label": "House"
+        },
+        "senate": {
+          "description": null,
+          "label": "Senate"
+        }
+      },
+      "help_text": "The chamber in which the vote was held, House or Senate.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "congress": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The number of the Congress in which the vote took place. The current Congress is 112. In recent history Congresses are two years; however, this was not always the case.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "created": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The date (and in recent history also time) on which the vote was held.",
+      "nullable": false,
+      "readonly": false,
+      "type": "datetime",
+      "unique": false
+    },
+    "id": {
+      "blank": false,
+      "default": "",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": true
+    },
+    "link": {
+      "help_text": "The URL to the corresponding page on www.GovTrack.us for this resource."
+    },
+    "number": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The number of the vote, unique to a Congress and session pair.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "options": {
+      "help_text": "The options available for the voters of this vote. Returned as key/value pairs. The keys correspond to the voter data, and the values are the display text for this option ('aye', 'nay', 'yea', 'no', etc.)"
+    },
+    "question": {
+      "blank": false,
+      "default": "",
+      "help_text": "Descriptive text for what the vote was about.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "related_bill": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "A bill related to this vote (optional, and possibly present even if this is not a vote on the passage of the bill).",
+      "nullable": true,
+      "readonly": false,
+      "type": "related",
+      "unique": false
+    },
+    "required": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "A code indicating what number of votes was required for success. Often '1/2' or '3/5'. This field should be interpreted with care. It comes directly from the upstream source and may need some 'unpacking.' For instance, while 1/2 always mean 1/2 of those voting (i.e. excluding absent and abstain), 3/5 in some cases means to include absent/abstain and in other cases to exclude.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "resource_uri": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": true,
+      "type": "string",
+      "unique": false
+    },
+    "result": {
+      "blank": false,
+      "default": "",
+      "help_text": "Descriptive text for the result of the vote.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "session": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "Within each Congress there are sessions. In recent history the sessions correspond to calendar years and are named accordingly. However, in historical data the sessions may be named in completely other ways, such as with letters A, B, and C. Session names are unique *within* a Congress.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "source": {
+      "blank": false,
+      "default": "No default provided.",
+      "enum_values": {
+        "house": {
+          "description": null,
+          "label": "house.gov"
+        },
+        "keithpoole": {
+          "description": null,
+          "label": "Professor Keith Poole"
+        },
+        "senate": {
+          "description": null,
+          "label": "senate.gov"
+        }
+      },
+      "help_text": "The source of the vote information.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "source_link": {
+      "help_text": "A link to the website where this vote information was obtained."
+    },
+    "total_minus": {
+      "blank": false,
+      "default": 0,
+      "help_text": "The count of negative votes (nay/no).",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "total_other": {
+      "blank": false,
+      "default": 0,
+      "help_text": "The count of abstain or absent voters.",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "total_plus": {
+      "blank": false,
+      "default": 0,
+      "help_text": "The count of positive votes (aye/yea).",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "vote_type": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "Descriptive text for the type of the vote.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    }
+  },
+  "filtering": {
+    "category": "exact",
+    "chamber": [
+      "exact"
+    ],
+    "congress": 1,
+    "created": 1,
+    "number": 1,
+    "related_bill": 2,
+    "session": 1
+  },
+  "ordering": [
+    "created"
+  ]
+}

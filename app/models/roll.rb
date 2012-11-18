@@ -2,6 +2,7 @@ class Roll
   include Mongoid::Document
   include VotingLogic
   include VotingMethods
+  # DOCUMENTATION: http://www.govtrack.us/developers/api#endpoint_vote
 
   field :chamber, type: String
   field :session, type: Integer #

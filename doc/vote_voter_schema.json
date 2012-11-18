@@ -1,0 +1,103 @@
+{
+  "allowed_detail_http_methods": [
+    "get"
+  ],
+  "allowed_list_http_methods": [
+    "get"
+  ],
+  "default_format": "application/json",
+  "default_limit": 20,
+  "fields": {
+    "created": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The date (and in recent history also time) on which the vote was held.",
+      "nullable": false,
+      "readonly": false,
+      "type": "datetime",
+      "unique": false
+    },
+    "id": {
+      "blank": false,
+      "default": "",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": true
+    },
+    "link": {
+      "help_text": "The URL to the corresponding page on www.GovTrack.us for this resource."
+    },
+    "option": {
+      "help_text": "Returns the way this person voted. The value corresponds to the key of an option on the vote object."
+    },
+    "person": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person making this vote.",
+      "nullable": false,
+      "readonly": false,
+      "type": "related",
+      "unique": false
+    },
+    "person_name": {
+      "help_text": "The name of the voter."
+    },
+    "resource_uri": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": true,
+      "type": "string",
+      "unique": false
+    },
+    "vote": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The vote that this was a part of.",
+      "nullable": false,
+      "readonly": false,
+      "type": "related",
+      "unique": false
+    },
+    "vote_description": {
+      "help_text": null
+    },
+    "voter_type": {
+      "blank": false,
+      "default": "No default provided.",
+      "enum_values": {
+        "member": {
+          "description": null,
+          "label": "Member of Congress"
+        },
+        "unknown": {
+          "description": null,
+          "label": "Unknown"
+        },
+        "vice_president": {
+          "description": null,
+          "label": "Vice President"
+        }
+      },
+      "help_text": "Whether the voter was a Member of Congress or the Vice President (in which case, the person field is null).",
+      "nullable": false,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    }
+  },
+  "filtering": {
+    "created": 1,
+    "option": [
+      "exact"
+    ],
+    "person": 2,
+    "vote": 2
+  },
+  "ordering": [
+    "created"
+  ]
+}
