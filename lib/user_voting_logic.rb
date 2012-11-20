@@ -1,24 +1,10 @@
 module UserVotingLogic
-  # eieio
-  # i don't think rolls could be voted on . . .
+
   def rolls_voted_on(chamber)
     roll_ids = Vote.where(user_id: self.id).and(chamber: chamber.to_sym).map(&:roll_id)
     Roll.any_in(_id: roll_ids)
   end
 
-  # eieio used?
-  #
-  def record_vote_for_state_and_district(roll_id, value)
-    if self.district.nil? || self.state.nil?
-      raise "#{self.name} must have an assigned state and district"
-    else
-      [self.district, self.state].each do |polco_group|
-        Vote.create!(user_id: self.id, roll_id: roll_id, value: value, polco_group_id: polco_group.id)
-      end
-    end
-  end
-
-  # eieio -- same logic
   def rolls_not_voted_on(chamber)
     ids = Vote.where(user_id: self.id).map{|v| v.roll.id }
     if chamber == :house
@@ -28,7 +14,6 @@ module UserVotingLogic
     end
   end
 
-  # eieio
   def find_10_rolls_not_voted_on
     ids = Vote.where(user_id: self.id).map{|v| v.roll.id }
     Roll.not_in(_id: ids).limit(10)
@@ -38,16 +23,12 @@ module UserVotingLogic
     self.state.name if self.state
   end
 
-  # eieio
-  # this needs to run off of roll
   def reps_vote_on(house_roll)
     if leg = self.representative
       house_roll.find_member_vote(leg).to_s
     end
   end
 
-  # eieio
-  # this needs to run on roll
   def senators_vote_on(r)
     unless self.senators.empty?
       votes = []
@@ -59,4 +40,5 @@ module UserVotingLogic
       votes
     end
   end
+
 end
