@@ -1,4 +1,6 @@
- Polco3::Application.routes.draw do
+Polco3::Application.routes.draw do
+
+  get "home/polco_info"
 
   resources :rolls
 
@@ -16,6 +18,8 @@
   match "/users/geocode" => "users#geocode"
   match "/users/save_geocode" => "users#save_geocode"
   match "/users/district" => "users#district"
+
+  get "polco_groups/add_custom_group"
 
   resources :polco_groups
 
@@ -39,8 +43,8 @@
   root :to => "home#index"
   resources :users, :only => [:index, :show, :edit, :update ]
 
-  match '/auth/:provider/callback' => 'sessions#create'
-  match '/signin' => 'sessions#new', :as => :signin
-  match '/signout' => 'sessions#destroy', :as => :signout
-  match '/auth/failure' => 'sessions#failure'
+  match '/auth/:provider/callback', to: 'sessions#create'
+  match '/signin', to: 'sessions#new', as: :signin
+  match '/signout', to: 'sessions#destroy', as: :signout
+  match '/auth/failure', to: 'sessions#failure'
 end

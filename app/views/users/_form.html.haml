@@ -1,10 +1,21 @@
 = simple_form_for @user, :html => { :class => 'form-horizontal' } do |f|
   %fieldset
     = f.input :name
-    = f.input :state, collection: PolcoGroup.states.collect {|s| [s.name, s.id]}
-    = f.input :district, collection: PolcoGroup.districts.collect {|s| [s.name, s.id]}
-    =# f.input :custom_group_ids, collection: PolcoGroup.customs
-    =# f.input :followed_group_ids, collection: PolcoGroup.all
+    - if @user.geocoded?
+      = f.input :state_id, collection: PolcoGroup.states.collect {|s| [s.name, s.id]}
+      = f.input :district_id, collection: PolcoGroup.districts.collect {|s| [s.name, s.id]}
+    - else
+      .well
+        = link_to "Load your state and district", users_geocode_path
+    = f.input :email, as: :email
+    .control-group
+      = f.label :custom_group_ids, "Custom Groups", class: "select optional control-label"
+      .controls
+        = f.collection_select :custom_group_ids, PolcoGroup.customs, :id, :name, {}, {multiple:true}
+    .control_group
+      = f.label :followed_group_ids, "Followed Groups", class: "select optional control-label"
+      .controls
+        = f.collection_select :followed_group_ids, PolcoGroup.all, :id, :name, {}, {multiple:true}
   .form-actions
     = f.button :submit, :class => 'btn-primary'
     = link_to 'Cancel', bills_path, :class => 'btn'

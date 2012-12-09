@@ -50,4 +50,5 @@ gem 'geocoder'
 # would like to remove
 gem 'gon'
 
-gem 'heroku'
+#gem 'heroku'
+gem 'cancan'

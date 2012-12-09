@@ -16,7 +16,7 @@
     %link(href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon-precomposed" sizes="114x114")
     %link(href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon-precomposed" sizes="72x72")
     %link(href="images/apple-touch-icon.png" rel="apple-touch-icon-precomposed")
-    %link(href="images/favicon.ico" rel="shortcut icon")
+    %link(href="/favicon.ico" rel="shortcut icon")
 
   %body
     .navbar.navbar-fixed-top
@@ -26,18 +26,20 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          %a.brand(href="#") Polco
+          %a.brand(href="/") Polco
           .container.nav-collapse
             %ul.nav
-              %li= link_to "bill", bills_path
-              %li= link_to "legislator", legislators_path
-              %li= link_to "legislator vote", legislator_votes_path
-              %li= link_to "polco group", polco_groups_path
-              %li= link_to "roll", rolls_path
-              %li= link_to "subject", subjects_path
-              %li= link_to "vote", votes_path
-              %li
+              %li= link_to "info", home_polco_info_path
+              %li= link_to "bills", bills_path
+              - if current_user && current_user.admin?
+                %li= link_to "legislators", legislators_path
+                %li= link_to "legislator votes", legislator_votes_path
+                %li= link_to "polco groups", polco_groups_path
+                %li= link_to "rolls", rolls_path
+                %li= link_to "subjects", subjects_path
+                %li= link_to "vote", votes_path
               - if current_user
+                %li= link_to "Add Custom Group", polco_groups_add_custom_group_path
                 %li= link_to current_user.name, user_path(current_user)
                 %li= link_to "sign out", signout_path
               - else

@@ -6,76 +6,58 @@
   .well
     = roll_presenter.vote_region
 
-%h2
-  = bill.long_title
+  %h4
+    = link_to bill.long_title, bill_path(bill)
 
-.well
-  = bill.summary
+  .well
+    = bill.summary
 
-%p
-  %strong= model_class.human_attribute_name(:chamber) + ':'
-  %br
-  = @roll.chamber
-%p
-  %strong= model_class.human_attribute_name(:session) + ':'
-  %br
-  = @roll.session
-%p
-  %strong= model_class.human_attribute_name(:file_name) + ':'
-  %br
-  = @roll.file_name
-%p
-  %strong= model_class.human_attribute_name(:result) + ':'
-  %br
-  = @roll.result
-%p
-  %strong= model_class.human_attribute_name(:required) + ':'
-  %br
-  = @roll.required
-%p
-  %strong= model_class.human_attribute_name(:type) + ':'
-  %br
-  = @roll.type
-%p
-  %strong= model_class.human_attribute_name(:bill_type) + ':'
-  %br
-  = @roll.bill_type
-%p
-  %strong= model_class.human_attribute_name(:the_question) + ':'
-  %br
-  = @roll.the_question
-%p
-  %strong= model_class.human_attribute_name(:bill_category) + ':'
-  %br
-  = @roll.bill_category
-%p
-  %strong= model_class.human_attribute_name(:aye) + ':'
-  %br
-  = @roll.aye
-%p
-  %strong= model_class.human_attribute_name(:nay) + ':'
-  %br
-  = @roll.nay
-%p
-  %strong= model_class.human_attribute_name(:nv) + ':'
-  %br
-  = @roll.nv
-%p
-  %strong= model_class.human_attribute_name(:present) + ':'
-  %br
-  = @roll.present
-%p
-  %strong= model_class.human_attribute_name(:year) + ':'
-  %br
-  = @roll.year
-%p
-  %strong= model_class.human_attribute_name(:congress) + ':'
-  %br
-  = @roll.congress
-%p
-  %strong Polco Votes
-  %br
-  = @roll.vote_count
+  %p
+    %strong= model_class.human_attribute_name(:chamber) + ':'
+    %br
+    = @roll.chamber
+  %p
+    %strong= model_class.human_attribute_name(:session) + ':'
+    %br
+    = @roll.session
+  %p
+    %strong= model_class.human_attribute_name(:result) + ':'
+    %br
+    = @roll.result
+  %p
+    %strong= model_class.human_attribute_name(:required) + ':'
+    %br
+    = @roll.required
+  %p
+    %strong= model_class.human_attribute_name(:type) + ':'
+    %br
+    = @roll.type
+  %p
+    %strong= model_class.human_attribute_name(:bill_type) + ':'
+    %br
+    = @roll.bill_type
+  %p
+    %strong= model_class.human_attribute_name(:the_question) + ':'
+    %br
+    = @roll.the_question
+  %p
+    %strong= model_class.human_attribute_name(:bill_category) + ':'
+    %br
+    = @roll.bill_category
+  %p
+    = roll_presenter.vote_tally
+  %p
+    %strong= model_class.human_attribute_name(:year) + ':'
+    %br
+    = @roll.year
+  %p
+    %strong= model_class.human_attribute_name(:congress) + ':'
+    %br
+    = @roll.congress
+  %p
+    %strong Polco Votes
+    %br
+    = @roll.vote_count
 
 .form-actions
   = link_to t('.back', :default => t("helpers.links.back")), rolls_path, :class => 'btn'

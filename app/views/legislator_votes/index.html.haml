@@ -8,10 +8,9 @@
   %thead
     %tr
       %th= model_class.human_attribute_name(:id)
-      %th= model_class.human_attribute_name(:value)
+      %th Value
       %th Legislator
-      %th= model_class.human_attribute_name(:roll_id)
-      %th= model_class.human_attribute_name(:bill_id)
+      %th Roll
       %th=t '.actions', :default => t("helpers.actions")
   %tbody
     - @legislator_votes.each do |legislator_vote|
@@ -19,8 +18,7 @@
         %td= link_to legislator_vote.id, legislator_vote_path(legislator_vote)
         %td= legislator_vote.value
         %td= link_to legislator_vote.legislator.full_name, legislator_path(legislator_vote.legislator)
-        %td= link_to 'roll', roll_path(legislator_vote.roll)
-        %td= link_to  legislator_vote.bill.ident, bill_path(legislator_vote.bill)
+        %td= link_to  legislator_vote.roll.title, roll_path(legislator_vote.roll)
         %td
           = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_vote_path(legislator_vote), :class => 'btn btn-mini'
           = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_vote_path(legislator_vote), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'

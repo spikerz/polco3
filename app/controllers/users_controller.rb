@@ -51,12 +51,12 @@ class UsersController < ApplicationController
         districts = user.get_district_from_coords(coords)
         flash[:method] = :ip_lookup
       when "Submit Address"
-        coords = Geocoder.coordinates(build_address(params))
+        coords = Geocoder.coordinates(user.build_address(params))
         districts = user.get_district_from_coords(coords)
-        flash[:method] = :address
+        flash[:method] = "Successful address lookup"
       when "Submit Zip Code"
         districts = user.get_districts_by_zipcode(params[:zip_code])
-        flash[:method] = :zip_lookup
+        flash[:method] = "Successful zip code lookup"
         coords = nil
       else
         districts = nil

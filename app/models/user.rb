@@ -10,6 +10,7 @@ class User
   field :email, type: String
   field :geocoded, type: Boolean
   field :coordinates, type: Array
+  field :admin, type: Boolean, default: false
 
   attr_accessible :provider, :uid, :name, :email, :custom_group_ids, :followed_group_ids, :state_id, :district_id
   # run 'rake db:mongoid:create_indexes' to create indexes
@@ -40,6 +41,7 @@ class User
   # a user can only join or follow a group once
   validates :custom_group_ids, :allow_blank => true, :uniqueness => true
   validates :followed_group_ids, :allow_blank => true, :uniqueness => true
+  validates :email, :email => true
 
   #before_create :assign_default_group
 
@@ -47,6 +49,10 @@ class User
   # attributes
   def us_state
     self.state.name if self.state
+  end
+
+  def titled_name
+    self.name.titlecase
   end
 
   def district_name
@@ -116,6 +122,14 @@ class User
     members[:junior_senator] = senators.last
     members[:representative] = (legs - senators).first
     members
+  end
+
+  def build_address(params)
+    if params[:zip]
+      "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}, #{params[:zip].strip}"
+    else
+      "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}"
+    end
   end
 
   def self.build_coords(input, district_name)

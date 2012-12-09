@@ -1,26 +1,37 @@
-- title "User Profile"
+- title "User Profile for #{@user.name.titlecase}"
+
+%p= link_to "edit", edit_user_path(@user)
+
+- if @user.email
+  %p
+    %b Email:
+    = @user.email
 
 %p
-  User: #{@user.name}
-%p
-  Email: #{@user.email if @user.email}
+  %b Registration Date:
+  #{@user.created_at.to_s(:db)}
 
 - if @user.geocoded?
-  %h3 State
-  = link_to @user.state.name, @user.state
+  %p
+    %b State:
+    = link_to @user.state.name, @user.state
 
-  %h3 District
-  = link_to @user.district.name, @user.district
+  %p
+    %b District:
+    = link_to @user.district.name, @user.district
 
-  %h3 Rep
-  = link_to @user.representative.full_name, @user.representative
+  %p
+    %b Representative:
+    = link_to @user.representative.full_name, @user.representative
 
-  %h3 Senators
-  - @user.senators.each do |sen|
-    %p
-      = link_to sen.full_name, sen
+  %p
+    %b Senators:
+    %ul
+      - @user.senators.each do |sen|
+        %li
+          = link_to sen.full_name, sen
 
-%h2 Groups
+%h4 Groups
 
 - if @user.custom_groups.size == 0 && @user.followed_groups.size == 0
   %p
@@ -28,10 +39,10 @@
     = link_to "Geocode","/users/geocode"
 - else
   - if @user.custom_groups.size > 0
-    %h3 Joined Groups
-    %table.table.zebra-striped
+    %h5 Joined Groups
+    %table.table.table-striped
       %tr
-        %th Name
+        %th{style: "width:50%"} Name
         %th Members
       - @user.custom_groups.each do |g|
         %tr
@@ -39,10 +50,10 @@
           %td= g.member_count
 
   - if @user.followed_groups.size > 0
-    %h3 Followed Groups
-    %table.table.zebra-striped
+    %h5 Followed Groups
+    %table.table.table-striped
       %tr
-        %th Name
+        %th{style: "width:50%"} Name
         %th Members
       - @user.followed_groups.each do |g|
         %tr

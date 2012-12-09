@@ -13,4 +13,11 @@ class RollPresenter < BasePresenter
     end
   end
 
+  def vote_tally
+    h.content_tag :div do
+      h.content_tag(:b, "Vote Results:") + "<br>".html_safe +
+      h.content_tag(:p, "Ayes: #{roll.aye}, Nays: #{roll.nay}, No votes: #{roll.nv}, Presents: #{roll.present}")
+    end
+  end
+
 end

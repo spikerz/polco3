@@ -1,5 +1,13 @@
 class RepresentController < ApplicationController
 
+  before_filter :check_geocode
+
+  def check_geocode
+    if current_user && !current_user.geocoded?
+      flash[:message] = "You should <a href='/users/geocode'>Geocode</a> to participate".html_safe
+    end
+  end
+
   def house_bills
     if @user = current_user
       @voted_on_rolls = @user.rolls_voted_on(:house).page(params[:voted_on]).per(5)

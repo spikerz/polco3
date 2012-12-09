@@ -123,4 +123,12 @@ class PolcoGroup
     end
   end
 
+  def proper_title
+    if self.type == :custom
+      self.name.titlecase
+    else
+      self.name
+    end
+  end
+
 end

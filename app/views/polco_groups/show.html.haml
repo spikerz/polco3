@@ -1,26 +1,24 @@
-- model_class = PolcoGroup
+- title "#{@polco_group.type.to_s.titlecase} Group: #{@polco_group.proper_title}"
 
-- title @polco_group.name
+- if @polco_group.description
+  %p
+    %strong Description:
+    = @polco_group.description
+
+- if @polco_group.type == :custom
+  %p custom
+
+- if @polco_group.type == :district
+  = render partial: "district_info", locals: {group: @polco_group}
 
 %p
-  %strong= model_class.human_attribute_name(:type) + ':'
-  %br
-  = @polco_group.type
-%p
-  %strong= model_class.human_attribute_name(:description) + ':'
-  %br
-  = @polco_group.description
-%p
-  %strong= model_class.human_attribute_name(:vote_count) + ':'
-  %br
+  %strong Votes:
   = @polco_group.vote_count
 %p
-  %strong= model_class.human_attribute_name(:follower_count) + ':'
-  %br
+  %strong Followers:
   = @polco_group.follower_count
 %p
-  %strong= model_class.human_attribute_name(:member_count) + ':'
-  %br
+  %strong Members:
   = @polco_group.member_count
 
 .form-actions

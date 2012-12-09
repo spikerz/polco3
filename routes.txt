@@ -1,3 +1,4 @@
+           represent_polco_info GET    /represent/polco_info(.:format)                         represent#polco_info
                           rolls GET    /rolls(.:format)                                        rolls#index
                                 POST   /rolls(.:format)                                        rolls#create
                        new_roll GET    /rolls/new(.:format)                                    rolls#new
@@ -43,6 +44,7 @@
                   users_geocode        /users/geocode(.:format)                                users#geocode
              users_save_geocode        /users/save_geocode(.:format)                           users#save_geocode
                  users_district        /users/district(.:format)                               users#district
+  polco_groups_add_custom_group GET    /polco_groups/add_custom_group(.:format)                polco_groups#add_custom_group
                    polco_groups GET    /polco_groups(.:format)                                 polco_groups#index
                                 POST   /polco_groups(.:format)                                 polco_groups#create
                 new_polco_group GET    /polco_groups/new(.:format)                             polco_groups#new
@@ -76,7 +78,7 @@
 represent_legislators_districts GET    /represent/legislators_districts(.:format)              represent#legislators_districts
                represent_states GET    /represent/states(.:format)                             represent#states
                         results        /represent/:chamber(.:format)                           represent#results
-                       add_vote POST   /bills/add_vote(.:format)                               bills#add_vote
+                       add_vote POST   /rolls/add_vote(.:format)                               rolls#add_vote
                            root        /                                                       home#index
                           users GET    /users(.:format)                                        users#index
                       edit_user GET    /users/:id/edit(.:format)                               users#edit
