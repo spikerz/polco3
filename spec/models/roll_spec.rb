@@ -7,7 +7,7 @@ describe Roll do
     @oh = FactoryGirl.create(:oh)
     @d = FactoryGirl.create(:district)
     cg = FactoryGirl.create(:common)
-    usrs = FactoryGirl.create_list(:random_user, 3, {state: @oh, district: @d})
+    usrs = FactoryGirl.create_list(:random_user, 4, {state: @oh, district: @d})
     grps = FactoryGirl.create_list(:polco_group, 5)
     usrs.each do |u|
       u.common_groups << cg
@@ -21,17 +21,15 @@ describe Roll do
     # means that 2=>0,2, 3=> 1,2 and 4,0,1=> one
     @usrs = usrs
     @grps = grps
+    @u = usrs.first
   end
 
   context "has basic properties and " do
 
     it "should be able to update the vote count on rolls" do
-      @oh = FactoryGirl.create(:oh)
-      @d = FactoryGirl.create(:district)
       @oh.vote_count.should eq(0)
-      u = FactoryGirl.create(:user, {state: @oh, district: @d})
       b = FactoryGirl.create(:roll)
-      b.vote_on(u,:aye)
+      b.vote_on(@u,:aye)
       @d.reload
       @d.vote_count.should eq(1)
       @oh.reload
@@ -40,13 +38,12 @@ describe Roll do
 
     it "should increment a roll's count each time we vote" do
       b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u,:aye)
+      b.vote_on(@u,:aye)
       b.vote_count.should eq(1)
     end
 
     it "should tell me the most popular rolls" do
-      users = FactoryGirl.create_list(:random_user, 3, state: FactoryGirl.create(:oh), district: FactoryGirl.create(:district))
+      users = FactoryGirl.create_list(:random_user, 3, state: @oh, district: @d)
       FactoryGirl.create_list(:roll, 12).each do |roll|
         users.each do |user|
           roll.vote_on(user, [:aye, :nay, :abstain, :present][rand(4)]) if rand > 0.2
@@ -62,29 +59,25 @@ describe Roll do
   context "interfaces with users and " do
 
     it "should let a user vote on the roll" do
-      b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u, :aye)
+      r = FactoryGirl.create(:roll)
+      r.vote_on(@u, :aye)
     end
 
     it "should tell you how a user voted on a roll" do
-      b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u, :aye)
-      b.voted_on?(u).should eql(:aye)
+      r = FactoryGirl.create(:roll)
+      r.vote_on(@u, :aye)
+      r.voted_on?(@u).should eql(:aye)
     end
 
     it "should get the overall users vote on a roll" do
-      b = FactoryGirl.create(:roll)
+      r = FactoryGirl.create(:roll)
       #pg = FactoryGirl.create(:common)
-      state = FactoryGirl.create(:oh)
-      district = FactoryGirl.create(:district)
-      users = FactoryGirl.create_list(:random_user, 4, {state: state, district: district})
-      b.vote_on(users[0], :aye)
-      b.vote_on(users[1], :nay)
-      b.vote_on(users[2], :aye)
-      b.vote_on(users[3], :abstain)
-      tally = b.get_overall_users_vote
+      #users = FactoryGirl.create_list(:random_user, 4, {state: @oh, district: @d})
+      r.vote_on(@usrs[0], :aye)
+      r.vote_on(@usrs[1], :nay)
+      r.vote_on(@usrs[2], :aye)
+      r.vote_on(@usrs[3], :abstain)
+      tally = r.get_overall_users_vote
       tally.should == {:ayes => 2, :nays => 1, :abstains => 1, :presents => 0}
     end
 
@@ -92,8 +85,7 @@ describe Roll do
       Bill.delete_all
       PolcoGroup.delete_all
       b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u, :aye)
+      b.vote_on(@u, :aye)
       b.votes.size.should eql(1)
       # b.votes.all.map { |v| puts "#{v.polco_group.name}" }
       groups = b.votes.map{|v| v.polco_groups.map(&:name)}.uniq
@@ -102,9 +94,8 @@ describe Roll do
 
     it "should show what the current users vote is on a specific roll" do
       b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u, :aye)
-      b.users_vote(u).should eql(:aye)
+      b.vote_on(@u, :aye)
+      b.users_vote(@u).should eql(:aye)
     end
 
     it "should show the votes for a specific district that a user belongs to" do
@@ -135,10 +126,11 @@ describe Roll do
       #pg = FactoryGirl.create(:common)
       cg = FactoryGirl.create(:custom_group)
       b = FactoryGirl.create(:roll)
-      oh = FactoryGirl.create(:oh)
+      #oh = FactoryGirl.create(:oh)
       user1, user2, user3, user4 = FactoryGirl.create_list(:random_user, 4,
-                                                           {district: FactoryGirl.create(:district), state: oh})
-      user1.state = PolcoGroup.create(type: :state, name: "CA"); user1.save
+                                                           {district: @d, state: @oh})
+      user1.state = PolcoGroup.create(type: :state, name: "CA")
+      user1.save
       user1.custom_groups << cg
       user2.custom_groups << cg
       user3.custom_groups << cg
@@ -155,17 +147,16 @@ describe Roll do
 
     it "should silently block a user from voting twice on a roll" do
       b = FactoryGirl.create(:roll)
-      u = FactoryGirl.create(:user)
-      b.vote_on(u, :aye)
-      b.vote_on(u, :aye)
-      puts u.custom_groups.map(&:name)
+      b.vote_on(@u, :aye)
+      b.vote_on(@u, :aye)
+      puts @u.custom_groups.map(&:name)
       b.votes.size.should eql(1)
     end
 
     it "should reject a value for vote other than :aye, :nay or :abstain" do
       b = FactoryGirl.create(:roll)
       v1 = b.votes.new
-      v1.user = FactoryGirl.create(:user)
+      v1.user = @u
       #v1.polco_group = FactoryGirl.create(:polco_group)
       v1.value = :happy
       v1.should_not be_valid
@@ -201,16 +192,16 @@ describe Roll do
 
   it "should be able to show the house representatives vote if the roll is a hr" do
     #load_legislators
-    b = FactoryGirl.create(:bill, bill_type: 'hr', congress: '112', number: '26', govtrack_id: 'hr112-26')
-    roll = FactoryGirl.create(:roll)#Roll.bring_in_roll("h2011-9.xml")
+    #b = FactoryGirl.create(:bill, bill_type: 'hr', congress: '112', number: '26', govtrack_id: 'hr112-26')
+    roll = FactoryGirl.create(:roll) #Roll.bring_in_roll("h2011-9.xml")
+    roll.legislator_votes << FactoryGirl.create(:legislator_vote, legislator: FactoryGirl.create(:legislator), roll: roll)
+    roll.save
     # this corresponds to hr112-26
-    u = FactoryGirl.create(:random_user)
-    l = roll.legislator_votes.first.legislator
-    u.representative = l
-    u.save
-    b.reload
-    u.reload
-    u.reps_vote_on(roll).should eq("aye")
+    @u.representative = roll.legislator_votes.first.legislator
+    @u.save
+    #b.reload
+    @u.reload
+    @u.reps_vote_on(roll).should eq("aye")
   end
 
 end

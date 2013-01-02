@@ -27,6 +27,7 @@ class Roll
   field :nay, type: Integer   #
   field :other, type: Integer     #
   field :vote_type, type: String
+  field :govtrack_id, type: Integer
 
   #field :chamber, type: String
   #field :session, type: Integer #
@@ -68,41 +69,43 @@ class Roll
     ROLL_CATEGORIES[self.category][:label]
   end
 
-  def create_legislator_votes(roll_call, bill)
-    #votes_hash = Hash.new
-    roll_call.each do |v|
-      if l = Legislator.where(govtrack_id: v.member_id).first
-        unless LegislatorVote.where(bill_id: bill.id).and(legislator_id: l.id).and(roll_id: self.id).exists?
-          LegislatorVote.create(bill_id: bill.id, legislator_id: l.id, value: VAL[v.member_vote.to_s], roll_id: self.id)
-        end
-        # votes_hash[l.id.to_s] = VAL[v.member_vote.to_s]
-      else
-        raise "legislator #{v.member_id} not found"
-      end
-    end
-    #self.legislator_votes = votes_hash
-  end
+  #def create_legislator_votes(roll_call, bill)
+  #  #votes_hash = Hash.new
+  #  roll_call.each do |v|
+  #    if l = Legislator.where(govtrack_id: v.member_id).first
+  #      unless LegislatorVote.where(bill_id: bill.id).and(legislator_id: l.id).and(roll_id: self.id).exists?
+  #        LegislatorVote.create(bill_id: bill.id, legislator_id: l.id, value: VAL[v.member_vote.to_s], roll_id: self.id)
+  #      end
+  #      # votes_hash[l.id.to_s] = VAL[v.member_vote.to_s]
+  #    else
+  #      raise "legislator #{v.member_id} not found"
+  #    end
+  #  end
+  #  #self.legislator_votes = votes_hash
+  #end
 
   def tally
-    #field :aye, type: Integer   #
-    #field :nay, type: Integer   #
-    #field :nv, type: Integer     #
-    #field :present, type: Integer   #
-    {:ayes => self.aye, :nays => self.nay, :abstains => self.nv, :presents => self.present}
+    {:ayes => self.aye, :nays => self.nay, :other => self.other}
   end
 
-  def record_legislator_votes
-    # the purpose of this is to build a table that links legislators to votes
-    self.legislator_votes.each do |vote|
-      LegislatorVote.create(bill_id: self.bill.id, legislator_id: vote.first, value: vote.last)
-    end
-  end
+  #def record_legislator_votes
+  #  # the purpose of this is to build a table that links legislators to votes
+  #  self.legislator_votes.each do |vote|
+  #    LegislatorVote.create(bill_id: self.bill.id, legislator_id: vote.first, value: vote.last)
+  #  end
+  #end
 
   def title
     if self.bill
-      self.bill.ident
+      self.bill.title
     else
       "no bill"
+    end
+  end
+
+  def add_votes
+    GovTrack::VoteVoter.find(vote: self.govtrack_id, limit: 450).each do |vote_voter|
+       self.legislator_votes << LegislatorVote.from_govtrack(vote_voter)
     end
   end
 
@@ -110,6 +113,7 @@ class Roll
 
     def from_govtrack(go)
       r = Roll.new
+      r.govtrack_id = go.id
       r.category = go.category
       r.chamber = go.chamber
       r.chamber_label = go.chamber_label
@@ -130,10 +134,10 @@ class Roll
       r.other = go.total_other
       r.aye = go.total_plus
       r.vote_type = go.vote_type
-
-      r.bill = Bill.find(govtrack_id: go.related_bill.id).first if go.related_bill
+      r.bill = Bill.where(govtrack_id: go.related_bill.id).first if go.related_bill
       r
     end
+
   end
 
 end

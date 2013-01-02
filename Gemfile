@@ -53,5 +53,5 @@ gem 'gon'
 
 #gem 'heroku'
 gem 'cancan'
-gem 'govtrack'
+gem 'govtrack', git: 'git@github.com:tbbooher/govtrack.git'
 gem 'spork', '~> 1.0rc'

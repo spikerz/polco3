@@ -1,2 +1,11 @@
-
+created "Fri, 28 Dec 2012 18:11:00 +0000"
+link "http://www.govtrack.us/congress/votes/112-2012/s247"
+option "-"
+person "/api/v1/person/300001/"
+person_name "Sen. Daniel Akaka [D-HI]"
+resource_uri "/api/v1/vote_voter/29612823/"
+vote "/api/v1/vote/113106/"
+vote_description "Senate Vote #247"
+voter_type "member"
+voter_type_label "Member of Congress"
 
