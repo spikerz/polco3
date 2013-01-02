@@ -30,11 +30,12 @@ class UsersController < ApplicationController
     # i don't like this but it is a good way to get a default address
     address_attempt = [38.7909, -77.0947] if address_attempt.all? { |a| a == 0 }
     @coords = User.build_coords_simple(address_attempt)
-    district = @user.get_district_from_coords(address_attempt).first
+    district = User.get_district_from_coords(address_attempt).first
     @district, @state = district.district, district.us_state
     @lat = params[:lat] || "19.71844"
     @lon = params[:lon] || "-155.095228"
     @zoom = params[:zoom] || "10"
+    # read in the map data information
     json = JSON(File.read("#{Rails.root}/public/district_data/#{@district}.json"))
     # ["name", "extents", "centroid", "coords"]
     #gon.file_name = json["name"]
@@ -48,19 +49,17 @@ class UsersController < ApplicationController
     case params[:commit]
       when "Yes"
         coords= Geocoder.coordinates(params[:location])
-        districts = user.get_district_from_coords(coords)
+        districts = User.get_district_from_coords(coords)
         flash[:method] = :ip_lookup
       when "Submit Address"
         coords = Geocoder.coordinates(user.build_address(params))
-        districts = user.get_district_from_coords(coords)
+        districts = User.get_district_from_coords(coords)
         flash[:method] = "Successful address lookup"
       when "Submit Zip Code"
-        districts = user.get_districts_by_zipcode(params[:zip_code])
+        districts = User.get_districts_by_zipcode(params[:zip_code])
         flash[:method] = "Successful zip code lookup"
-        coords = nil
       else
         districts = nil
-        coords = nil
     end
     if districts.nil?
       flash[:notice] = "No addresses found, please refine your answer or try a different method."
@@ -71,7 +70,7 @@ class UsersController < ApplicationController
     else
       district = districts.first
       @district, @state = district.district, district.us_state
-      members = user.get_members(district.members)
+      members = self.get_members(district.members)
       @senior_senator = members[:senior_senator]
       @junior_senator = members[:junior_senator]
       @representative = members[:representative]

@@ -59,25 +59,7 @@ class User
     self.district.name if self.district
   end
 
-  # district fun
-  def get_district_from_coords(coords)
-    lat, lon = coords # .first, coords.last
-    self.coordinates = [lat, lon]
-    feed_url = "#{GOVTRACK_URL}perl/district-lookup.cgi?lat=#{lat}&long=#{lon}"
-    feed = Feedzirra::Feed.fetch_raw(feed_url)
-    if feed == 0
-      raise "Failed to connect to #{feed_url}"
-    else
-      govtrack_data = Feedzirra::Parser::GovTrackDistrict.parse(feed)
-    end
-    if govtrack_data.districts.count > 1
-      raise "too many for this coordinate (strange)"
-    else
-      result = govtrack_data.districts.first
-      result.district = "#{result.us_state}#{"%02d" % result.district.to_i}"
-    end
-    [result]
-  end
+
 
   def add_members(junior_senator, senior_senator, representative, district, us_state)
     self.senators.push(junior_senator)
@@ -105,25 +87,6 @@ class User
     Geocoder.coordinates(ip)
   end
 
-  def get_members(members)
-    legs = []
-    members.each do |member|
-      # need to clear previous members
-      if leg = Legislator.where(:govtrack_id => member.govtrack_id).first
-        legs << leg
-      else
-        raise "legislator #{member.govtrack_id} not found"
-      end
-    end
-    # TODO -- mongo this
-    senators = legs.select { |l| l.title == 'Sen.' }.sort_by { |u| u.start_date }
-    members = Hash.new
-    members[:senior_senator] = senators.first
-    members[:junior_senator] = senators.last
-    members[:representative] = (legs - senators).first
-    members
-  end
-
   def build_address(params)
     if params[:zip]
       "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}, #{params[:zip].strip}"
@@ -132,25 +95,85 @@ class User
     end
   end
 
-  def self.build_coords(input, district_name)
-    input = DISTRICT_CENTERS[district_name] unless input
-    "#{input.first},#{input.last}"
-  end
+  class << self
 
-  def self.build_coords_simple(input)
-    #input = get_district_center(district_name) unless input
-    "#{input.first},#{input.last}"
-  end
+    API_URL = "http://services.sunlightlabs.com/api/"
+    API_FORMAT = "json"
+    API_KEY = '92c20ab595eb497094652016086760ea' # yeah, it's here feel free to use it
 
-
-  def get_districts_by_zipcode(zipcode)
-    feed_url = "#{GOVTRACK_URL}perl/district-lookup.cgi?zipcode=#{zipcode}"
-    feed = Feedzirra::Feed.fetch_raw(feed_url)
-    districts = Feedzirra::Parser::GovTrackDistrict.parse(feed).districts
-    districts.each do |d|
-      d.district = "#{d.us_state}#{"%02d" % d.district.to_i}"
+    def build_coords(input, district_name)
+      input = DISTRICT_CENTERS[district_name] unless input
+      "#{input.first},#{input.last}"
     end
-    districts
+
+    def build_coords_simple(input)
+      #input = get_district_center(district_name) unless input
+      "#{input.first},#{input.last}"
+    end
+
+    def get_districts_by_zipcode(zip)
+      method = 'districts.getDistrictsFromZip'
+      if response = HTTParty.get(User.construct_sunlight_url(method,{zip: zip}))['response']
+        districts = response['districts']
+      else
+        raise "no response from sunlight"
+      end
+      districts.map{|d| "#{d['district']['state']}#{"%02d" % d['district']['number'].to_i}"}
+    end
+
+    def get_district_from_coords(coords)
+      lat, lon = coords # .first, coords.last
+      if response = HTTParty.get(User.construct_sunlight_url('districts.getDistrictFromLatLong',{latitude: lat, longitude: lon}))['response']
+        district = response['districts'].first['district']
+      else
+        raise "no response from sunlight"
+      end
+      "#{district['state']}#{"%02d" % district['number'].to_i}"
+    end
+
+    def get_members(members)
+      legs = []
+      members.each do |member|
+        # need to clear previous members
+        if leg = Legislator.where(:govtrack_id => member.govtrack_id).first
+          legs << leg
+        else
+          puts "adding legislator"
+          legislator = Legislator.find_and_build(member.govtrack_id)
+          legislator.save!
+          legs << legislator
+          #raise "legislator #{member.govtrack_id} not found"
+        end
+      end
+      # TODO -- mongo this
+      senators = legs.select { |l| l.title == 'Sen.' }.sort_by { |u| u.start_date }
+      members = Hash.new
+      members[:senior_senator] = senators.first
+      members[:junior_senator] = senators.last
+      members[:representative] = (legs - senators).first
+      members
+    end
+
+    # Constructs a Sunlight API-friendly URL
+    def construct_sunlight_url(api_method, params)
+      "#{API_URL}#{api_method}.#{API_FORMAT}?apikey=#{API_KEY}#{hash2get(params)}"
+    end
+
+    # Converts a hash to a GET string
+    def hash2get(h)
+
+      get_string = ""
+
+      h.each_pair do |key, value|
+        get_string += "&#{key.to_s}=#{CGI::escape(value.to_s)}"
+      end
+
+      get_string
+
+    end # def hash2get
+
   end
+
+
 
 end

@@ -186,6 +186,10 @@ class Legislator
     self.current_role.party
   end
 
+  def start_date
+    self.current_role.startdate
+  end
+
   def is_senator?
     self.current_role.roll_type == 3
   end
