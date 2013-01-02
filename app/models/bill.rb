@@ -73,6 +73,14 @@ class Bill
   end
 
   class << self
+
+    def pull_in_bills(congress = 112, limit = 100)
+      GovTrack::Bill.find(congress: congress, order_by: "-current_status_date", limit: limit).each do |bill|
+        puts "Pulling in #{bill.title}"
+        from_govtrack(bill).save!
+      end
+    end
+
     def from_govtrack(bill)
       b = Bill.new
       b.govtrack_id = bill.id
@@ -95,15 +103,20 @@ class Bill
       b.title = bill.title
       b.title_without_number = bill.title_without_number
       # lookup
+      # add legislator if they don't exist?
       if legislator = Legislator.where(govtrack_id: bill.sponsor.id).first
         b.sponsor = legislator
       else
-        raise "sponsor not found"
+        legislator = Legislator.find_and_build(bill.sponsor.id)
+        legislator.save!
+        b.sponsor = legislator
+        #raise "sponsor not found"
       end
       # add rolls ?
-      GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |roll|
+      GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |vote|
+        roll = Roll.from_govtrack(vote)
         roll.add_votes
-        b.rolls << Roll.from_govtrack(roll)
+        b.rolls << roll
       end
       b
     end

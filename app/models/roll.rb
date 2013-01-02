@@ -105,6 +105,7 @@ class Roll
 
   def add_votes
     GovTrack::VoteVoter.find(vote: self.govtrack_id, limit: 450).each do |vote_voter|
+       puts "Adding #{vote_voter.vote_description}"
        self.legislator_votes << LegislatorVote.from_govtrack(vote_voter)
     end
   end

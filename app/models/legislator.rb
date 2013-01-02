@@ -101,8 +101,13 @@ class Legislator
     def update_legislators(limit = 800)
       # this method pulls the GovTrack api for all persons, loads each one into the database
       GovTrack::Person.find(roles__current: "true", limit: limit).each do |legislator|
+        puts "working on #{legislator.name}"
         self.save_legislator(legislator)
       end
+    end
+
+    def find_and_build(govtrack_id)
+      from_govtrack(GovTrack::Person.find_by_id(govtrack_id))
     end
 
     def save_legislator(person)

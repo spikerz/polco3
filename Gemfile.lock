@@ -69,6 +69,7 @@ GEM
       capybara (>= 1.1.2)
       cucumber (>= 1.1.8)
       nokogiri (>= 1.5.0)
+    curb (0.8.3)
     daemons (1.1.9)
     database_cleaner (0.9.1)
     diff-lcs (1.1.3)
@@ -86,6 +87,13 @@ GEM
       railties (>= 3.0.0)
     faker (1.1.2)
       i18n (~> 0.5)
+    feedzirra (0.0.24)
+      activesupport (>= 2.3.8)
+      builder (>= 2.1.2)
+      curb (>= 0.2.3)
+      loofah (>= 0.3.1)
+      nokogiri (> 0.0.0)
+      sax-machine (>= 0.0.12)
     ffi (1.1.5)
     geocoder (1.1.5)
     gherkin (2.11.5)
@@ -132,6 +140,8 @@ GEM
     libv8 (3.3.10.4)
     libwebsocket (0.1.5)
       addressable
+    loofah (1.2.1)
+      nokogiri (>= 1.4.4)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -215,6 +225,8 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    sax-machine (0.1.0)
+      nokogiri (> 0.0.0)
     selenium-webdriver (2.26.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -264,6 +276,7 @@ DEPENDENCIES
   email_spec (>= 1.4.0)
   factory_girl_rails (>= 4.1.0)
   faker
+  feedzirra
   geocoder
   gon
   govtrack!

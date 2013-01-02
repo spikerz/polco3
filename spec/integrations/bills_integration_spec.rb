@@ -49,5 +49,10 @@ describe "Bills" do
       b.rolls.first.legislator_votes.size.should be > 100
     end
 
+    it "should be able to pull in two bills (with no legislators added)" do
+      Bill.pull_in_bills(112,2)
+      Bill.all.size.should eql(2)
+    end
+
   end
 end
