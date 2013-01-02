@@ -2,31 +2,41 @@ class Legislator
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :first_name, :type => String
-  field :last_name, :type => String
-  field :middle_name, :type => String
-  field :religion, :type => String
-  field :pvs_id, :type => Integer
-  field :os_id, :type => String
-  field :metavid_id, :type => String
-  field :bioguide_id, :type => String
-  field :youtube_id, :type => String
-  field :title, :type => String
-  field :nickname, :type => String
-  field :user_approval, :type => String
-  field :district, :type => Integer
-  field :state, :type => String  # TODO -- CHANGE TO US_STATE
-  field :party, :type => String
+  # the following fields are directly from govtrack
+
+  field :govtrack_id, type: Integer
+  field :bioguideid, type: String
+  field :birthday, type: Date
+  field :firstname, type: String
+  field :gender, type: Integer
+  field :id, type: String
+  field :lastname, type: String
+  field :link, type: String
+  field :metavidid, type: String
+  field :middlename, type: String
+  field :name, type: String
+  field :name_no_details, type: String
+  field :namemod, type: String
+  field :nickname, type: String
+  field :osid, type: String
+  field :pvsid, type: String
+  field :resource_uri, type: String
+  field :sortname, type: String
+  field :twitterid, type: String
+  field :youtubeid, type: String
+
+  # fields I add
   field :sponsored_count, :type => Integer
   field :cosponsored_count, :type => Integer
-  field :full_name, :type => String
-  field :govtrack_id, :type => Integer
-  field :start_date, :type => Date
 
-  index({ title: 1}, {unique: true})
+  index({ sortname: 1}, {unique: true})
   index({ govtrack_id: 1}, {unique: true})
 
+  GENDERS = {1 => 'male', 2 => 'female'}
+
   has_many :bills, :inverse_of => :sponsor
+  embeds_many :roles
+  embeds_one :current_role, class_name: "Role", inverse_of: :elected_member
   has_many :district_constituents, :class_name => "User", :inverse_of => :representative
   has_many :legislator_votes
   has_and_belongs_to_many :state_constituents, :class_name => "User", :inverse_of => :senators
@@ -44,7 +54,11 @@ class Legislator
   end
 
   def first_or_nick
-    nickname.blank? ? first_name : nickname
+    nickname.blank? ? firstname : nickname
+  end
+
+  def title
+    self.current_role.title
   end
 
   def chamber
@@ -67,63 +81,88 @@ class Legislator
   end
 
   def full_name
-    "#{first_or_nick} #{last_name}"
+    "#{first_or_nick} #{lastname}"
   end
 
   def full_title
     "#{title} #{full_name} (#{party}-#{state})"
   end
 
+  def state
+    self.current_role.state
+  end
+
   def state_name
     state.to_us_state
   end
 
-  def party_name
-    case party
-      when "D" then
-        "Democrat"
-      when "R" then
-        "Republican"
-      when "I" then
-        "Independent"
+  class << self
+
+    def update_legislators(limit = 800)
+      # this method pulls the GovTrack api for all persons, loads each one into the database
+      GovTrack::Person.find(roles__current: "true", limit: limit).each do |legislator|
+        self.save_legislator(legislator)
+      end
+    end
+
+    def save_legislator(person)
+      unless Legislator.where(govtrack_id: person.id).exists?
+         from_govtrack(person).save!
+      end
+    end
+
+    def from_govtrack(person)
+      leg = Legislator.new
+      leg.govtrack_id = person.id.to_i
+      leg.bioguideid = person.bioguideid
+      leg.birthday = person.birthday
+      leg.firstname = person.firstname
+      leg.id = person.id
+      leg.lastname = person.lastname
+      leg.link = person.link
+      leg.metavidid = person.metavidid
+      leg.middlename = person.middlename
+      leg.name = person.name
+      leg.name_no_details = person.name_no_details
+      leg.namemod = person.namemod
+      leg.nickname = person.nickname
+      leg.osid = person.osid
+      leg.pvsid = person.pvsid
+      leg.resource_uri = person.resource_uri
+      leg.sortname = person.sortname
+      leg.twitterid = person.twitterid
+      leg.youtubeid = person.youtubeid
+      leg.current_role = Role.from_govtrack(person.current_role)
+      leg.gender = self.gender_integer(person.gender)
+      person.roles.each do |gt_role|
+        leg.roles << Role.from_govtrack(gt_role)
+      end
+      leg
+    end
+
+    def gender_integer(gender)
+      if gender == "male"
+        1
       else
-        party
+        2
+      end
     end
-  end
 
-  def self.update_legislators
-    # we need to prevent repeat imports
-    file_data = File.new("#{DATA_PATH}/people.xml", 'r')
-    feed = Feedzirra::Parser::GovTrackPeople.parse(file_data).people
-    feed.each do |person|
-      self.load_legislator(person)
+    def bill_search(search)
+      puts search
+      if search
+        # you have to have a class to perform where on (i think)
+        self.where(title: /#{search}/i)
+      else
+        # does scoped work with mongoid
+        self.all
+      end
     end
-    file_data.close
-  end
 
-  def self.load_legislator(person)
-    role = Legislator.find_most_recent_role(person)
-    if !role[:startdate].nil? && role[:startdate] >= 10.years.ago.to_date
-      leg = Legislator.find_or_create_by(:bioguide_id => person.bioguide_id,
-                                         :first_name => person.first_name,
-                                         :last_name => person.last_name,
-                                         :middle_name => person.middle_name,
-                                         :religion => person.religion,
-                                         :pvs_id => person.pvs_id,
-                                         :os_id => person.os_id,
-                                         :metavid_id => person.metavid_id,
-                                         :bioguide_id => person.bioguide_id,
-                                         :youtube_id => person.youtube_id,
-                                         :title => person.title,
-                                         :district => person.district,
-                                         :state => person.state,
-                                         :party => role[:party],
-                                         :start_date => role[:startdate],
-                                         :full_name => person.full_name,
-                                         :govtrack_id => person.govtrack_id
-      )
-      leg.save
-    end
+  end # self code
+
+  def district
+     self.current_role.district
   end
 
   def district_name
@@ -138,28 +177,12 @@ class Legislator
     PolcoGroup.states.where(name: self.state).first
   end
 
-  def senators_for_state(us_state)
-
-  end
-
-
-
-  def self.find_most_recent_role(person)
-    #array = [person.role_startdate.map{|d| Date.parse(d)}, person.role_party]
-    role = Hash.new
-    if person.role_startdate.empty?
-      role[:party] = nil
-      role[:startdate] = nil
-    else
-      array = person.role_startdate.map { |d| Date.parse(d) }.zip(person.role_party).sort_by { |d, p| d }.reverse.first
-      role[:party] = array.last
-      role[:startdate] = array.first
-    end
-    role
+  def party
+    self.current_role.party
   end
 
   def is_senator?
-    self.district.nil?
+    self.current_role.roll_type == 3
   end
 
   def job
@@ -174,28 +197,7 @@ class Legislator
     LegislatorVote.where(legislator_id: self.id).only(:bill_id).map(&:bill_id).uniq
   end
 
-  # added by nate
-  # strange full_name is derivative
-  def self.legislator_search(search)
-    puts search
-    if search
-      # you have to have a class to perform where on (i think)
-      self.where(full_name: /#{search}/i)
-    else
-      # does scoped work with mongoid
-      self.all
-    end
-  end
-
-  # added by nate
-  def self.bill_search(search)
-    puts search
-    if search
-      # you have to have a class to perform where on (i think)
-      self.where(title: /#{search}/i)
-    else
-      # does scoped work with mongoid
-      self.all
-    end
+  def gender_label
+    GENDERS[self.gender]
   end
 end

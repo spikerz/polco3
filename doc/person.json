@@ -1,0 +1,213 @@
+{
+  "allowed_detail_http_methods": [
+    "get"
+  ],
+  "allowed_list_http_methods": [
+    "get"
+  ],
+  "default_format": "application/json",
+  "default_limit": 20,
+  "fields": {
+    "bioguideid": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's ID on bioguide.congress.gov. May be null if the person served only as a president and not in Congress.",
+      "nullable": true,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "birthday": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's birthday.",
+      "nullable": true,
+      "readonly": false,
+      "type": "datetime",
+      "unique": false
+    },
+    "current_role": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The current term in Congress or as President that this person is currently serving, or null if none.",
+      "nullable": true,
+      "readonly": false,
+      "type": "related",
+      "unique": false
+    },
+    "firstname": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's first name or first initial.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "gender": {
+      "blank": false,
+      "default": "No default provided.",
+      "enum_values": {
+        "female": {
+          "description": null,
+          "label": "Female"
+        },
+        "male": {
+          "description": null,
+          "label": "Male"
+        }
+      },
+      "help_text": "The person's gender, if known. For historical data, the gender is sometimes not known.",
+      "nullable": true,
+      "readonly": false,
+      "type": "integer",
+      "unique": false
+    },
+    "id": {
+      "blank": false,
+      "default": "",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": true
+    },
+    "lastname": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's last name.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "link": {
+      "help_text": "The URL to the corresponding page on www.GovTrack.us for this resource."
+    },
+    "metavidid": {
+      "blank": false,
+      "default": "",
+      "help_text": "The person's ID on metavid.org, if known.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "middlename": {
+      "blank": false,
+      "default": "",
+      "help_text": "The person's middle name (optional).",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "name": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's full name with title, district, and party information for current Members of Congress, in a typical display format.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "name_no_details": {
+      "help_text": "The person's full name (excluding all title details)."
+    },
+    "namemod": {
+      "blank": false,
+      "default": "",
+      "help_text": "The suffix on the person's name usually one of Jr., Sr., I, II, etc.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "nickname": {
+      "blank": false,
+      "default": "",
+      "help_text": "The person's nickname. If set, the nickname should usually be displayed in quotes where a middle name would go. For instance, Joe \"Buster\" Smith.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "osid": {
+      "blank": false,
+      "default": "",
+      "help_text": "The person's ID on opensecrets.org (The Center for Responsive Politics), if known.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "pvsid": {
+      "blank": false,
+      "default": "",
+      "help_text": "The person's ID on vote-smart.org (Project Vote Smart), if known.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "resource_uri": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "Unicode string data. Ex: \"Hello World\"",
+      "nullable": false,
+      "readonly": true,
+      "type": "string",
+      "unique": false
+    },
+    "roles": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "A list of terms in Congress or as President that this person has been elected to. A list of API resources to query for more information.",
+      "nullable": false,
+      "readonly": false,
+      "type": "related",
+      "unique": false
+    },
+    "sortname": {
+      "blank": false,
+      "default": "No default provided.",
+      "help_text": "The person's name suitable for sorting lexicographically by last name or for display in a sorted list of names. Title, district, and party information are included for current Members of Congress.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "twitterid": {
+      "blank": false,
+      "default": "",
+      "help_text": "The name of the person's official Twitter handle, if known.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    },
+    "youtubeid": {
+      "blank": false,
+      "default": "",
+      "help_text": "The name of the person's official YouTube channel, if known.",
+      "nullable": false,
+      "readonly": false,
+      "type": "string",
+      "unique": false
+    }
+  },
+  "filtering": {
+    "firstname": "exact,",
+    "gender": 1,
+    "lastname": "exact,",
+    "metavidid": 1,
+    "middlename": "exact,",
+    "namemod": "exact,",
+    "nickname": "exact,",
+    "osid": 1,
+    "pvsid": 1,
+    "roles": 2,
+    "twitterid": "exact,",
+    "youtubeid": "exact,"
+  }
+}

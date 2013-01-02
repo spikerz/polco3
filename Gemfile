@@ -41,14 +41,17 @@ gem "has_scope"
 gem "kaminari-bootstrap"
 gem "less-rails"
 gem "faker", :group => [:test, :development]
-gem 'feedzirra'
-gem 'sax-machine'
-gem 'httparty'
+#gem 'feedzirra'
+#gem 'sax-machine'
+#gem 'httparty'
 gem 'omniauth-identity'
 gem 'geocoder'
+#gem 'nokogiri', '>= 1.5.6'
 
 # would like to remove
 gem 'gon'
 
 #gem 'heroku'
 gem 'cancan'
+gem 'govtrack'
+gem 'spork', '~> 1.0rc'

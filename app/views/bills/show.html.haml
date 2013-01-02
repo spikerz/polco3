@@ -1,15 +1,63 @@
+%p#notice= notice
 
-- present @bill do |bill_presenter| 
-  - title @bill.bill_title
-  %h3= bill_presenter.bill_sponsor
-  .well
-    = bill_presenter.bill_description
-    %h3 Summary
-    /= bill_presenter.summary
-  .well
-    = bill_presenter.activity
-  .well
-    = bill_presenter.rolls
-  -# load text via ajax
+%p
+  %b Bill resolution type:
+  = @bill.bill_resolution_type
+%p
+  %b Bill type:
+  = @bill.bill_type
+%p
+  %b Congress:
+  = @bill.congress
+%p
+  %b Current status:
+  = @bill.current_status
+%p
+  %b Current status date:
+  = @bill.current_status_date
+%p
+  %b Current status description:
+  = @bill.current_status_description
+%p
+  %b Display number:
+  = @bill.display_number
+%p
+  %b Docs house gov postdate:
+  = @bill.docs_house_gov_postdate
+%p
+  %b Govtrack:
+  = @bill.govtrack_id
+%p
+  %b Introduced date:
+  = @bill.introduced_date
+%p
+  %b Is alive:
+  = @bill.is_alive
+%p
+  %b Is current:
+  = @bill.is_current
+%p
+  %b Link:
+  = @bill.link
+%p
+  %b Number:
+  = @bill.number
+%p
+  %b Resource uri:
+  = @bill.resource_uri
+%p
+  %b Senate floor schedule postdate:
+  = @bill.senate_floor_schedule_postdate
+%p
+  %b Thomas link:
+  = @bill.thomas_link
+%p
+  %b Title:
+  = @bill.title
+%p
+  %b Title without number:
+  = @bill.title_without_number
 
-
+= link_to 'Edit', edit_bill_path(@bill)
+\|
+= link_to 'Back', bills_path

@@ -1,0 +1,167 @@
+{
+    "allowed_detail_http_methods": [
+        "get"
+    ],
+    "allowed_list_http_methods": [
+        "get"
+    ],
+    "default_format": "application/json",
+    "default_limit": 20,
+    "fields": {
+        "congress_numbers": {
+            "help_text": "The Congressional sessions (Congress numbers) that this role spans, as a list from the starting Congress number through consecutive numbers to the ending Congress number."
+        },
+        "current": {
+            "blank": false,
+            "default": false,
+            "help_text": "Whether the role is currently held, or if this is archival information.",
+            "nullable": false,
+            "readonly": false,
+            "type": "boolean",
+            "unique": false
+        },
+        "description": {
+            "help_text": "A description of this role, e.g. Delegate for District of Columbia At Large."
+        },
+        "district": {
+            "blank": false,
+            "default": "No default provided.",
+            "help_text": "For representatives, the number of their congressional district. 0 for at-large districts, -1 in historical data if the district is not known.",
+            "nullable": true,
+            "readonly": false,
+            "type": "integer",
+            "unique": false
+        },
+        "enddate": {
+            "blank": false,
+            "default": "No default provided.",
+            "help_text": "The date the role ended (when the person resigned, died, etc.)",
+            "nullable": false,
+            "readonly": false,
+            "type": "datetime",
+            "unique": false
+        },
+        "id": {
+            "blank": false,
+            "default": "",
+            "help_text": "Unicode string data. Ex: \"Hello World\"",
+            "nullable": false,
+            "readonly": false,
+            "type": "string",
+            "unique": true
+        },
+        "party": {
+            "blank": false,
+            "default": "No default provided.",
+            "help_text": "The political party of the person. If the person changes party, it is usually the most recent party during this role.",
+            "nullable": true,
+            "readonly": false,
+            "type": "string",
+            "unique": false
+        },
+        "resource_uri": {
+            "blank": false,
+            "default": "No default provided.",
+            "help_text": "Unicode string data. Ex: \"Hello World\"",
+            "nullable": false,
+            "readonly": true,
+            "type": "string",
+            "unique": false
+        },
+        "role_type": {
+            "blank": false,
+            "default": "No default provided.",
+            "enum_values": {
+                "president": {
+                    "description": null,
+                    "label": "President"
+                },
+                "representative": {
+                    "description": null,
+                    "label": "Representative"
+                },
+                "senator": {
+                    "description": null,
+                    "label": "Senator"
+                }
+            },
+            "help_text": "The type of this role: a U.S. senator, a U.S. congressperson, or a U.S. president.",
+            "nullable": false,
+            "readonly": false,
+            "type": "integer",
+            "unique": false
+        },
+        "senator_class": {
+            "blank": false,
+            "default": "No default provided.",
+            "enum_values": {
+                "class1": {
+                    "description": null,
+                    "label": "Class 1"
+                },
+                "class2": {
+                    "description": null,
+                    "label": "Class 2"
+                },
+                "class3": {
+                    "description": null,
+                    "label": "Class 3"
+                }
+            },
+            "help_text": "For senators, their election class, which determines which years they are up for election. (It has nothing to do with seniority.)",
+            "nullable": true,
+            "readonly": false,
+            "type": "integer",
+            "unique": false
+        },
+        "startdate": {
+            "blank": false,
+            "default": "No default provided.",
+            "help_text": "The date the role began (when the person took office).",
+            "nullable": false,
+            "readonly": false,
+            "type": "datetime",
+            "unique": false
+        },
+        "state": {
+            "blank": false,
+            "default": "",
+            "help_text": "For senators and representatives, the two-letter USPS abbrevation for the state or territory they are serving. Values are the abbreviations for the 50 states (each of which have at least one representative and two senators, assuming no vacancies) plus DC, PR, and the island territories AS, GU, MP, and VI (all of which have a non-voting delegate), and for really old historical data you will also find PI (Philippines, 1907-1946), DK (Dakota Territory, 1861-1889), and OR (Orleans Territory, 1806-1811) for non-voting delegates.",
+            "nullable": false,
+            "readonly": false,
+            "type": "string",
+            "unique": false
+        },
+        "title": {
+            "help_text": "The title used to prefix the names of people with this role: Rep., Sen., President, Del. (delegate), or Res.Com. (resident commissioner)."
+        },
+        "title_long": {
+            "help_text": "The long form of the title used to prefix the names of people with this role: Representative, Senator, President, Delegate, or Resident Commissioner."
+        },
+        "website": {
+            "blank": false,
+            "default": "",
+            "help_text": "The URL to the official website of the person during this role, if known.",
+            "nullable": false,
+            "readonly": false,
+            "type": "string",
+            "unique": false
+        }
+    },
+    "filtering": {
+        "current": 1,
+        "district": 1,
+        "enddate": 1,
+        "party": [
+            "exact"
+        ],
+        "role_type": 1,
+        "senator_class": 1,
+        "startdate": 1,
+        "state": "exact,"
+    },
+    "ordering": [
+        "startdate",
+        "enddate"
+    ]
+}

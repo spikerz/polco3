@@ -1,27 +1,26 @@
-= simple_form_for @bill, :html => { :class => 'form-horizontal' } do |f|
-  = f.input :congress
-  = f.input :bill_number
-  = f.input :bill_type
-  = f.input :last_updated
-  = f.input :bill_state
-  = f.input :introduced_date
-  = f.input :title
-  = f.input :titles
-  = f.input :summary
-  = f.input :bill_actions
-  = f.input :bill_html
-  = f.input :ident
-  = f.input :cosponsors_count
-  = f.input :govtrack_id
-  = f.input :govtrack_name
-  = f.input :summary_word_count
-  = f.input :text_word_count
-  = f.input :text_updated_on
-  = f.input :hidden
-  = f.input :roll_time
-  = f.input :sponsor_id, collection: Legislator.all, label_method: :full_name
-  = f.input :cosponsor_ids
-  = f.input :subject_ids
+= simple_form_for(@bill) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :bill_resolution_type
+    = f.input :bill_type
+    = f.input :congress
+    = f.input :current_status
+    = f.input :current_status_date
+    = f.input :current_status_description
+    = f.input :display_number
+    = f.input :docs_house_gov_postdate
+    = f.input :govtrack_id
+    = f.input :introduced_date
+    = f.input :is_alive
+    = f.input :is_current
+    = f.input :link
+    = f.input :number
+    = f.input :resource_uri
+    = f.input :senate_floor_schedule_postdate
+    = f.input :thomas_link
+    = f.input :title
+    = f.input :title_without_number
+
   .form-actions
-    = f.button :submit, :class => 'btn-primary'
-    = link_to t('.cancel', :default => t("helpers.links.cancel")), bills_path, :class => 'btn'
+    = f.button :submit

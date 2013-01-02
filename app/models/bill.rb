@@ -1,23 +1,32 @@
 class Bill
   include Mongoid::Document
-  # DOCUMENTATION: http://www.govtrack.us/developers/api#endpoint_bill
 
-  # initial fields
-  field :congress, :type => Integer
-  field :bill_number, :type => Integer
-  field :bill_type, :type => String
-  field :last_updated, :type => Date
-  field :bill_state, :type => String #
-  field :introduced_date, :type => Date #
-  field :title, :type => String
-  field :titles, :type => Array #
-  field :summary, :type => String #
-  field :bill_actions, :type => Array #
+  field :bill_resolution_type, type: String
+  field :bill_type, type: String
+  field :congress, type: Integer
+  field :current_status, type: String
+  field :current_status_label, type: String
+  field :current_status_date, type: Date
+  field :current_status_description, type: String
+  field :display_number, type: String
+  field :docs_house_gov_postdate, type: Date
+  field :govtrack_id, type: String
+  field :introduced_date, type: Date
+  field :is_alive, type: Boolean
+  field :is_current, type: Boolean
+  field :link, type: String
+  field :number, type: Integer
+  field :resource_uri, type: String
+  field :senate_floor_schedule_postdate, type: Date
+  field :thomas_link, type: String
+  field :title, type: String
+  field :title_without_number, type: String
+
+  # my additions
   field :bill_html, :type => String
   # things i calculate
   field :ident, :type => String
   field :cosponsors_count, :type => Integer
-  field :govtrack_id, :type => String
   field :govtrack_name, type: String
   field :summary_word_count, :type => Integer
   field :text_word_count, :type => Integer
@@ -39,8 +48,14 @@ class Bill
   scope :rolled_bills, where(:roll_time.ne => nil).descending(:roll_time)
 
   belongs_to :sponsor, :class_name => "Legislator"
+
   has_and_belongs_to_many :cosponsors, :class_name => "Legislator"
   has_and_belongs_to_many :subjects
+
+
+  def current_status_explanation
+    CURRENT_STATUS[self.current_status]
+  end
 
   #validates_presence_of :govtrack_name
 
@@ -116,7 +131,7 @@ class Bill
   end
 
   def passed?
-    !(self.bill_state =~ /^PASS_OVER|PASSED|PASS_BACK|ENACTED/).nil?
+    !(self.current_status =~ /^pass/).nil?
   end
 
   def update_legislator_counts
@@ -142,78 +157,13 @@ class Bill
     BILL_STATE[self.bill_state.gsub(":", "|")]
   end
 
-  def update_bill(force_update = false)
-    # this is a critical method . . . (27 April 2012)
-    if self.govtrack_name
-      file_data = File.new("#{DATA_PATH}/bills/#{self.govtrack_name}.xml", 'r')
-    else
-      raise "The bill does not have the property govtrack_name."
-    end
-    bill = Feedzirra::Parser::GovTrackBill.parse(file_data)
-    # check for changes
-    if bill && (self.introduced_date.nil? || (bill.introduced_date.to_date > self.introduced_date) || force_update)
-      # front-matter
-      puts "updating #{self.govtrack_name}"
-      self.congress = bill.congress
-      self.bill_type = bill.bill_type
-      self.bill_number = bill.bill_number
-      self.last_updated = bill.last_updated.to_date
-      # get titles
-      self.ident = "#{self.congress}-#{self.bill_type}#{self.bill_number}"
-      self.govtrack_id = "#{self.bill_type}#{self.congress}-#{self.bill_number}"
-
-      # get actions
-      self.bill_state = bill.bill_state
-      self.introduced_date = bill.introduced_date.to_date
-
-      self.titles = get_titles(bill.titles)
-      self.bill_actions = get_actions(bill.bill_actions)
-      self.summary = bill.summary
-
-      # update subjects
-      self.subjects = []
-      bill.subjects.each do |subject|
-        self.subjects.push(Subject.find_or_create_by(:name => subject))
-      end
-      #puts "the bill is valid? #{self.valid?}"
-
-      # sponsors
-      save_sponsor(bill.sponsor_id)
-      save_cosponsors(bill.cosponsor_ids) unless bill.cosponsor_ids.empty?
-
-      # Yield to a block that can perform arbitrary calls on this bill
-      if block_given?
-        yield(self)
-      end
-
-      # bill text
-      get_bill_text if self.bill_html.blank? || self.text_updated_on.blank? || self.text_updated_on < Date.parse(self.bill_actions.first.first)
-
-      self.cosponsors_count = self.cosponsors.count
-      self.text_word_count = self.bill_html.to_s.word_count
-      self.summary_word_count = self.summary.to_s.word_count
-      true
-    else
-      puts "no need to update #{self.govtrack_name}"
-      false
-    end
-
-  end
-
   def get_bill_text
-    bill_object = HTTParty.get("#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.bill_type}/#{self.bill_type + self.bill_number.to_s}.html")
-    self.bill_html = bill_object.response.body
-    self.text_updated_on = Date.today
-    Rails.logger.info "Updated Bill Text for #{self.ident}"
+    HTTParty.get("#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.bill_type}/#{self.bill_type + self.bill_number.to_s}.html").response.body
   end
 
   def save_sponsor(id)
     if sponsor = Legislator.where(:govtrack_id => id).first
       self.sponsor = sponsor
-      # now add this bill to the sponsor
-      #self.save
-      #sponsor.bills.push(self)
-      #sponsor.save!
     else
       raise "sponsor not in database!"
     end

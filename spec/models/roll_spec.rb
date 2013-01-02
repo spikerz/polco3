@@ -23,21 +23,6 @@ describe Roll do
     @grps = grps
   end
 
-
-  it "should be able to show the house representatives vote if the roll is a hr" do
-    load_legislators
-    b = FactoryGirl.create(:bill, bill_type: 'hr', congress: '112', bill_number: '26', govtrack_id: 'hr112-26')
-    roll = Roll.bring_in_roll("h2011-9.xml")
-    # this corresponds to hr112-26
-    u = FactoryGirl.create(:user)
-    l = roll.legislator_votes.first.legislator
-    u.representative = l
-    u.save
-    b.reload
-    u.reload
-    u.reps_vote_on(roll).should eq("aye")
-  end
-
   context "has basic properties and " do
 
     it "should be able to update the vote count on rolls" do
@@ -62,7 +47,7 @@ describe Roll do
 
     it "should tell me the most popular rolls" do
       users = FactoryGirl.create_list(:random_user, 3, state: FactoryGirl.create(:oh), district: FactoryGirl.create(:district))
-      rolls = FactoryGirl.create_list(:roll, 12).each do |roll|
+      FactoryGirl.create_list(:roll, 12).each do |roll|
         users.each do |user|
           roll.vote_on(user, [:aye, :nay, :abstain, :present][rand(4)]) if rand > 0.2
         end
@@ -212,6 +197,20 @@ describe Roll do
     @d.reload
     @oh.format_votes_tally(r).should eq("2, 1, 0")
     @d.format_votes_tally(r).should eq("2, 1, 0")
+  end
+
+  it "should be able to show the house representatives vote if the roll is a hr" do
+    #load_legislators
+    b = FactoryGirl.create(:bill, bill_type: 'hr', congress: '112', number: '26', govtrack_id: 'hr112-26')
+    roll = FactoryGirl.create(:roll)#Roll.bring_in_roll("h2011-9.xml")
+    # this corresponds to hr112-26
+    u = FactoryGirl.create(:random_user)
+    l = roll.legislator_votes.first.legislator
+    u.representative = l
+    u.save
+    b.reload
+    u.reload
+    u.reps_vote_on(roll).should eq("aye")
   end
 
 end

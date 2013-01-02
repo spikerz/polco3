@@ -24,7 +24,7 @@ describe BillsController do
   # Bill. As you add validations to Bill, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {govtrack_id: '111', govtrack_name: 'howdy'}
+    {}
   end
 
   # This should return the minimal set of values that should be in the session
@@ -96,7 +96,6 @@ describe BillsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Bill.any_instance.stub(:save).and_return(false)
-        Bill.any_instance.stub(:errors).and_return(['error'])
         post :create, {:bill => {}}, valid_session
         response.should render_template("new")
       end
@@ -141,7 +140,6 @@ describe BillsController do
         bill = Bill.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Bill.any_instance.stub(:save).and_return(false)
-        Bill.any_instance.stub(:errors).and_return(['error'])
         put :update, {:id => bill.to_param, :bill => {}}, valid_session
         response.should render_template("edit")
       end

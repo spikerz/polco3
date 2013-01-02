@@ -1,3 +1,10 @@
+first, let's get the latest data loaded. how do we bring it in?
+
+data first goes into the data directory . . .
+
+
+
+
 - add notice (done)
 - fix 6 views (done)
 

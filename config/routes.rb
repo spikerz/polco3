@@ -1,5 +1,9 @@
 Polco3::Application.routes.draw do
 
+  resources :bills
+
+  resources :roles
+
   get "home/polco_info"
 
   resources :rolls

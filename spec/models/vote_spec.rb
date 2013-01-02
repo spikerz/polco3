@@ -11,4 +11,10 @@ describe Vote do
     r.vote_count.should eq(3)
   end
 
+  it "should present the description and category for a roll" do
+    roll = FactoryGirl.create(:roll)
+    roll.category_description.should eql("")
+    roll.category_label.should eql("")
+  end
+
 end
