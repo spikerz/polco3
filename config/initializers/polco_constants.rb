@@ -3,7 +3,6 @@ GROUP_TYPES = [:custom, :state, :district]
 GOVTRACK_URL = "http://www.govtrack.us/"
 BILL_STATE = YAML.load_file(File.expand_path("#{Rails.root}/config/bill_status.yml", __FILE__))
 CHAMBERS = [:house, :senate]
-BILL_TYPES = ['h','hr','hj','hc','s','sr','sj','sc']
 BILL_STATUS =   {:prov_kill_veto =>"Vetoed (No Override Attempt). <em>Vetoed by the President but the veto can be overridden.</em>",
                  :fail_second_senate =>"Passed House, Failed Senate. <em>Passed the House but failed in the Senate.</em>",
                  :passed_bill =>"At President. <em>The bill passed both chambers of Congress in identical form and goes on to the President for signing next.</em>",
@@ -32,14 +31,15 @@ BILL_STATUS =   {:prov_kill_veto =>"Vetoed (No Override Attempt). <em>Vetoed by 
                  :vetoed_override_fail_originating_senate =>"Vetoed &amp; Override Failed in Senate. <em>The Senate's attempt to override a veto failed.</em>",
                  :introduced =>"Introduced. <em>Introduced but not yet referred to a committee.</em>",
                  :referred =>"Referred to Committee. <em>Referred to a committee in the originating chamber.</em>"}
-BILL_TYPE_HASH = {house_resolution: {short_title: 'H.Res..', description: 'House simple resolutions, which do not have the force of law'},
-                  senate_bill: {short_title: 'S.', description: 'Senate bills'},
-                  senate_joint_resolution: {short_title: 'S.J.Res.', description: 'Joint resolutions originating in the Senate, which may be used to enact laws or propose constitutional amendments'},
-                  house_bill: {short_title: 'H.R.', description: 'House bills'},
-                  house_concurrent_resolution: {short_title: 'H.Con.Res.', description: 'Concurrent resolutions originating in the House, which do not have the force of law'},
-                  senate_concurrent_resolution: {short_title: 'S.Con.Res.', description: 'Concurrent resolutions originating in the Senate, which do not have the force of law'},
-                  house_joint_resolution: {short_title: 'H.J.Res.', description: 'Joint resolutions originating in the House, which may be used to enact laws or propose constitutional amendments'},
-                  senate_resolution: {short_title: 'S.Res.', description: 'Senate simple resolutions, which do not have the force of law'}}
+BILL_TYPE_HASH = {house_resolution: {short_title: 'H.Res..', description: 'House simple resolutions, which do not have the force of law', key: 'hr'},
+                  senate_bill: {short_title: 'S.', description: 'Senate bills', key: 's'},
+                  senate_joint_resolution: {short_title: 'S.J.Res.', description: 'Joint resolutions originating in the Senate, which may be used to enact laws or propose constitutional amendments', key: 'sj'},
+                  house_bill: {short_title: 'H.R.', description: 'House bills', key: 'h'},
+                  house_concurrent_resolution: {short_title: 'H.Con.Res.', description: 'Concurrent resolutions originating in the House, which do not have the force of law', key: 'hc'},
+                  senate_concurrent_resolution: {short_title: 'S.Con.Res.', description: 'Concurrent resolutions originating in the Senate, which do not have the force of law', key: 'sc'},
+                  house_joint_resolution: {short_title: 'H.J.Res.', description: 'Joint resolutions originating in the House, which may be used to enact laws or propose constitutional amendments', key: 'hj'},
+                  senate_resolution: {short_title: 'S.Res.', description: 'Senate simple resolutions, which do not have the force of law'}, key: 'sr'}
+BILL_TYPES = ['h','hr','hj','hc','s','sr','sj','sc']
 ROLL_CATEGORIES = {amendment: {
                       description: "Votes on accepting or rejecting amendments to bills and resolutions.",
                       label: "Amendment"},

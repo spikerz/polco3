@@ -58,6 +58,13 @@
   %b Title without number:
   = @bill.title_without_number
 
-= link_to 'Edit', edit_bill_path(@bill)
-\|
-= link_to 'Back', bills_path
+- unless @bill_text.nil?
+  .well
+    = @bill_text.html_safe
+- else
+  %p No bill text available
+
+- if current_user.admin?
+  = link_to 'Edit', edit_bill_path(@bill)
+  \|
+  = link_to 'Back', bills_path

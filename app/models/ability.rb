@@ -6,7 +6,7 @@ class Ability
     if user.admin?
       can :manage, :all
     else
-      can :read, Bill
+      can :read, [Bill, Legislator]
     end
     # Define abilities for the passed in user here. For example:
     #

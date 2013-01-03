@@ -30,8 +30,8 @@ class UsersController < ApplicationController
     # i don't like this but it is a good way to get a default address
     address_attempt = [38.7909, -77.0947] if address_attempt.all? { |a| a == 0 }
     @coords = User.build_coords_simple(address_attempt)
-    district = User.get_district_from_coords(address_attempt).first
-    @district, @state = district.district, district.us_state
+    result = User.get_district_from_coords(address_attempt)
+    @district, @state = result[:district], result[:state]
     @lat = params[:lat] || "19.71844"
     @lon = params[:lon] || "-155.095228"
     @zoom = params[:zoom] || "10"
@@ -45,32 +45,19 @@ class UsersController < ApplicationController
   end
 
   def district
-    user = current_user
-    case params[:commit]
-      when "Yes"
-        coords= Geocoder.coordinates(params[:location])
-        districts = User.get_district_from_coords(coords)
-        flash[:method] = :ip_lookup
-      when "Submit Address"
-        coords = Geocoder.coordinates(user.build_address(params))
-        districts = User.get_district_from_coords(coords)
-        flash[:method] = "Successful address lookup"
-      when "Submit Zip Code"
-        districts = User.get_districts_by_zipcode(params[:zip_code])
-        flash[:method] = "Successful zip code lookup"
-      else
-        districts = nil
-    end
-    if districts.nil?
+    data = User.get_data(params)
+    coords = data[:coords]
+    flash[:method] = data[:method]
+    if data[:districts].nil?
       flash[:notice] = "No addresses found, please refine your answer or try a different method."
       redirect_to users_geocode_path
-    elsif districts.count > 1 # then we need to pick a district
-      flash[:notice] = "Multiple districts found for #{params[:zip_code]}, please enter your address or a zip+4"
-      redirect_to users_geocode_path
+    #elsif data[:districts].size > 1 # then we need to pick a district
+    #  # we are abandoning zip code, so this shouldn't matter
+    #  flash[:notice] = "Multiple districts found for #{params[:zip_code]}, please enter your address or a zip+4"
+    #  redirect_to users_geocode_path
     else
-      district = districts.first
-      @district, @state = district.district, district.us_state
-      members = self.get_members(district.members)
+      @district, @state = data[:districts][:district], data[:districts][:state]
+      members = User.get_members_from_(coords)
       @senior_senator = members[:senior_senator]
       @junior_senator = members[:junior_senator]
       @representative = members[:representative]

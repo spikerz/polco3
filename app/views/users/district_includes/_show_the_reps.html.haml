@@ -7,15 +7,15 @@
 .row
   .span3
     %h3 Senior Senator
-    = senior_senator.full_title
+    %h4= senior_senator.name
     %p= image_tag senior_senator.image_location_medium
   .span3
     %h3 Junior Senator
-    = junior_senator.full_title
+    %h4= junior_senator.name
     %p= image_tag junior_senator.image_location_medium
   .span3
     %h3 Representative
-    = representative.full_title
+    %h4= representative.name
     %p= image_tag representative.image_location_medium
 %p
   If this isn't correct, you can change that #{link_to 'here', users_geocode_path}

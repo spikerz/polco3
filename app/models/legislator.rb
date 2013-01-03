@@ -84,9 +84,9 @@ class Legislator
     "#{first_or_nick} #{lastname}"
   end
 
-  def full_title
-    "#{title} #{full_name} (#{party}-#{state})"
-  end
+  #def full_title
+  #  "#{title} #{full_name} (#{party}-#{state})"
+  #end
 
   def state
     self.current_role.state
@@ -191,7 +191,7 @@ class Legislator
   end
 
   def is_senator?
-    self.current_role.roll_type == 3
+    self.current_role.role_type == 3
   end
 
   def job

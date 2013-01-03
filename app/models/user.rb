@@ -59,8 +59,6 @@ class User
     self.district.name if self.district
   end
 
-
-
   def add_members(junior_senator, senior_senator, representative, district, us_state)
     self.senators.push(junior_senator)
     self.senators.push(senior_senator)
@@ -87,19 +85,41 @@ class User
     Geocoder.coordinates(ip)
   end
 
-  def build_address(params)
-    if params[:zip]
-      "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}, #{params[:zip].strip}"
-    else
-      "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}"
-    end
-  end
+
 
   class << self
 
     API_URL = "http://services.sunlightlabs.com/api/"
     API_FORMAT = "json"
     API_KEY = '92c20ab595eb497094652016086760ea' # yeah, it's here feel free to use it
+
+    def build_address(params)
+      if params[:zip]
+        "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}, #{params[:zip].strip}"
+      else
+        "#{params[:street_address].strip}, #{params[:city].strip}, #{params[:state].strip}"
+      end
+    end
+
+    def get_data(params)
+      case params[:commit]
+        when "Yes"
+          coords= Geocoder.coordinates(params[:location])
+          districts = User.get_district_from_coords(coords)
+          method = :ip_lookup
+        when "Submit Address"
+          coords = Geocoder.coordinates(build_address(params))
+          districts = User.get_district_from_coords(coords)
+          method = "Successful address lookup"
+        #when "Submit Zip Code"
+        #  districts = User.get_districts_by_zipcode(params[:zip_code])
+        #  method = "Successful zip code lookup"
+        ## need to get coords somehow
+        else
+          districts = nil
+      end
+      {coords: coords, method: method, districts: districts}
+    end
 
     def build_coords(input, district_name)
       input = DISTRICT_CENTERS[district_name] unless input
@@ -111,15 +131,15 @@ class User
       "#{input.first},#{input.last}"
     end
 
-    def get_districts_by_zipcode(zip)
-      method = 'districts.getDistrictsFromZip'
-      if response = HTTParty.get(User.construct_sunlight_url(method,{zip: zip}))['response']
-        districts = response['districts']
-      else
-        raise "no response from sunlight"
-      end
-      districts.map{|d| "#{d['district']['state']}#{"%02d" % d['district']['number'].to_i}"}
-    end
+    #def get_districts_by_zipcode(zip)
+    #  method = 'districts.getDistrictsFromZip'
+    #  if response = HTTParty.get(User.construct_sunlight_url(method,{zip: zip}))['response']
+    #    districts = response['districts']
+    #  else
+    #    raise "no response from sunlight"
+    #  end
+    #  districts.map{|k| k['district']}.map{|d| {district: d_format(d), state: d['state']}}
+    #end
 
     def get_district_from_coords(coords)
       lat, lon = coords # .first, coords.last
@@ -128,30 +148,44 @@ class User
       else
         raise "no response from sunlight"
       end
+      {district: d_format(district), state: district['state']}
+    end
+
+    def d_format(district)
+      # format the district like "VA08"
       "#{district['state']}#{"%02d" % district['number'].to_i}"
     end
 
-    def get_members(members)
-      legs = []
-      members.each do |member|
-        # need to clear previous members
-        if leg = Legislator.where(:govtrack_id => member.govtrack_id).first
-          legs << leg
-        else
-          puts "adding legislator"
-          legislator = Legislator.find_and_build(member.govtrack_id)
-          legislator.save!
-          legs << legislator
-          #raise "legislator #{member.govtrack_id} not found"
+    def get_members_from_(coords)
+      lat, lon = coords
+      method = 'legislators.allForLatLong'
+      if response = HTTParty.get(User.construct_sunlight_url(method,{latitude: lat, longitude: lon}))['response']
+        members = Hash.new
+        response['legislators'].map{|l| {id: l['legislator']['govtrack_id'],
+                                         district: l['legislator']['district']}}.each do |leg|
+          # need to clear previous members
+          unless legislator = Legislator.where(:govtrack_id => leg[:id]).first
+            puts "adding legislator"
+            legislator = Legislator.find_and_build(leg[:id])
+            legislator.save!
+          end
+          members[find_role(leg[:district])] = legislator
         end
+        members
+      else
+        raise "no response from sunlight"
       end
-      # TODO -- mongo this
-      senators = legs.select { |l| l.title == 'Sen.' }.sort_by { |u| u.start_date }
-      members = Hash.new
-      members[:senior_senator] = senators.first
-      members[:junior_senator] = senators.last
-      members[:representative] = (legs - senators).first
-      members
+    end
+
+    def find_role(d)
+      case d
+        when "Junior Seat"
+          :junior_senator
+        when "Senior Seat"
+          :senior_senator
+        else
+          :representative
+      end
     end
 
     # Constructs a Sunlight API-friendly URL

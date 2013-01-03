@@ -60,6 +60,10 @@ class Bill
   # #####################
   # METHODS
 
+  def type_key
+    BILL_TYPE_HASH[self.bill_type.to_sym][:key]
+  end
+
   def current_status_explanation
     CURRENT_STATUS[self.current_status]
   end
@@ -69,7 +73,14 @@ class Bill
   end
 
   def get_bill_text
-    HTTParty.get("#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.bill_type}/#{self.bill_type + self.bill_number.to_s}.html").response.body
+    #"#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.type_key}/#{self.type_key + self.number.to_s}.html"
+    response = HTTParty.get("#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.bill_type}/#{self.bill_type + self.number.to_s}.html").response
+    case response
+      when 200
+        response.body
+      else
+        nil
+    end
   end
 
   class << self

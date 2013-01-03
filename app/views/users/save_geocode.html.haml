@@ -6,18 +6,18 @@
 %h2 Your representative's Activity
 %p (Remember, only a subset of bills are loaded now)
 %h3
-  Senior Senator: #{link_to @senior_senator.full_name, @senior_senator}
+  Senior Senator: #{link_to @senior_senator.name, @senior_senator}
 %ul
   - @senior_senator.bills.each do |b|
-    %li= link_to b.bill_title, bill_path(b)
+    %li= link_to b.title, bill_path(b)
 / we should DRY this up
 %h3
-  Junior Senator: #{link_to @junior_senator.full_name, @junior_senator}
+  Junior Senator: #{link_to @junior_senator.name, @junior_senator}
 %ul
   - @junior_senator.bills.each do |b|
-    %li= link_to b.bill_title, bill_path(b)
+    %li= link_to b.title, bill_path(b)
 %h3
-  Rep: #{link_to @representative.full_name, @representative}
+  Rep: #{link_to @representative.name, @representative}
 %ul
   - @representative.bills.each do |b|
-    %li= link_to b.bill_title, bill_path(b)
+    %li= link_to b.title, bill_path(b)

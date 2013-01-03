@@ -1,10 +1,10 @@
-- title @legislator.full_title
+- title @legislator.name
 
 .well
   = image_tag @legislator.image_location_medium
 
 .well
-  = "#{@legislator.title} #{@legislator.last_name}"
+  = "#{@legislator.name_no_details}"
   is a
   = "#{@legislator.job}."
 
@@ -22,11 +22,11 @@
 - else
   No activity yet
 
-.well
-  %h3 COMMITTEE MEMBERSHIP
-
-.well
-  %h3 BILL SPONSORSHIP & COSPONSORSHIP
+-#.well
+-#  %h3 COMMITTEE MEMBERSHIP
+-#
+-#.well
+-#  %h3 BILL SPONSORSHIP & COSPONSORSHIP
 
 
 - # who is this person
@@ -36,8 +36,8 @@
 - # what bills has he sponsored?
 - # how has he voted?
 - # any other info available online?
-
-.form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'
-  = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_path(@legislator), :class => 'btn'
-  = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+- if current_user.admin?
+  .form-actions
+    = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'
+    = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_path(@legislator), :class => 'btn'
+    = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
