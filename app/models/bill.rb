@@ -92,7 +92,7 @@ class Bill
       end
     end
 
-    def from_govtrack(bill)
+    def from_govtrack(bill, add_rolls = false)
       b = Bill.new
       b.govtrack_id = bill.id
       b.bill_resolution_type = bill.bill_resolution_type
@@ -124,10 +124,11 @@ class Bill
         #raise "sponsor not found"
       end
       # add rolls ?
-      GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |vote|
-        roll = Roll.from_govtrack(vote)
-        roll.add_votes
-        b.rolls << roll
+      if add_rolls
+        GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |vote|
+          roll = Roll.from_govtrack(vote)
+          b.rolls << roll
+        end
       end
       b
     end

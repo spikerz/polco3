@@ -1,6 +1,6 @@
-first, let's get the latest data loaded. how do we bring it in?
-
-data first goes into the data directory . . .
+- groups are showing zero members
+- views are not loading
+- add comments
 
 
 

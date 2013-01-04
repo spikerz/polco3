@@ -1,8 +1,8 @@
 class LegislatorVote
   # this maps to VOTE_VOTER
   include Mongoid::Document
-  field :value, :type => Symbol
 
+  field :value, :type => Symbol
   field :created, type: Date
   field :link, type: String
   field :option, type: String
@@ -38,7 +38,7 @@ class LegislatorVote
       l.vote_description = gt_o.vote_description
       l.voter_type = find_voter_type(gt_o.voter_type)
       l.legislator = Legislator.where(govtrack_id: gt_o.person.id).first # legislator
-      l.roll = Roll.where(govtrack_id: gt_o.vote.id).first # roll
+      #l.roll = Roll.where(govtrack_id: gt_o.vote.id).first # roll
       l.value = l.vote_result
       #l = gt_o.person_name
       l

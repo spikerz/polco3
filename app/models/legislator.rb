@@ -137,7 +137,11 @@ class Legislator
       leg.sortname = person.sortname
       leg.twitterid = person.twitterid
       leg.youtubeid = person.youtubeid
-      leg.current_role = Role.from_govtrack(person.current_role)
+      if person.current_role
+        leg.current_role = Role.from_govtrack(person.current_role)
+      else
+        puts "no current role for #{person.name} with govtrack id #{person.id}??"
+      end
       leg.gender = self.gender_integer(person.gender)
       person.roles.each do |gt_role|
         leg.roles << Role.from_govtrack(gt_role)

@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:tbbooher/govtrack.git
-  revision: 310118379c638e47eeceda8d2df14e7f569b9273
+  revision: 185f546f03702524f40f5e0b1933ec46f44d1fad
   specs:
     govtrack (0.0.1)
       httparty (>= 0.6.1)

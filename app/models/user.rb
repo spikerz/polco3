@@ -63,7 +63,6 @@ class User
     self.senators.push(junior_senator)
     self.senators.push(senior_senator)
     self.representative = representative
-    self.district = PolcoGroup.find_district(district).first
     self.add_baseline_groups(us_state, district)
     self.geocoded = true
     #self.role = :registered # 7 = registered (or 6?)
@@ -71,8 +70,16 @@ class User
   end
 
   def add_baseline_groups(us_state, district)
-    self.district = PolcoGroup.where(name: district, type: :district).first
-    self.state = PolcoGroup.where(name: us_state, type: :state).first
+    if district = PolcoGroup.where(name: district, type: :district).first
+      self.district = district
+    else
+      raise "district does not exist"
+    end
+    if state = PolcoGroup.where(name: us_state, type: :state).first
+      self.state = state
+    else
+      raise "state does not exist"
+    end
     [['USA', :country],['Polco Common',:common]].each do |name, type|
       g = PolcoGroup.find_or_create_by(:name => name, :type => type)
       #g.members.push(self)

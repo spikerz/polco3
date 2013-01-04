@@ -25,23 +25,28 @@ class UsersController < ApplicationController
 
   def geocode
     @user = current_user
-    address_attempt = @user.get_ip(request.remote_ip)
-    # TODO REMOVE!
-    # i don't like this but it is a good way to get a default address
-    address_attempt = [38.7909, -77.0947] if address_attempt.all? { |a| a == 0 }
-    @coords = User.build_coords_simple(address_attempt)
-    result = User.get_district_from_coords(address_attempt)
-    @district, @state = result[:district], result[:state]
-    @lat = params[:lat] || "19.71844"
-    @lon = params[:lon] || "-155.095228"
-    @zoom = params[:zoom] || "10"
-    # read in the map data information
-    json = JSON(File.read("#{Rails.root}/public/district_data/#{@district}.json"))
-    # ["name", "extents", "centroid", "coords"]
-    #gon.file_name = json["name"]
-    gon.coords = json["coords"]
-    gon.extents = json["extents"]
-    gon.centroid = json["centroid"]
+    if @user.geocoded?
+      flash[:notice] = "You have already geocoded"
+      redirect_to root_path
+    else
+      address_attempt = @user.get_ip(request.remote_ip)
+      # TODO REMOVE!
+      # i don't like this but it is a good way to get a default address
+      address_attempt = [38.7909, -77.0947] if address_attempt.all? { |a| a == 0 }
+      @coords = User.build_coords_simple(address_attempt)
+      result = User.get_district_from_coords(address_attempt)
+      @district, @state = result[:district], result[:state]
+      @lat = params[:lat] || "19.71844"
+      @lon = params[:lon] || "-155.095228"
+      @zoom = params[:zoom] || "10"
+      # read in the map data information
+      json = JSON(File.read("#{Rails.root}/public/district_data/#{@district}.json"))
+      # ["name", "extents", "centroid", "coords"]
+      #gon.file_name = json["name"]
+      gon.coords = json["coords"]
+      gon.extents = json["extents"]
+      gon.centroid = json["centroid"]
+    end
   end
 
   def district

@@ -9,6 +9,7 @@ class RepresentController < ApplicationController
   end
 
   def house_bills
+    # what are the active house bills?
     if @user = current_user
       @voted_on_rolls = @user.rolls_voted_on(:house).page(params[:voted_on]).per(5)
       @not_voted_on_rolls = @user.rolls_not_voted_on(:house).page(params[:not_voted_on]).per(3)

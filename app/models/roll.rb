@@ -1,7 +1,6 @@
 class Roll
 
   # this is known as a Vote in the GovTrack API!
-
   include Mongoid::Document
   include VotingLogic
   include VotingMethods
@@ -29,26 +28,6 @@ class Roll
   field :vote_type, type: String
   field :govtrack_id, type: Integer
 
-  #field :chamber, type: String
-  #field :session, type: Integer #
-  #field :file_name, type: String
-  #field :result, type: String #
-  #field :required, type: String #
-  #field :type, type: String #
-  #field :bill_type, type: String #
-  #
-  #
-  ## votes
-  #
-  #field :year, type: Integer     #
-  #field :congress, type: String  #
-  ## just added . . . rolls vote
-  #field :vote_count, type: Integer, default: 0
-  ##
-  #field :original_time, type: Time    #
-  #field :updated_time, type: Time     #
-  # still here for speed . . . (might delete)
-  #field :legislator_votes, type: Hash
   scope :most_popular, desc(:vote_count).limit(10)
   scope :house_rolls, where(chamber: :house).desc(:vote_count)
   scope :senate_rolls, where(chamber: :senate).desc(:vote_count)
@@ -103,14 +82,26 @@ class Roll
     end
   end
 
-  def add_votes
-    GovTrack::VoteVoter.find(vote: self.govtrack_id, limit: 450).each do |vote_voter|
-       puts "Adding #{vote_voter.vote_description}"
-       self.legislator_votes << LegislatorVote.from_govtrack(vote_voter)
-    end
-  end
-
   class << self
+
+    def pull_in_votes(limit = 150, voter_limit = 500)
+      GovTrack::Vote.find(order_by: "-created", limit: limit).each do |vote|
+        unless Roll.where(govtrack_id: vote.id).exists?
+          puts "Pulling in #{vote.question}"
+          roll = from_govtrack(vote)
+          roll.save
+          # from mongo docs: If the parent is persisted, then the child documents will be automatically saved.
+          GovTrack::VoteVoter.find(vote: roll.govtrack_id, limit: voter_limit).each do |vote_voter|
+            puts "Adding #{vote_voter.vote_description} for #{vote_voter.person_name} who voted #{vote_voter.option}"
+            l = LegislatorVote.from_govtrack(vote_voter)
+            roll.legislator_votes << l
+          end
+          roll.save
+        else
+          puts "skipping #{vote.question} from #{vote.resource_uri}"
+        end
+      end
+    end
 
     def from_govtrack(go)
       r = Roll.new
@@ -135,7 +126,15 @@ class Roll
       r.other = go.total_other
       r.aye = go.total_plus
       r.vote_type = go.vote_type
-      r.bill = Bill.where(govtrack_id: go.related_bill.id).first if go.related_bill
+      if go.related_bill
+        unless bill = Bill.where(govtrack_id: go.related_bill.id).first
+          bill = Bill.from_govtrack GovTrack::Bill.find_by_id(go.related_bill.id)
+          bill.save!
+        end
+        r.bill = bill
+      else
+        puts "no related bill for #{r.the_question}"
+      end
       r
     end
 
