@@ -28,14 +28,21 @@ class Roll
   field :vote_type, type: String
   field :govtrack_id, type: Integer
 
+  field :vote_count, type: Integer, default: 0
+
   scope :most_popular, desc(:vote_count).limit(10)
-  scope :house_rolls, where(chamber: :house).desc(:vote_count)
-  scope :senate_rolls, where(chamber: :senate).desc(:vote_count)
+  scope :house_rolls, where(chamber: :house, :bill_id.exists => true).desc(:vote_count)
+  scope :senate_rolls, where(chamber: :senate, :bill_id.exists => true).desc(:vote_count)
+
+  #def house_rolls
+  #  Roll.where(chamber:
+  #end
 
   # associations
   belongs_to :bill
   has_many :legislator_votes
   has_many :votes
+  has_many :comments, as: :commentable
 
   # [:aye, :nay, :abstain, :present]
   VAL = {'+' => :aye, '-' => :nay, 'P' => :present, '0' => :abstain}
@@ -48,31 +55,9 @@ class Roll
     ROLL_CATEGORIES[self.category][:label]
   end
 
-  #def create_legislator_votes(roll_call, bill)
-  #  #votes_hash = Hash.new
-  #  roll_call.each do |v|
-  #    if l = Legislator.where(govtrack_id: v.member_id).first
-  #      unless LegislatorVote.where(bill_id: bill.id).and(legislator_id: l.id).and(roll_id: self.id).exists?
-  #        LegislatorVote.create(bill_id: bill.id, legislator_id: l.id, value: VAL[v.member_vote.to_s], roll_id: self.id)
-  #      end
-  #      # votes_hash[l.id.to_s] = VAL[v.member_vote.to_s]
-  #    else
-  #      raise "legislator #{v.member_id} not found"
-  #    end
-  #  end
-  #  #self.legislator_votes = votes_hash
-  #end
-
   def tally
     {:ayes => self.aye, :nays => self.nay, :other => self.other}
   end
-
-  #def record_legislator_votes
-  #  # the purpose of this is to build a table that links legislators to votes
-  #  self.legislator_votes.each do |vote|
-  #    LegislatorVote.create(bill_id: self.bill.id, legislator_id: vote.first, value: vote.last)
-  #  end
-  #end
 
   def title
     if self.bill

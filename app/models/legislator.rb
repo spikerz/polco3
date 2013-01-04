@@ -41,6 +41,8 @@ class Legislator
   has_many :legislator_votes
   has_and_belongs_to_many :state_constituents, :class_name => "User", :inverse_of => :senators
 
+  has_many :comments, as: :commentable
+
   # scopes
   scope :representatives, where(title: 'Rep.')
   scope :senators, where(title: 'Sen.')

@@ -13,7 +13,7 @@
         %th= "#{@user.representative.full_name}'s vote"
       - else
         %th= @user.us_state
-        %th= "Senators #{@user.senators.map(&:last_name).to_sentence}"
+        %th= "Senators #{@user.senators.map(&:lastname).to_sentence}"
       %th Result
     - @rolls.each do |roll|
       %tr

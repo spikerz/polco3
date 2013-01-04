@@ -1,10 +1,11 @@
-= simple_form_for @comment, :html => { :class => 'form-horizontal' } do |f|
-  = f.input :_type
-  = f.input :author
-  = f.input :author_email
-  = f.input :comment_type
-  = f.input :content
-  = f.input :user_ip
+= simple_form_for [parent, comment], :html => { :class => 'form-horizontal' } do |f|
+  - if author.empty?
+    = f.input :author
+    = f.input :author_email
+  - else
+    = f.input :author, input_html: {value: author}
+    = f.input :author_email, input_html: {value: author_email}
+  = f.input :content, as: :text
+  = f.input :user_ip, as: :hidden
   .form-actions
     = f.button :submit, :class => 'btn-primary'
-    = link_to t('.cancel', :default => t("helpers.links.cancel")), comments_path, :class => 'btn'

@@ -2,10 +2,10 @@
 
 FactoryGirl.define do
   factory :comment do
-    author "MyString"
-    author_email "MyString"
+    author "tim"
+    author_email "tim@theboohers.org"
     comment_type "MyString"
-    content "MyString"
-    user_id "MyString"
+    content "I love this place. It is sweet."
+    user_ip "192.168.1.102"
   end
 end

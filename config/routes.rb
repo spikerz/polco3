@@ -6,17 +6,19 @@ Polco3::Application.routes.draw do
 
   get "home/polco_info"
 
-  resources :rolls
+  resources :rolls do
+    resources :comments
+  end
 
   resources :bills do
     resources :comments
   end
 
-  resources :subjects
-
   resources :legislators do
     resources :comments
   end
+
+  resources :subjects
 
   # sign up a user for a district
   match "/users/geocode" => "users#geocode"

@@ -8,6 +8,13 @@ class Ability
     else
       can :read, :all
     end
+    can :manage, Vote, :user_id => user.id
+    if user.geocoded?
+      can :add_vote, Roll
+      can :add_custom_group, PolcoGroup
+      can :manage, PolcoGroup, owner_id: user.id
+      can :create, PolcoGroup
+    end
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

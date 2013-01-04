@@ -20,8 +20,8 @@
 %p
   %strong Members:
   = @polco_group.member_count
-
-.form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), polco_groups_path, :class => 'btn'
-  = link_to t('.edit', :default => t("helpers.links.edit")), edit_polco_group_path(@polco_group), :class => 'btn'
-  = link_to t('.destroy', :default => t("helpers.links.destroy")), polco_group_path(@polco_group), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+- if current_user.admin? || current_user.id == @polco_group.owner_id
+  .form-actions
+    = link_to 'back', polco_groups_path, :class => 'btn'
+    = link_to 'edit', edit_polco_group_path(@polco_group), :class => 'btn'
+    = link_to 'destroy', polco_group_path(@polco_group), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

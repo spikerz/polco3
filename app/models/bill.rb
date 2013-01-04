@@ -50,6 +50,8 @@ class Bill
   # #####################
   # ASSOCIATIONS
 
+  has_many :comments, as: :commentable
+
   belongs_to :sponsor, :class_name => "Legislator"
 
   has_and_belongs_to_many :cosponsors, :class_name => "Legislator"
