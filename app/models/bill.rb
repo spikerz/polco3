@@ -1,6 +1,8 @@
 class Bill
   include Mongoid::Document
 
+  field :title, type: String
+  field :title_without_number, type: String
   field :govtrack_id, type: String
   field :bill_resolution_type, type: String
   field :bill_type, type: String
@@ -19,11 +21,9 @@ class Bill
   field :resource_uri, type: String
   field :senate_floor_schedule_postdate, type: Date
   field :thomas_link, type: String
-  field :title, type: String
-  field :title_without_number, type: String
 
   # my additions
-  field :bill_html, :type => String
+  #field :bill_html, :type => String
   field :ident, :type => String
   field :cosponsors_count, :type => Integer
   field :govtrack_name, type: String
@@ -67,7 +67,7 @@ class Bill
   end
 
   def current_status_explanation
-    CURRENT_STATUS[self.current_status]
+    "#{BILL_STATUS[self.current_status.to_sym]} on #{self.current_status_date}".html_safe
   end
 
   def passed?
@@ -75,14 +75,35 @@ class Bill
   end
 
   def get_bill_text
-    #"#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.type_key}/#{self.type_key + self.number.to_s}.html"
-    response = HTTParty.get("#{GOVTRACK_URL}data/us/bills.text/#{self.congress.to_s}/#{self.bill_type}/#{self.bill_type + self.number.to_s}.html").response
+    response = HTTParty.get(self.bill_html_link).response
     case response
       when 200
         response.body
       else
         nil
     end
+  end
+
+  def bill_text?
+    response = HTTParty.get(self.bill_html_link).response
+    case response.code
+      when "200"
+        true
+      else
+        nil
+    end
+  end
+
+  def bill_html_link
+    "#{bill_link}.html"
+  end
+
+  def bill_pdf_link
+    "#{bill_link}.pdf"
+  end
+
+  def bill_link
+    "#{GOVTRACK_URL}/data/us/bills.text/#{self.congress.to_s}/#{self.type_key}/#{self.type_key + self.number.to_s}"
   end
 
   class << self
@@ -117,6 +138,7 @@ class Bill
       b.title_without_number = bill.title_without_number
       # lookup
       # add legislator if they don't exist?
+      b.save
       if legislator = Legislator.where(govtrack_id: bill.sponsor.id).first
         b.sponsor = legislator
       else
@@ -126,6 +148,7 @@ class Bill
         #raise "sponsor not found"
       end
       # add rolls ?
+      b.save
       if add_rolls
         GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |vote|
           roll = Roll.from_govtrack(vote)
@@ -139,125 +162,6 @@ class Bill
   ############################################################################################################
   #########################################      OLD METHODS        ##########################################
   ############################################################################################################
-
-  #def rolled
-  #  !self.roll_time.nil?
-  #end
-  #
-
-  #def chamber
-  #  self.title[0] == "h" ? :house : :senate
-  #end
-
-  # ------------------- Public booher_modules aggregation methods -------------------
-
-  #def full_type
-  #  case self.bill_type
-  #    when 'h' then
-  #      'H.R.'
-  #    when 'hr' then
-  #      'H.Res.'
-  #    when 'hj' then
-  #      'H.J.Res.'
-  #    when 'hc' then
-  #      'H.C.Res.'
-  #    when 's' then
-  #      'S.'
-  #    when 'sr' then
-  #      'S.Res.'
-  #    when 'sj' then
-  #      'S.J.Res.'
-  #    when 'sc' then
-  #      'S.C.Res.'
-  #  end
-  #end
-
-  #def update_legislator_counts
-  #  unless self.sponsor.nil?
-  #    self.sponsor.update_attribute(:sponsored_count, self.sponsor.sponsored.length)
-  #  end
-  #  cosponsors.each do |cosponsor|
-  #    cosponsor.update_attribute(:cosponsored_count, cosponsor.cosponsored.length)
-  #  end
-  #  if self.hidden?
-  #    self.sponsor = nil
-  #    self.cosponsors = []
-  #    self.bill_html = nil
-  #  end
-  #end
-
-  #def get_latest_action
-  #  last_action = self.bill_actions.sort_by { |dt, tit| dt }.last
-  #  {:date => last_action.first, :description => last_action.last}
-  #end
-
-  #def status_description
-  #  BILL_STATE[self.bill_state.gsub(":", "|")]
-  #end
-
-
-  #def save_sponsor(id)
-  #  if sponsor = Legislator.where(:govtrack_id => id).first
-  #    self.sponsor = sponsor
-  #  else
-  #    raise "sponsor not in database!"
-  #  end
-  #  self.save
-  #end
-
-  #def save_cosponsors(cosponsors)
-  #  cosponsors.each do |cosponsor_id|
-  #    cosponsor = Legislator.where(:govtrack_id => cosponsor_id).first
-  #    if cosponsor
-  #      self.cosponsors << cosponsor
-  #    else
-  #      raise "cosponsor not found"
-  #    end
-  #  end
-  #  self.save
-  #end
-
-  #def get_titles(raw_titles)
-  #  titles = Array.new
-  #  raw_titles.each_slice(2) do |title|
-  #    titles.push title
-  #  end
-  #  titles
-  #end
-  #
-  #def get_actions(raw_actions)
-  #  # what are the actions? next steps for the bill, right?
-  #  actions = Array.new
-  #  raw_actions.each_slice(2) do |action|
-  #    actions.push action
-  #  end
-  #  actions.sort_by { |d, a| d }.reverse
-  #end
-
-  #def rolled?
-  #  !self.roll_time.nil?
-  #end
-
-  # eieio -- this is the "last" vote summary
-  #def vote_summary
-  #  self.rolls.last.tally if self.rolled?
-  #end
-
-  #private
-
-  #def self.bill_search(search)
-  #  if search
-  #    self.where(short_title: /#{search}/i) if search
-  #  else
-  #    self.all
-  #  end
-  #end
-
-#   Bill files are named as follows: data/us/CCC/rolls/TTTNNN.xml.
-
-#      CCC signifies the Congress number. See the first column of data/us/sessions.tsv. It is a number from 1 to 112 (at the time of writing) without zero-padding.
-#      TTT is the type of bill or resolution from the following codes: "h" (displayed "H.R." i.e. a House bill), "hr" (displayed "H.Res.", a House resolution), "hj" (displayed "H.J.Res." i.e. a House joint resolution), "hc" (displayed "H.Con.Res.", i.e. a House Concurrent Resolution), and similarly "s", "sr", "sj", and "sc" for Senate bills displayed as "S.", "S.Res.", "S.J.Res.", and "S.Con.Res."
-
 
 
 end

@@ -52,7 +52,7 @@
           - if content_for?(:title)
             %section{id: yield(:title)}
               .page-header
-                %h1= yield(:title)
+                %h2= yield(:title)
           = yield
         .span3
           %ul.nav.nav-tabs.nav-stacked{style: "padding-top: 100px;"}

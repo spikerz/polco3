@@ -50,4 +50,15 @@ gem 'gon'
 #gem 'heroku'
 gem 'cancan'
 gem 'govtrack', git: 'git@github.com:tbbooher/govtrack.git'
-gem 'spork', '~> 1.0rc'
+group :development do
+  gem 'guard', require: false
+  gem 'spork', '~> 1.0rc'
+  gem 'guard-livereload', require: false
+  #gem 'guard-spork', require: false
+  #gem 'guard-rspec', require: false
+  gem 'rb-inotify', :require => false
+  gem 'rb-fsevent', :require => false
+  gem 'rb-fchange', :require => false
+  gem 'growl', :require => false if RUBY_PLATFORM =~ /darwin/i
+end
+

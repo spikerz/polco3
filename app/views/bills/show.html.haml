@@ -6,18 +6,28 @@
   %strong Sponsor:
   = link_to @bill.sponsor.name, legislator_path(@bill.sponsor)
 
-%ul
-  %li Bill Title
-  %li Long Title
-  %li Summary (does this exist)
-  %li Sponsor & District
-  %li Bill Status
+%p
+  %strong Introduced:
+  = @bill.introduced_date.to_s
 
-- unless @bill_text.nil?
-  .well
-    = @bill_text.html_safe
+%p
+  %strong Current status:
+  = @bill.current_status_explanation
+
+- if @bill.bill_text?
+  %p
+    Full bill text
+    (
+    = link_to 'html', @bill.bill_html_link, target: "_blank"
+    |
+    = link_to 'pdf', @bill.bill_pdf_link, target: "_blank"
+    ) or
+    = link_to "View on THOMAS", @bill.thomas_link
+
 - else
-  %p No bill text available
+  %p Bill text is not yet available
+
+
 
 = render partial: 'comments/comments_section', locals: {parent: @bill, comment: @comment, author: @author, author_email: @email}
 
