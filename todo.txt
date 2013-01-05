@@ -1,17 +1,15 @@
-- better title for roll (without a bill)
+- add hashes to roll
 
 - rolls don't show if user is logged out
 
 then nickification:
 -------------------
-
-
 - if you create a group, you should be following it by default
 
-- add comments
-
-- legislative activity not showing up for members (that i can see)
-
-- "nickify" stuff
 
 - groups are showing zero members ??
+
+not doing now:
+--------------
+> comment ratings
+>

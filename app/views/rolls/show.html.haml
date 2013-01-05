@@ -14,7 +14,35 @@
   %strong Chamber:
   = @roll.chamber
 
-%p What do we want to show here? (use nick's sheets)
+%h4 District Tallies
+
+%p The fundamental question is how did all the 'polco' districts vote on this roll?
+%p We need to make this apply to house as well as senate bills (meaning states)
+%table.table.table-striped
+  %tr
+    %th District
+    %th Rep Vote
+    %th Rep Name
+    %th Party
+    %th Tally
+  - # here is where we do the magic . . how have we done this previously?
+
+%h4 Joined and Followed Groups
+
+%p Same thing, but for the joined and followed groups
+%table.table.table-striped
+  %tr
+    %th Group name
+    %th Description
+    %th Tally
+  - # here is where we do the magic . . how have we done this previously?
+
+=# @roll.polco_groups.all.size
+
+%ul
+  %li District Tallies
+  %li Joined and Followed Groups
+  %li Show individual rep votes
 
 = render partial: 'comments/comments_section', locals: {parent: @roll, comment: @comment, author: @author, author_email: @email}
 

@@ -27,7 +27,11 @@
 - else
   %p Bill text is not yet available
 
-
+- unless @bill.rolls.empty?
+  %h5 Rolls
+  %ul
+    - @bill.rolls.each do |roll|
+      %li= link_to roll.title, roll_path(roll)
 
 = render partial: 'comments/comments_section', locals: {parent: @bill, comment: @comment, author: @author, author_email: @email}
 
