@@ -22,7 +22,7 @@
       %th= model_class.human_attribute_name(:title_long)
       %th= model_class.human_attribute_name(:website)
       %th= model_class.human_attribute_name(:created_at)
-      %th=t '.actions', :default => t("helpers.actions")
+      %th Actions
   %tbody
     - @roles.each do |role|
       %tr
@@ -45,7 +45,7 @@
         %td= role.website
         %td=l role.created_at
         %td
-          = link_to t('.edit', :default => t("helpers.links.edit")), edit_role_path(role), :class => 'btn btn-mini'
-          = link_to t('.destroy', :default => t("helpers.links.destroy")), role_path(role), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+          = link_to 'Edit', edit_role_path(role), :class => 'btn btn-mini'
+          = link_to 'Destroy', role_path(role), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
-= link_to t('.new', :default => t("helpers.links.new")), new_role_path, :class => 'btn btn-primary'
+= link_to 'New', new_role_path, :class => 'btn btn-primary'

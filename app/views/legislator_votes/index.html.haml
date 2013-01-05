@@ -11,7 +11,7 @@
       %th Value
       %th Legislator
       %th Roll
-      %th=t '.actions', :default => t("helpers.actions")
+      %th Actions
   %tbody
     - @legislator_votes.each do |legislator_vote|
       %tr
@@ -20,9 +20,9 @@
         %td= link_to legislator_vote.legislator.full_name, legislator_path(legislator_vote.legislator)
         %td= link_to  legislator_vote.roll.title, roll_path(legislator_vote.roll)
         %td
-          = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_vote_path(legislator_vote), :class => 'btn btn-mini'
-          = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_vote_path(legislator_vote), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
+          = link_to 'Edit', edit_legislator_vote_path(legislator_vote), :class => 'btn btn-mini'
+          = link_to 'Destroy', legislator_vote_path(legislator_vote), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-mini btn-danger'
 
-= link_to t('.new', :default => t("helpers.links.new")), new_legislator_vote_path, :class => 'btn btn-primary'
+= link_to 'New', new_legislator_vote_path, :class => 'btn btn-primary'
 
 = paginate @legislator_votes

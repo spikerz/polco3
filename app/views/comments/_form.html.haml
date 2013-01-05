@@ -5,7 +5,7 @@
   - else
     = f.input :author, input_html: {value: author}
     = f.input :author_email, input_html: {value: author_email}
-  = f.input :content, as: :text
+  = f.input :content, as: :text, label: 'Comment'
   = f.input :user_ip, as: :hidden
   .form-actions
     = f.button :submit, :class => 'btn-primary'

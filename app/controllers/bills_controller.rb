@@ -5,6 +5,11 @@ class BillsController < InheritedResources::Base
   def show
     @bill = Bill.find(params[:id])
     @bill_text = @bill.get_bill_text
+    # comment fields
+    @comment = Comment.new
+    @author = current_user.nil? ? "" : current_user.name
+    @email = current_user.nil? ? "" : current_user.email
+    # # #
     show!
   end
 

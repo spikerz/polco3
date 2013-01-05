@@ -47,6 +47,10 @@ class Roll
   # [:aye, :nay, :abstain, :present]
   VAL = {'+' => :aye, '-' => :nay, 'P' => :present, '0' => :abstain}
 
+  def name
+    self.the_question
+  end
+
   def category_description
     ROLL_CATEGORIES[self.category][:description]
   end
@@ -60,11 +64,7 @@ class Roll
   end
 
   def title
-    if self.bill
-      self.bill.title
-    else
-      "no bill"
-    end
+    self.the_question
   end
 
   class << self

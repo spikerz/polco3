@@ -4,6 +4,11 @@ class LegislatorsController < InheritedResources::Base
 
   def show
     @legislator = Legislator.find(params[:id])
+    # comment fields
+    @comment = Comment.new
+    @author = current_user.nil? ? "" : current_user.name
+    @email = current_user.nil? ? "" : current_user.email
+    # # #
     @latest_votes = @legislator.latest_votes.page(params[:page])
     show! do |format|
       format.html {    if @legislator.current_role.nil?

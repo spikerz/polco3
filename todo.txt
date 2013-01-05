@@ -1,3 +1,4 @@
+- better title for roll (without a bill)
 
 - rolls don't show if user is logged out
 

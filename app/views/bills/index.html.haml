@@ -1,55 +1,30 @@
-%h1 Listing bills
 
-%table
+
+-title 'Listing bills'
+
+= paginate @bills
+
+%table.table.table-striped
   %tr
-    %th Bill resolution type
-    %th Bill type
-    %th Congress
+    %th{style: 'width: 80%'} Title without number
     %th Current status
-    %th Current status date
-    %th Current status description
-    %th Display number
-    %th Docs house gov postdate
-    %th Govtrack
-    %th Introduced date
-    %th Is alive
-    %th Is current
-    %th Link
-    %th Number
-    %th Resource uri
-    %th Senate floor schedule postdate
-    %th Thomas link
-    %th Title
-    %th Title without number
-    %th
-    %th
-    %th
+    - if current_user.admin?
+      %th
+      %th
+      %th
 
   - @bills.each do |bill|
     %tr
-      %td= bill.bill_resolution_type
-      %td= bill.bill_type
-      %td= bill.congress
-      %td= bill.current_status
-      %td= bill.current_status_date
-      %td= bill.current_status_description
-      %td= bill.display_number
-      %td= bill.docs_house_gov_postdate
-      %td= bill.govtrack_id
-      %td= bill.introduced_date
-      %td= bill.is_alive
-      %td= bill.is_current
-      %td= bill.link
-      %td= bill.number
-      %td= bill.resource_uri
-      %td= bill.senate_floor_schedule_postdate
-      %td= bill.thomas_link
-      %td= bill.title
-      %td= bill.title_without_number
-      %td= link_to 'Show', bill
-      %td= link_to 'Edit', edit_bill_path(bill)
-      %td= link_to 'Destroy', bill, method: :delete, data: { confirm: 'Are you sure?' }
+      %td= link_to bill.title_without_number, bill_path(bill)
+      %td= CURRENT_STATUS[bill.current_status].gsub(/<em>.*<\/em>/,'')
+      - if current_user.admin?
+        %td= link_to 'Show', bill
+        %td= link_to 'Edit', edit_bill_path(bill)
+        %td= link_to 'Destroy', bill, method: :delete, data: { confirm: 'Are you sure?' }
+
+= paginate @bills
 
 %br
 
-= link_to 'New Bill', new_bill_path
+- if current_user.admin?
+  = link_to 'New Bill', new_bill_path

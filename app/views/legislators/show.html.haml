@@ -8,9 +8,17 @@
   is a
   = "#{@legislator.job}."
 
-- if @latest_votes
+%h4 Bills Sponsored
+
+- unless @legislator.bills.empty?
+  %ul
+    - @legislator.bills.each do |bill|
+      %li= link_to bill.title, bill_path(bill)
+
+%h4 Recent voting activity
+
+- unless @latest_votes.empty?
   .well
-    %h3 RECENT LEGISLATIVE ACTIVITY
     %table.table.zebra-striped
       %tr
         %th Title
@@ -20,7 +28,9 @@
           %th= link_to lv.bill.title, lv.bill
           %th= lv.value
 - else
-  No activity yet
+  %p No voting activity yet
+
+
 
 -#.well
 -#  %h3 COMMITTEE MEMBERSHIP
@@ -36,8 +46,11 @@
 - # what bills has he sponsored?
 - # how has he voted?
 - # any other info available online?
+
+= render partial: 'comments/comments_section', locals: {parent: @legislator, comment: @comment, author: @author, author_email: @email}
+
 - if current_user.admin?
   .form-actions
     = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'
-    = link_to t('.edit', :default => t("helpers.links.edit")), edit_legislator_path(@legislator), :class => 'btn'
-    = link_to t('.destroy', :default => t("helpers.links.destroy")), legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+    = link_to 'Edit', edit_legislator_path(@legislator), :class => 'btn'
+    = link_to 'Destroy', legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

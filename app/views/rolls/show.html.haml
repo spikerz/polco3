@@ -6,6 +6,7 @@
   .well
     = roll_presenter.vote_region
 
+- if bill
   %h4
     = link_to bill.title, bill_path(bill)
 
@@ -15,14 +16,10 @@
 
 %p What do we want to show here? (use nick's sheets)
 
-%ul
-  - @roll.comments.each do |comment|
-    %li= comment.content
-
-= render partial: 'comments/form', locals: {parent: @roll, comment: @comment, author: @author, author_email: @email}
+= render partial: 'comments/comments_section', locals: {parent: @roll, comment: @comment, author: @author, author_email: @email}
 
 - if current_user.admin?
   .form-actions
     = link_to t('.back', :default => t("helpers.links.back")), rolls_path, :class => 'btn'
-    = link_to t('.edit', :default => t("helpers.links.edit")), edit_roll_path(@roll), :class => 'btn'
-    = link_to t('.destroy', :default => t("helpers.links.destroy")), roll_path(@roll), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+    = link_to 'Edit', edit_roll_path(@roll), :class => 'btn'
+    = link_to 'Destroy', roll_path(@roll), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

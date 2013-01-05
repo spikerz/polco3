@@ -124,7 +124,6 @@ class Legislator
       leg.bioguideid = person.bioguideid
       leg.birthday = person.birthday
       leg.firstname = person.firstname
-      leg.id = person.id
       leg.lastname = person.lastname
       leg.link = person.link
       leg.metavidid = person.metavidid
