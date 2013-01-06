@@ -1,0 +1,13 @@
+- unless user.custom_groups.empty?
+  .well
+    %h5= group_title
+    %table.table.table-striped
+      %tr
+        %th Name
+        -#%th Description
+        %th Members
+      - groups.each do |g|
+        %tr
+          %td= link_to g.name, g
+          -#%td= truncate(g.description, length: 70)
+          %td= g.member_count

@@ -6,38 +6,37 @@
   .well
     = roll_presenter.vote_region
 
-- if bill
-  %h4
-    = link_to bill.title, bill_path(bill)
+  - if bill
+    %h4
+      = link_to bill.title, bill_path(bill)
 
-%p
-  %strong Chamber:
-  = @roll.chamber
+  %p
+    %strong Chamber:
+    = @roll.chamber
 
-%h4 District Tallies
+  %h4 District Tallies
 
-%p The fundamental question is how did all the 'polco' districts vote on this roll?
-%p We need to make this apply to house as well as senate bills (meaning states)
-%table.table.table-striped
-  %tr
-    %th District
-    %th Rep Vote
-    %th Rep Name
-    %th Party
-    %th Tally
-  - # here is where we do the magic . . how have we done this previously?
+  %p The fundamental question is how did all the 'polco' districts vote on this roll?
+  %p We need to make this apply to house as well as senate bills (meaning states)
+
+  %h4 District Tallies
+  .well
+    = roll_presenter.activity
 
 %h4 Joined and Followed Groups
 
 %p Same thing, but for the joined and followed groups
+
 %table.table.table-striped
   %tr
     %th Group name
     %th Description
     %th Tally
-  - # here is where we do the magic . . how have we done this previously?
-
-=# @roll.polco_groups.all.size
+  - current_user.relevant_groups.each do |group| # here is where we do the magic . . how have we done this previously?
+    %tr
+      %td= group.name
+      %td= truncate(group.description, length: 70)
+      %td= pie_chart(group.get_votes_tally(@roll))
 
 %ul
   %li District Tallies
@@ -48,6 +47,6 @@
 
 - if current_user.admin?
   .form-actions
-    = link_to t('.back', :default => t("helpers.links.back")), rolls_path, :class => 'btn'
+    = link_to 'back', rolls_path, :class => 'btn'
     = link_to 'Edit', edit_roll_path(@roll), :class => 'btn'
     = link_to 'Destroy', roll_path(@roll), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

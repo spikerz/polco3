@@ -1,20 +1,17 @@
-- bill.rolls.each do |roll|
-  - unless roll.votes.empty?
-    %h3= roll.title
-    %table.table.table-striped
+%table.table.table-striped
+  %tr
+    %th District
+    %th Pie chart
+    %th Rep Vote
+    %th Rep Name
+    %th Party
+  - districts.each do |d|
+    - # to do this row, we want to make sure there are results to show
+    - if d.the_rep && d.has_activity?(roll)
+      - rep = d.the_rep
       %tr
-        %th District
-        %th Pie chart
-        %th Rep Vote
-        %th Rep Name
-        %th Party
-      - districts.each do |d|
-        - # to do this row, we want to make sure there are results to show
-        - if d.the_rep && d.has_activity?(roll)
-          - rep = d.the_rep
-          %tr
-            %td= link_to d.name, d
-            %td= pie_chart(d.get_votes_tally(roll))
-            %td= roll.find_member_vote(rep)
-            %td= link_to rep.full_name, rep
-            %td= rep.party
+        %td= link_to d.name, d
+        %td= pie_chart(d.get_votes_tally(roll))
+        %td= roll.find_member_vote(rep)
+        %td= link_to rep.full_name, rep
+        %td= rep.party

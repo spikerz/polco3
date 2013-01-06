@@ -44,14 +44,26 @@ ul.nav li {
 }
 
 .page-header {
-  /* padding-top: 30px; */
+  padding-top: 30px;
 }
 
-
+/*
 .row {
   padding-top: 70px;
-}
+} */
 
-%footer {
+footer {
   padding-top: 10px;
+ }
+
+span.red {
+  color:#ff0000;
+ }
+
+span.orange {
+  color: #FFA500;
+ }
+
+span.green {
+  color: #008000;
  }

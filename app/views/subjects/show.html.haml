@@ -16,6 +16,6 @@
   = @subject.name
 
 .form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), subjects_path, :class => 'btn'
+  = link_to 'back', subjects_path, :class => 'btn'
   = link_to 'Edit', edit_subject_path(@subject), :class => 'btn'
   = link_to 'Destroy', subject_path(@subject), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

@@ -11,18 +11,8 @@ describe Legislator do
   end
 
   it "should have a chamber" do
-    @l.chamber.should eql("U.S. House of Representatives")
-    #  assert_equal(, @legislator.chamber)
+    @l.chamber_label.should eql("U.S. House of Representatives")
   end
-
-  #it "should have a list of votes on bills" do
-  #  Legislator.update_legislators
-  #  b = FactoryGirl.create(:bill, bill_type: 'h', congress: '112', bill_number: '1837', govtrack_id: 'h112-1837')
-  #  roll = Roll.bring_in_roll("h2012-86.xml")
-  #  #roll.record_legislator_votes   # loads the legislator vote table
-  #  @l.vote_on(b).should eq(:aye)
-  #  @l.bills_voted_on.first.should eq(b.id)
-  #end
 
   it " should show how they voted on a bill" do
     b = FactoryGirl.create(:bill)

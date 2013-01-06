@@ -84,8 +84,64 @@ describe PolcoGroup do
     d.the_rep.should eql("Only districts can have a representative")
   end
 
-  it "should be able to record a tally for a common group" do
+  it "should be able to find the rep for a district" do
+    data = @d.name.match(/([A-Z]+)(\d+)/)
+    state, district_num = data[1], data[2].to_i
+    l = FactoryGirl.create(:legislator, chamber: :house, state: state, district: district_num)
+    @d.the_rep.should eql(l)
+  end
 
+  it "should be able to display a list of representatives" do
+    FactoryGirl.create(:legislator, chamber: :house, firstname: 'mike', lastname: 'handy')
+    FactoryGirl.create(:legislator, chamber: :house, firstname: 'brian', lastname: 'larson')
+    Legislator.representatives.size.should eql(2)
+  end
+
+  it "should be able to record a tally for a common group" do
+    pending
+  end
+
+  it "should be able to find the senators for a state" do
+    va = FactoryGirl.create(:polco_group, type: :state, name: 'VA')
+    junior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'apollo', state: 'VA')
+    senior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'daphne', state: 'VA')
+    junior.current_role.startdate = Date.parse("August 12, 2000")
+    senior.current_role.enddate = Date.parse("August 12, 1976")
+    senators = va.senators_hash
+    senators[:junior_senator].twitterid = "apollo"
+    senators[:senior_senator].twitterid = "daphne"
+  end
+
+  it "produces nil when there are not two senators" do
+    va = FactoryGirl.create(:polco_group, type: :state, name: 'VA')
+    ky = FactoryGirl.create(:polco_group, type: :state, name: 'KY')
+    junior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'apollo', state: 'VA')
+    senior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'daphne', state: 'VA')
+    # just one from ohio
+    junior_oh = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'cupid', state: 'OH')
+    junior.current_role.startdate = Date.parse("August 12, 2000")
+    senior.current_role.enddate = Date.parse("August 12, 1976")
+    junior_oh.current_role.startdate = Date.parse("August 12, 1827")
+    va.senators_hash.size.should be 2
+    @oh.senators_hash.nil?.should be true
+    ky.senators_hash.nil?.should eql(true)
+  end
+
+  it "should build an array of states with senators" do
+    FactoryGirl.create(:polco_group, type: :state, name: 'VA')
+    junior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'apollo', state: 'VA')
+    senior = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'daphne', state: 'VA')
+    # just one from ohio
+    junior_oh = FactoryGirl.create(:legislator, chamber: :senate, twitterid: 'cupid', state: 'OH')
+    junior.current_role.startdate = Date.parse("August 12, 2000")
+    senior.current_role.enddate = Date.parse("August 12, 1976")
+    junior_oh.current_role.startdate = Date.parse("August 12, 1827")
+    states_with_senators = PolcoGroup.states_with_senators
+    states_with_senators.size.should be 1
+    state = states_with_senators.first
+    state[:state].name.should eql('VA')
+    state[:senior_senator].twitterid.should eql('apollo')
+    state[:junior_senator].twitterid.should eql('daphne')
   end
 
 end

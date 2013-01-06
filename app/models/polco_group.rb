@@ -26,15 +26,11 @@ class PolcoGroup
   has_and_belongs_to_many :members, :class_name => "User", :inverse_of => :custom_groups # uniq: true
   has_and_belongs_to_many :common_members, :class_name => "User", :inverse_of => :common_groups # uniq: true
   has_and_belongs_to_many :followers, :class_name => "User", :inverse_of => :followed_groups #, uniq: true
+  # I forget why a PolcoGroup would have votes, this makes no sense
   has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
 
-  # you can only join and follow a group once
-  #validates_uniqueness_of :members, message: "User has already joined this group"
-  #validates_uniqueness_of :followers, message: "User has already joined this group"
-
-  def get_tally
-    # TODO what does this mean in the context of a group?
-    process_votes(self.votes)
+  def get_tally(roll)
+    process_votes(self.votes.where(roll_id: roll.id))
   end
 
   def add_member(user_obj)
@@ -42,9 +38,6 @@ class PolcoGroup
     self.member_count += 1
     self.save
   end
-
-  #we want to increment member_count when a new member is added
-  #before_save :update_followers_and_members
 
   # some validations
   validates_uniqueness_of :name, :scope => :type
@@ -78,6 +71,30 @@ class PolcoGroup
     self.votes.where(roll_id: roll.id).size > 0
   end
 
+  def senators_hash
+    # polcoGroup must be a state
+    if (self.type == :state) && (Legislator.senators.where(state: self.name).size == 2)
+      legs = Legislator.senators.where(state: self.name).sort_by { |u| u.current_role.startdate }
+      {junior_senator: legs.last, senior_senator: legs.first}
+    else
+      nil
+    end
+  end
+
+  def self.states_with_senators
+    collection = []
+    PolcoGroup.states.each do |state|
+      if h = state.senators_hash
+        collection << {state: state, junior_senator: h[:junior_senator], senior_senator: h[:senior_senator]}
+      end
+    end
+    collection
+  end
+
+  #def has_senator?
+  #  (self.type == :state) && (!self.senators_hash.all? {|k,v| v.nil?})
+  #end
+
   def the_rep
     # this method finds the rep of a district
     if self.type == :district && self.name
@@ -97,7 +114,6 @@ class PolcoGroup
   end
 
   def get_votes_tally(roll)
-    # messy!
     process_votes(self.votes.where(roll_id: roll.id).all.to_a)
   end
 
@@ -109,15 +125,6 @@ class PolcoGroup
   def senators
     if self.type == :state
       Legislator.senators.where(state: self.name).all.to_a
-    else
-      nil
-    end
-  end
-
-  def senators_hash
-    if self.type == :state
-      legs=Legislator.senators.where(state: self.name).all.to_a.sort_by { |u| u.start_date }
-      {junior_senator: legs.last, senior_senator: legs.first}
     else
       nil
     end

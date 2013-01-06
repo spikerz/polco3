@@ -29,24 +29,32 @@ class User
 
   # crazy number of associations
   has_many :votes
-  #has_many :custom_groups, class_name: "PolcoGroup", inverse_of: :owner
+
   belongs_to :district, class_name: "PolcoGroup", inverse_of: :constituents
   belongs_to :state, class_name: "PolcoGroup", inverse_of: :state_constituents
+  # these groups are groups that users have created -- a user 'joins' these
   has_and_belongs_to_many :custom_groups, class_name: "PolcoGroup", inverse_of: :members
+  # these are groups that all users are in
   has_and_belongs_to_many :common_groups, class_name: "PolcoGroup", inverse_of: :common_members
+  # these are groups that a user follows but has not joined (hmm, so their votes don't count)
   has_and_belongs_to_many :followed_groups, class_name: "PolcoGroup", inverse_of: :followers
+
   has_and_belongs_to_many :senators, class_name: "Legislator", inverse_of: :state_constituents
   belongs_to :representative, class_name: "Legislator", inverse_of: :district_constituents
+  has_many :comments, as: :commentable
 
   # a user can only join or follow a group once
+  # really should change this to "joined groups"
   validates :custom_group_ids, :allow_blank => true, :uniqueness => true
   validates :followed_group_ids, :allow_blank => true, :uniqueness => true
   validates :email, :email => true
 
-  #before_create :assign_default_group
-
-
   # attributes
+
+  def relevant_groups
+    self.custom_groups + self.followed_groups
+  end
+
   def us_state
     self.state.name if self.state
   end

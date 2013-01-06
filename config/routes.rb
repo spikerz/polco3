@@ -45,7 +45,9 @@ Polco3::Application.routes.draw do
   post "rolls/add_vote", as: :add_vote
 
   root :to => "home#index"
-  resources :users, :only => [:index, :show, :edit, :update ]
+  resources :users, :only => [:index, :show, :edit, :update ] do
+    resources :comments
+  end
 
   match '/auth/:provider/callback', to: 'sessions#create'
   match '/signin', to: 'sessions#new', as: :signin

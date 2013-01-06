@@ -1,4 +1,10 @@
-- add hashes to roll
+- page: "http://localhost:3001/rolls/50e87cd6d6f45fbc38000360", why:  AR		no votes
+
+- get nick's simple display to work for tallys
+- can follow users?
+- show group members and followers
+
+- get others working
 
 - rolls don't show if user is logged out
 
@@ -8,6 +14,10 @@ then nickification:
 
 
 - groups are showing zero members ??
+
+done:
+- make user's commentable
+
 
 not doing now:
 --------------

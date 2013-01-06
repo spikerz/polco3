@@ -1,73 +1,72 @@
 - title "User Profile for #{@user.name.titlecase}"
+- content_for :sidebar do
+  - if @user.id == current_user.id || current_user.admin?
+    = link_to "Edit your profile", edit_user_path(@user), class: 'btn btn-primary'
 
-- if @user.id == current_user.id || current_user.admin?
-  %p= link_to "edit", edit_user_path(@user)
+.row
+  .span4
+    - if @user.email
+      %p
+        %strong Email:
+        = @user.email
 
-- if @user.email
-  %p
-    %b Email:
-    = @user.email
+      %p
+        %strong Registration Date:
+        #{@user.created_at.to_s(:db)}
 
-%p
-  %b Registration Date:
-  #{@user.created_at.to_s(:db)}
+      %p
+        %strong Votes cast:
+        = @user.votes.size
 
-- if @user.geocoded?
-  %p
-    %b State:
-    = link_to @user.state.name, @user.state
+  .span4
+    - if @user.geocoded?
+      %p
+        %b State:
+        = link_to @user.state.name, @user.state
 
-  %p
-    %b District:
-    = link_to @user.district.name, @user.district
+      %p
+        %b District:
+        = link_to @user.district.name, @user.district
 
-  %p
-    %b Representative:
-    = link_to @user.representative.full_name, @user.representative
+      %p
+        %b Representative:
+        = link_to @user.representative.full_name, @user.representative
 
-  %p
-    %b Senators:
-  %ul
-    - @user.senators.each do |sen|
-      %li
-        = link_to sen.full_name, sen
+      %p
+        %b Senators:
+      %ul
+        - @user.senators.each do |sen|
+          %li
+            = link_to sen.full_name, sen
 
 %h4 Groups
+.row
+  - if @user.custom_groups.size == 0 && @user.followed_groups.size == 0 && @user.common_groups.empty?
+    %p
+      You have zero groups (not even the default ones)
+      = link_to "Geocode","/users/geocode"
+  - else
+    .span4
+      = render partial: 'display_groups', locals: {user: @user, group_title: 'Joined Groups', groups: @user.relevant_groups}
+    .span4
+      = render partial: 'display_groups', locals: {user: @user, group_title: 'Followed Groups', groups: @user.followed_groups}
 
-- if @user.custom_groups.size == 0 && @user.followed_groups.size == 0 && @user.common_groups.empty?
-  %p
-    You have zero groups (not even the default ones)
-    = link_to "Geocode","/users/geocode"
-- else
-  - if @user.custom_groups.size > 0
-    %h5 Joined Groups
+%h4 Roll Call
+.row
+  .span4.offset2.alert-message.well
     %table.table.table-striped
       %tr
-        %th{style: "width:50%"} Name
-        %th Members
-      - @user.custom_groups.each do |g|
+        %th Roll
+        %th Your Vote
+        %th Your District
+        %th Your Rep
+        %th Result
+      - @user.votes.each do |vote|
         %tr
-          %td= link_to g.name, g
-          %td= g.member_count
+          %th= link_to vote.roll.short_title, vote.roll
+          %th= vote.value
+          %th= vote.district_tally
+          %th= vote.reps_vote
+          %th= vote.roll.result
 
-  - if @user.followed_groups.size > 0
-    %h5 Followed Groups
-    %table.table.table-striped
-      %tr
-        %th{style: "width:50%"} Name
-        %th Members
-      - @user.followed_groups.each do |g|
-        %tr
-          %td= link_to g.name, g
-          %td= g.member_count
-
-  - unless @user.common_groups.empty?
-    %h5 Common Groups
-    %table.table.table-striped
-      %tr
-        %th{style: "width:50%"} Name
-        %th Members
-      - @user.common_groups.each do |g|
-        %tr
-          %td= link_to g.name, g
-          %td= g.member_count
+= render partial: 'comments/comments_section', locals: {parent: @user, comment: @comment, author: @author, author_email: @email}

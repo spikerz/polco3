@@ -64,6 +64,8 @@
             %li= link_to "States", represent_states_path
             - if current_user
               %li= link_to "S Representation", results_path(:senate)
+          - if content_for?(:sidebar)
+            = yield(:sidebar)
     
       %footer
         %p &copy; Nick, Tom, and Tim 2012

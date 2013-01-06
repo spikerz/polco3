@@ -4,6 +4,7 @@ class Roll
   include Mongoid::Document
   include VotingLogic
   include VotingMethods
+  include ActionView::Helpers::TextHelper
   # DOCUMENTATION: http://www.govtrack.us/developers/api#endpoint_vote
 
   field :category, type: String
@@ -65,6 +66,15 @@ class Roll
 
   def title
     self.the_question
+  end
+
+  def short_title
+    if self.the_question =~ /(.*?):/
+      q = $1
+    else
+      q = self.the_question
+    end
+    truncate(q, length: 30)
   end
 
   class << self

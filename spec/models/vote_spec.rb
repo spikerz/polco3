@@ -18,4 +18,33 @@ describe Vote do
     roll.category_label.should eql("")
   end
 
+  context "when a user votes on a roll" do
+    def set_stage
+      @u = FactoryGirl.create(:user)
+      l = FactoryGirl.create(:legislator)
+      lv = FactoryGirl.create(:legislator_vote)
+      @u.representative = l
+      @roll = FactoryGirl.create(:roll) # and bill and sponsor
+      @roll.vote_on(@u, :aye) # not in district
+      @v = @u.votes.first
+      lv.roll = @roll
+      lv.legislator = l
+      lv.save!
+    end
+
+    it "should find the tally for a district when a user from that district votes on a roll" do
+    #  district = self.user.district.find_vote_on_(self.roll)
+      set_stage
+      # testing vote.district_tally
+      @v.district_tally.should == "<span class=\"green\">1</span>, <span class=\"orange\">0</span>, <span class=\"red\">0"
+    end
+
+    it "should find a reps vote on a bill after a user has voted on a roll" do
+      # testing vote.reps_vote
+      set_stage
+      @v.reps_vote.should eql("aye")
+    end
+  end
+
+
 end

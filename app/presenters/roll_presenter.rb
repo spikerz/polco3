@@ -20,4 +20,11 @@ class RollPresenter < BasePresenter
     end
   end
 
+  def activity
+    # show all the activity for all the districts for this roll
+    # what about senate bills?
+    districts = PolcoGroup.districts
+    render(partial: "district_results", locals: {roll: roll, districts: districts}) unless districts.empty?
+  end
+
 end

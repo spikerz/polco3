@@ -25,19 +25,10 @@
         %th Vote
       - @latest_votes.each do |lv|
         %tr
-          %th= link_to lv.bill.title, lv.bill
+          %th= link_to lv.roll.title, lv.roll
           %th= lv.value
 - else
   %p No voting activity yet
-
-
-
--#.well
--#  %h3 COMMITTEE MEMBERSHIP
--#
--#.well
--#  %h3 BILL SPONSORSHIP & COSPONSORSHIP
-
 
 - # who is this person
 - # Tim Booher
@@ -51,6 +42,6 @@
 
 - if current_user.admin?
   .form-actions
-    = link_to t('.back', :default => t("helpers.links.back")), legislators_path, :class => 'btn'
+    = link_to 'back', legislators_path, :class => 'btn'
     = link_to 'Edit', edit_legislator_path(@legislator), :class => 'btn'
     = link_to 'Destroy', legislator_path(@legislator), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

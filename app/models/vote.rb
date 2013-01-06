@@ -3,6 +3,7 @@ class Vote
 
   include Mongoid::Document
   include Mongoid::Timestamps
+  include VotingMethods
 
   field :value, :type => Symbol # can be :aye, :nay, :abstain, :present
   field :chamber, :type => Symbol # can be :house, :senate
@@ -21,5 +22,15 @@ class Vote
   validates_uniqueness_of :user_id, :scope => [:polco_group_id, :roll_id], :message => "this vote already exists"
   validates_presence_of :value, :user_id, :roll_id, :message => "A value must be included"
   validates_inclusion_of :value, :in => VOTE_VALUES, :message => 'You can only vote yes, no or abstain'
+
+  def district_tally
+    # we want to find all the votes on roll 'r' and this district
+    h = process_votes(self.user.district.votes.where(roll_id: self.roll.id))
+    "<span class=\"green\">#{h[:ayes]}</span>, <span class=\"orange\">#{h[:abstains] + h[:presents]}</span>, <span class=\"red\">#{h[:nays]}".html_safe
+  end
+
+  def reps_vote
+    self.user.reps_vote_on(self.roll)
+  end
 
 end

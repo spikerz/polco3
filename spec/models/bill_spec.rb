@@ -4,12 +4,6 @@ describe Bill do
 
   context "when I interface with legislators a Bill" do
 
-    it "should be able to show both senators votes if the bill is a sr" do
-      pending "until i get legislators set up"
-      #senator_votes = @user1.senators_vote_on(@senate_bill_with_roll_count)
-      #assert_equal :nay, senator_votes.first[:vote], "senator's vote does not match"
-    end
-
     it "should be able to add a sponsor to a bill" do
       b = Bill.new
       b.title = Faker::Company.name
@@ -23,7 +17,7 @@ describe Bill do
 
     it "should be able to describe it's status" do
       b = FactoryGirl.create(:bill, current_status: "fail_second_senate")
-      b.current_status_explanation.should eq("Passed House, Failed Senate. <em>Passed the House but failed in the Senate.</em>")
+      b.current_status_explanation.should eq("Passed House, Failed Senate on 2011-01-05")
     end
 
     it "should show if it has passed" do

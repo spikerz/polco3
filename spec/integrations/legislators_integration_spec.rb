@@ -20,8 +20,20 @@ describe "Legislators" do
   end
 
   it "should be able to read in all legislators" do
-    Legislator.update_legislators
+    Legislator.update_legislators(10)
     # should be at least the number of reps (435) + the number of senators
-    Legislator.all.size.should be >= (535)
+    Legislator.all.size.should be 10
+  end
+
+  it "should be able to pull in legislators and get the correct scopes to work for senators and representatives" do
+    GovTrack::Person.find(limit: 50).each do |person|
+      Legislator.from_govtrack(person).save!
+    end
+    reps = Legislator.representatives.size
+    senators = Legislator.senators.size
+    puts "reps size is #{reps}"
+    puts "senators size is #{senators}"
+    reps.should be > 0
+    senators.size.should be > 0
   end
 end

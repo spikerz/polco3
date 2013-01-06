@@ -21,6 +21,9 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @comment = Comment.new
+    @author = current_user.nil? ? "" : current_user.name
+    @email = current_user.nil? ? "" : current_user.email
   end
 
   def geocode

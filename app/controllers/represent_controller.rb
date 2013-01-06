@@ -33,8 +33,9 @@ class RepresentController < ApplicationController
   end
 
   def states
-    @states = PolcoGroup.states.page(params[:page]).per(10)
+    #@states = PolcoGroup.states
     @rolls = Roll.senate_rolls.page(params[:page]).per(10)
+    @states_with_senators = Kaminari.paginate_array(PolcoGroup.states_with_senators).page(params[:page]).per(10)
   end
 
   def results

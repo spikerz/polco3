@@ -32,6 +32,6 @@
   = @comment.user_ip
 
 .form-actions
-  = link_to t('.back', :default => t("helpers.links.back")), comments_path, :class => 'btn'
+  = link_to 'back', comments_path, :class => 'btn'
   = link_to 'Edit', edit_comment_path(@comment), :class => 'btn'
   = link_to 'Destroy', comment_path(@comment), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

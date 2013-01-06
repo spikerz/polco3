@@ -98,51 +98,43 @@ describe Roll do
       b.users_vote(@u).should eql(:aye)
     end
 
-    it "should show the votes for a specific district that a user belongs to" do
-      #PolcoGroup.destroy_all
-      Vote.destroy_all
-      PolcoGroup.destroy_all
-      #pg = FactoryGirl.create(:common)
+    # 20130106: this functionality makes no sense, why are they voting on a
+    it "should show the votes for a specific district that a user belongs to on a specific roll" do
       cg = FactoryGirl.create(:custom_group)
-      b = FactoryGirl.create(:roll)
-      dg = FactoryGirl.create(:district)
-      user1, user2, user3, user4 = FactoryGirl.create_list(:random_user, 4, {state: FactoryGirl.create(:oh)})
-      user1.custom_groups << cg
-      user2.custom_groups << cg
-      user3.custom_groups << cg
-      user4.custom_groups << cg
-      user1.district = PolcoGroup.create(name: "test group"); user1.save
-      user2.district = dg; user2.save
-      user3.district = dg; user3.save
-      user4.district = dg; user4.save
-      b.vote_on(user1, :aye) # not in district
-      b.vote_on(user2, :nay)
-      b.vote_on(user3, :abstain)
-      b.vote_on(user4, :aye)
-      user3.district.get_tally.should eql({:ayes => 1, :nays => 1, :abstains => 1, :presents => 0})
+      @usrs[0].district = PolcoGroup.create(name: "test group"); @usrs[0].save
+      r = FactoryGirl.create(:roll)
+      # add all users to cg
+      @usrs.each do |u|
+        u.custom_groups << cg
+        u.save
+      end
+      r.vote_on(@usrs[0], :aye) # not in district
+      r.vote_on(@usrs[1], :nay)
+      r.vote_on(@usrs[2], :abstain)
+      r.vote_on(@usrs[3], :aye)
+      @usrs[3].district.get_tally(r).should eql({:ayes => 1, :nays => 1, :abstains => 1, :presents => 0})
+      cg.reload
+      cg.get_tally(r).should eql({:ayes => 2, :nays => 1, :abstains => 1, :presents => 0})
     end
 
     it "should be able to show votes for a specific state that a user belongs to" do
       #pg = FactoryGirl.create(:common)
       cg = FactoryGirl.create(:custom_group)
-      b = FactoryGirl.create(:roll)
+      r = FactoryGirl.create(:roll)
       #oh = FactoryGirl.create(:oh)
-      user1, user2, user3, user4 = FactoryGirl.create_list(:random_user, 4,
-                                                           {district: @d, state: @oh})
-      user1.state = PolcoGroup.create(type: :state, name: "CA")
-      user1.save
-      user1.custom_groups << cg
-      user2.custom_groups << cg
-      user3.custom_groups << cg
-      user4.custom_groups << cg
-      b.vote_on(user1, :aye)
-      b.vote_on(user2, :nay)
-      b.vote_on(user3, :abstain)
-      b.vote_on(user4, :aye)
-      user2.reload
-      user2.state.get_tally.should eql({:ayes=>1, :nays=>1, :abstains=>1, :presents=>0})
-      user1.reload
-      user1.state.get_tally.should eql({:ayes => 1, :nays => 0, :abstains => 0, :presents => 0})
+      @usrs[0].state = PolcoGroup.create(type: :state, name: "CA"); @usrs[0].save
+      @usrs.each do |u|
+        u.custom_groups << cg
+        u.save
+      end
+      r.vote_on(@usrs[0], :aye)
+      r.vote_on(@usrs[1], :nay)
+      r.vote_on(@usrs[2], :abstain)
+      r.vote_on(@usrs[3], :aye)
+      @usrs[1].reload
+      @usrs[1].state.get_tally(r).should eql({:ayes=>1, :nays=>1, :abstains=>1, :presents=>0})
+      @usrs[0].reload
+      @usrs[0].state.get_tally(r).should eql({:ayes => 1, :nays => 0, :abstains => 0, :presents => 0})
     end
 
     it "should silently block a user from voting twice on a roll" do
@@ -157,10 +149,8 @@ describe Roll do
       b = FactoryGirl.create(:roll)
       v1 = b.votes.new
       v1.user = @u
-      #v1.polco_group = FactoryGirl.create(:polco_group)
       v1.value = :happy
       v1.should_not be_valid
-      #assert_equal "You can only vote yes, no or abstain", v1.errors.messages[:value].first
     end
 
   end
@@ -199,7 +189,6 @@ describe Roll do
     # this corresponds to hr112-26
     @u.representative = roll.legislator_votes.first.legislator
     @u.save
-    #b.reload
     @u.reload
     @u.reps_vote_on(roll).should eq("aye")
   end

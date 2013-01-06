@@ -24,6 +24,10 @@ class Legislator
   field :sortname, type: String
   field :twitterid, type: String
   field :youtubeid, type: String
+  # populated
+  field :chamber, type: Symbol
+  field :state, type: String
+  field :district, type: String
 
   # fields I add
   field :sponsored_count, :type => Integer
@@ -31,8 +35,10 @@ class Legislator
 
   index({ sortname: 1}, {unique: true})
   index({ govtrack_id: 1}, {unique: true})
+  index({ chamber: 1}, {unique: false})
 
   GENDERS = {1 => 'male', 2 => 'female'}
+  CHAMBERS = [:house, :senate, :other]
 
   has_many :bills, :inverse_of => :sponsor
   embeds_many :roles
@@ -40,12 +46,11 @@ class Legislator
   has_many :district_constituents, :class_name => "User", :inverse_of => :representative
   has_many :legislator_votes
   has_and_belongs_to_many :state_constituents, :class_name => "User", :inverse_of => :senators
-
   has_many :comments, as: :commentable
 
   # scopes
-  scope :representatives, where(title: 'Rep.')
-  scope :senators, where(title: 'Sen.')
+  scope :representatives, where(chamber: :house)
+  scope :senators, where(chamber: :senate)
 
   def latest_votes
     self.legislator_votes.desc(:updated_time)
@@ -63,14 +68,14 @@ class Legislator
     self.current_role.title
   end
 
-  def chamber
-    case title
-      when "Rep." then
+  def chamber_label
+    case self.chamber
+      when :house then
         "U.S. House of Representatives"
-      when "Sen." then
+      when :senate then
         "U.S. Senate"
       else
-        title
+        "Other"
     end
   end
 
@@ -85,10 +90,6 @@ class Legislator
   def full_name
     "#{first_or_nick} #{lastname}"
   end
-
-  #def full_title
-  #  "#{title} #{full_name} (#{party}-#{state})"
-  #end
 
   def state
     self.current_role.state
@@ -118,6 +119,23 @@ class Legislator
       end
     end
 
+    def update_current_role
+      Legislator.all.each do |leg|
+        person = GovTrack::Person.find_by_id(leg.govtrack_id)
+        if person.current_role
+          puts "updating #{leg.name}"
+          leg.current_role = Role.from_govtrack(person.current_role)
+          leg.state = person.current_role.state
+          leg.chamber = find_chamber(person.current_role.title)
+          leg.district = person.current_role.district.to_s
+          leg.save!
+        else
+          puts "no current role for #{person.name} with govtrack id #{person.id}??"
+        end
+      end
+      puts "Update successful"
+    end
+
     def from_govtrack(person)
       leg = Legislator.new
       leg.govtrack_id = person.id.to_i
@@ -140,6 +158,9 @@ class Legislator
       leg.youtubeid = person.youtubeid
       if person.current_role
         leg.current_role = Role.from_govtrack(person.current_role)
+        leg.state = person.current_role.state
+        leg.chamber = find_chamber(person.current_role.title)
+        leg.district = person.current_role.district.to_s
       else
         puts "no current role for #{person.name} with govtrack id #{person.id}??"
       end
@@ -169,7 +190,19 @@ class Legislator
       end
     end
 
+    def find_chamber(title)
+      case title
+        when "Rep." then
+          :house
+        when "Sen." then
+          :senate
+        else
+          :other
+      end
+    end
+
   end # self code
+
 
   def district
      self.current_role.district

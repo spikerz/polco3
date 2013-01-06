@@ -7,13 +7,12 @@
     %th State
     %th Senior Senator
     %th Junior Senator
-  - @states.each do |state|
+  - @states_with_senators.each do |state|
     %tr
-      %td= link_to state.name, state
-      - senators = state.senators_hash
-      %td= link_to senators[:senior_senator].last_name, senators[:senior_senator]
-      %td= link_to senators[:junior_senator].last_name, senators[:junior_senator]
+      %td= link_to state[:state].name, state[:state]
+      %td= link_to state[:senior_senator].lastname, state[:senior_senator]
+      %td= link_to state[:junior_senator].lastname, state[:junior_senator]
 
-= paginate @states
+= paginate @states_with_senators
 
 = render partial: "rolls_with_results", locals: {rolls: @rolls}

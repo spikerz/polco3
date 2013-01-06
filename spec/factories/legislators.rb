@@ -19,5 +19,9 @@ FactoryGirl.define do
     sortname "Ackerman, Gary (Rep.) [D-NY5]"
     twitterid 'data'
     youtubeid "RepAckerman"
+    chamber :house
+    state 'NY'
+    district '8'
+
   end
 end
