@@ -56,11 +56,11 @@
           = yield
         .span3
           %ul.nav.nav-tabs.nav-stacked{style: "padding-top: 100px;"}
-            %li= link_to "House Bills", represent_house_bills_path
+            %li= link_to "House Rolls", represent_house_bills_path
             %li= link_to "District + Reps", represent_legislators_districts_path
             - if current_user
               %li= link_to "H Representation", results_path(:house)
-            %li= link_to "Senate Bills", represent_senate_bills_path
+            %li= link_to "Senate Rolls", represent_senate_bills_path
             %li= link_to "States", represent_states_path
             - if current_user
               %li= link_to "S Representation", results_path(:senate)

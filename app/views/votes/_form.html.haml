@@ -6,4 +6,4 @@
     = f.input :user_id, collection: User.all, label_method: :name
   .form-actions
     = f.button :submit, :class => 'btn-primary'
-    = link_to t('.cancel', :default => t("helpers.links.cancel")), votes_path, :class => 'btn'
+    = link_to 'cancel', votes_path, :class => 'btn'

@@ -33,11 +33,14 @@ class User
   belongs_to :district, class_name: "PolcoGroup", inverse_of: :constituents
   belongs_to :state, class_name: "PolcoGroup", inverse_of: :state_constituents
   # these groups are groups that users have created -- a user 'joins' these
-  has_and_belongs_to_many :custom_groups, class_name: "PolcoGroup", inverse_of: :members
+  has_many :custom_groups, class_name: "PolcoGroup", inverse_of: :owner
   # these are groups that all users are in
   has_and_belongs_to_many :common_groups, class_name: "PolcoGroup", inverse_of: :common_members
-  # these are groups that a user follows but has not joined (hmm, so their votes don't count)
+  # these are groups that a user follows but has not joined
   has_and_belongs_to_many :followed_groups, class_name: "PolcoGroup", inverse_of: :followers
+  # these are groups that a user has joined
+  has_and_belongs_to_many :joined_groups, class_name: "PolcoGroup", inverse_of: :members
+  # so where are the 'joined groups' ?? looks like we still need this . . .
 
   has_and_belongs_to_many :senators, class_name: "Legislator", inverse_of: :state_constituents
   belongs_to :representative, class_name: "Legislator", inverse_of: :district_constituents

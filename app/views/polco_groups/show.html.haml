@@ -1,12 +1,20 @@
 - title "#{@polco_group.type.to_s.titlecase} Group: #{@polco_group.proper_title}"
 
-- if @polco_group.description
-  %p
-    %strong Description:
-    = @polco_group.description
+- if @polco_group.description.size > 2
+  %h3 Group Description
+  %p= @polco_group.description
 
-- if @polco_group.type == :custom
-  %p custom
+%h3
+  Group Formation Date:
+  = @polco_group.created_at.strftime('%B %e, %Y')
+
+- if (@polco_group.type == :custom) && @polco_group.owner
+  %h3
+    Owned by:
+    = link_to @polco_group.owner.name, @polco_group.owner
+
+%p
+%h3 Manage Group (if owner)
 
 - if @polco_group.type == :district
   = render partial: "district_info", locals: {group: @polco_group}
@@ -20,6 +28,7 @@
 %p
   %strong Members:
   = @polco_group.member_count
+
 - if current_user.admin? || current_user.id == @polco_group.owner_id
   .form-actions
     = link_to 'back', polco_groups_path, :class => 'btn'

@@ -2,6 +2,7 @@ class PolcoGroup
   include Mongoid::Document
   include Mongoid::Timestamps
   include VotingMethods
+  #include Origin::Queryable
 
   attr_accessible :name, :type, :description, :vote_count, :follower_count, :member_count, :owner_id, :member_ids, :common_member_ids, :follower_ids, :vote_ids
 
@@ -18,19 +19,24 @@ class PolcoGroup
   index({ member_count: 1}, {unique: true})
   index({ vote_count: 1}, {unique: true})
 
+  # this might be trouble, a user might not "own" this if they are just in the custom groups (by the way i understood it)
   belongs_to :owner, :class_name => "User", :inverse_of => :custom_groups
 
   has_many :constituents, class_name: "User", inverse_of: :district
   has_many :state_constituents, class_name: "User", inverse_of: :state
 
-  has_and_belongs_to_many :members, :class_name => "User", :inverse_of => :custom_groups # uniq: true
+  has_and_belongs_to_many :members, :class_name => "User", :inverse_of => :joined_groups # uniq: true
   has_and_belongs_to_many :common_members, :class_name => "User", :inverse_of => :common_groups # uniq: true
   has_and_belongs_to_many :followers, :class_name => "User", :inverse_of => :followed_groups #, uniq: true
-  # I forget why a PolcoGroup would have votes, this makes no sense
+  # groups have votes just like users do !
   has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
 
   def get_tally(roll)
     process_votes(self.votes.where(roll_id: roll.id))
+  end
+
+  def self.column_names
+    self.fields.collect { |field| field[0] }
   end
 
   def add_member(user_obj)

@@ -5,12 +5,12 @@
 %table.table.table-striped
   %thead
     %tr
-      %th Name
-      %th Type
-      %th Description
-      %th Votes
-      %th Followers
-      %th Members
+      %th= sortable "name", "Name"
+      %th= sortable "type", "Type"
+      %th= sortable "description", "Description"
+      %th= sortable "vote_count", "Votes"
+      %th= sortable "follower_count", "Followers"
+      %th= sortable "member_count", "Members"
       - if current_user.admin?
         %th Actions
   %tbody

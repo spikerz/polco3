@@ -1,25 +1,39 @@
 - page: "http://localhost:3001/rolls/50e87cd6d6f45fbc38000360", why:  AR		no votes
+- don't show empty fields on rolls.show
+- groups show: show group members and followers
+- get abstains to show up
+- remove pie charts, and replace with nicks stats
+- why do all groups have no member count to them
+- a user always needs to join the group they create
 
-- get nick's simple display to work for tallys
-- can follow users?
-- show group members and followers
+go through pdf's:
+-----------------
+- users show
+ -- make sure we can still follow groups
+- bills show
+- rolls show
 
+*- groups show
 - get others working
-
+ -- can't figure out how owner is assigned
+ -- now missing groups we can follow
 - rolls don't show if user is logged out
 
 then nickification:
 -------------------
 - if you create a group, you should be following it by default
-
-
 - groups are showing zero members ??
 
 done:
 - make user's commentable
-
+- get nick's simple display to work for tallys (done)
+- you voted on (empty)
+- polco_group owner not working
 
 not doing now:
 --------------
 > comment ratings
+> can follow users
+> user pictures
+
 >
