@@ -6,19 +6,17 @@ describe Roll do
     # need state and district
     @oh = FactoryGirl.create(:oh)
     @d = FactoryGirl.create(:district)
-    cg = FactoryGirl.create(:common)
+    FactoryGirl.create(:common)
     usrs = FactoryGirl.create_list(:random_user, 4, {state: @oh, district: @d})
     grps = FactoryGirl.create_list(:polco_group, 5)
-    usrs.each do |u|
-      u.common_groups << cg
-    end
-    usrs[0].custom_groups << [grps[0..2]]
-    usrs[1].custom_groups << [grps[3..4]]
-    usrs[2].custom_groups << [grps[2..3]]
+    usrs[0].joined_groups << [grps[0..2]]
+    usrs[1].joined_groups << [grps[3..4]]
+    usrs[2].joined_groups << [grps[2..3]]
     # user 0 => 0,1,2
     # user 1 => 3,4
     # user 2 => 2,3
     # means that 2=>0,2, 3=> 1,2 and 4,0,1=> one
+    usrs.map{|u| u.save!}
     @usrs = usrs
     @grps = grps
     @u = usrs.first
@@ -81,21 +79,23 @@ describe Roll do
       tally.should == {:ayes => 2, :nays => 1, :abstains => 1, :presents => 0}
     end
 
-    it "should record the group when a user votes on a roll" do
-      Bill.delete_all
-      PolcoGroup.delete_all
-      b = FactoryGirl.create(:roll)
-      b.vote_on(@u, :aye)
-      b.votes.size.should eql(1)
-      # b.votes.all.map { |v| puts "#{v.polco_group.name}" }
-      groups = b.votes.map{|v| v.polco_groups.map(&:name)}.uniq
-      groups.first.should include('VA08')
+    context "when a user votes on a roll" do
+      before {
+        @r = FactoryGirl.create(:roll)
+        @r.vote_on(@u, :aye)
+      }
+      it "should have exactly one user's vote" do
+        @r.votes.users.size.should eql(1)
+      end
+      it "should record the users district as having voted" do
+        @r.district_votes.map(&:name).include?("VA08")
+      end
     end
 
     it "should show what the current users vote is on a specific roll" do
-      b = FactoryGirl.create(:roll)
-      b.vote_on(@u, :aye)
-      b.users_vote(@u).should eql(:aye)
+      r = FactoryGirl.create(:roll)
+      r.vote_on(@u, :aye)
+      r.users_vote(@u).should eql(:aye)
     end
 
     # 20130106: this functionality makes no sense, why are they voting on a
@@ -105,7 +105,7 @@ describe Roll do
       r = FactoryGirl.create(:roll)
       # add all users to cg
       @usrs.each do |u|
-        u.custom_groups << cg
+        u.joined_groups << cg
         u.save
       end
       r.vote_on(@usrs[0], :aye) # not in district
@@ -124,7 +124,7 @@ describe Roll do
       #oh = FactoryGirl.create(:oh)
       @usrs[0].state = PolcoGroup.create(type: :state, name: "CA"); @usrs[0].save
       @usrs.each do |u|
-        u.custom_groups << cg
+        u.joined_groups << cg
         u.save
       end
       r.vote_on(@usrs[0], :aye)
@@ -137,32 +137,51 @@ describe Roll do
       @usrs[0].state.get_tally(r).should eql({:ayes => 1, :nays => 0, :abstains => 0, :presents => 0})
     end
 
-    it "should silently block a user from voting twice on a roll" do
-      b = FactoryGirl.create(:roll)
-      b.vote_on(@u, :aye)
-      b.vote_on(@u, :aye)
-      puts @u.custom_groups.map(&:name)
-      b.votes.size.should eql(1)
+    context "when a user votes twice on a roll" do
+      before {
+        @r = FactoryGirl.create(:roll)
+        @r.vote_on(@u, :aye)
+        @r.vote_on(@u, :aye)
+      }
+      it "should silently block a user from voting twice on a roll" do
+        @r.votes.users.size.should eql(1)
+      end
+      it "should ensure the associated voting groups do not vote twice" do
+        @r.votes.groups.size.should eql(@u.voting_groups.size)
+      end
     end
 
     it "should reject a value for vote other than :aye, :nay or :abstain" do
-      b = FactoryGirl.create(:roll)
-      v1 = b.votes.new
-      v1.user = @u
+      r = FactoryGirl.create(:roll)
+      v1 = r.votes.new
       v1.value = :happy
       v1.should_not be_valid
     end
 
   end
 
-  # this about to get big!
-  it "should show the votes in each polco group" do
-    b = FactoryGirl.create(:roll)
-    b.vote_on(@usrs[0], :aye)
-    b.vote_on(@usrs[1], :nay)
-    b.vote_on(@usrs[2], :aye)
-    Vote.all.size.should eq(3)
-    b.vote_count.should eq(3)
+  context "when there are groups involved" do
+    before{
+      @r = FactoryGirl.create(:roll)
+      @r.vote_on(@usrs[0], :aye)
+      @r.vote_on(@usrs[1], :nay)
+      @r.vote_on(@usrs[2], :aye)
+    }
+    it "should show more than three votes created (due to multiple groups)" do
+      Vote.all.size.should be >= 3
+    end
+
+    it "should show the roll has three user votes" do
+      Vote.users.size.should be 3
+    end
+
+    it "should have a bunch of group votes" do
+      Vote.groups.size.should be 16
+    end
+
+    it "should have the proper vote count matching the number of users" do
+      @r.vote_count.should eq(3)
+    end
   end
 
   # When we vote with a roll (or amendment?),

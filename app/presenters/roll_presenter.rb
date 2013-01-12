@@ -4,7 +4,7 @@ class RollPresenter < BasePresenter
   def vote_region
     if user = current_user
       unless vote = roll.voted_on?(user)
-        h.render(partial: "vote_region", locals: {roll: roll})
+        h.render(partial: "rolls/vote_region", locals: {roll: roll})
       else
         h.content_tag(:div, "You voted #{vote} on this roll already.")
       end

@@ -47,9 +47,9 @@
       = link_to "Geocode","/users/geocode"
   - else
     .span4
-      = render partial: 'display_groups', locals: {user: @user, group_title: 'Joined Groups', groups: @user.relevant_groups}
+      = render partial: 'display_groups', locals: {user: @user, group_title: 'Joined Groups', groups: @user.voting_groups }
     .span4
-      = render partial: 'display_groups', locals: {user: @user, group_title: 'Followed Groups', groups: @user.followed_groups}
+      = render partial: 'display_groups', locals: {user: @user, group_title: 'Followed Groups', groups: @user.followed_groups }
 
 %h4 Roll Call
 .row

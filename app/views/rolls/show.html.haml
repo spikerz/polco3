@@ -32,7 +32,7 @@
     %th Group name
     %th Description
     %th Tally
-  - current_user.relevant_groups.each do |group| # here is where we do the magic . . how have we done this previously?
+  - current_user.voting_groups.each do |group| # here is where we do the magic . . how have we done this previously?
     %tr
       %td= group.name
       %td= truncate(group.description, length: 70)

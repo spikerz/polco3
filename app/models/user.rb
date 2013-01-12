@@ -12,7 +12,7 @@ class User
   field :coordinates, type: Array
   field :admin, type: Boolean, default: false
 
-  attr_accessible :provider, :uid, :name, :email, :custom_group_ids, :followed_group_ids, :state_id, :district_id
+  attr_accessible :provider, :uid, :name, :email, :custom_group_ids, :followed_group_ids, :state_id, :district_id, :joined_group_ids
   # run 'rake db:mongoid:create_indexes' to create indexes
   index({ email: 1 }, { unique: true, background: true })
 
@@ -28,11 +28,11 @@ class User
   end
 
   # crazy number of associations
-  has_many :votes
+  has_many :votes, as: :votable
 
   belongs_to :district, class_name: "PolcoGroup", inverse_of: :constituents
   belongs_to :state, class_name: "PolcoGroup", inverse_of: :state_constituents
-  # these groups are groups that users have created -- a user 'joins' these
+  # these groups are groups that users have created -- a user must join these
   has_many :custom_groups, class_name: "PolcoGroup", inverse_of: :owner
   # these are groups that all users are in
   has_and_belongs_to_many :common_groups, class_name: "PolcoGroup", inverse_of: :common_members
@@ -49,13 +49,22 @@ class User
   # a user can only join or follow a group once
   # really should change this to "joined groups"
   validates :custom_group_ids, :allow_blank => true, :uniqueness => true
+  validates :joined_group_ids, :allow_blank => true, :uniqueness => true
   validates :followed_group_ids, :allow_blank => true, :uniqueness => true
   validates :email, :email => true
 
   # attributes
 
-  def relevant_groups
-    self.custom_groups + self.followed_groups
+  after_save do |user|
+    if cg = PolcoGroup.where(type: :common).first
+      user.common_groups << cg
+    else
+      raise "common group does not exist"
+    end
+  end
+
+  def voting_groups
+    self.custom_groups + self.joined_groups + self.common_groups + [self.district, self.state]
   end
 
   def us_state

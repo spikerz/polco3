@@ -1,7 +1,16 @@
-- title 'House Bills'
+- title '113th Congress'
+
+= link_to @roll.title, @roll
+%p sponsor and district
+
+- present @roll do |roll_presenter|
+  .well
+    = roll_presenter.vote_region
 
 - if @user = current_user
-  = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, title: 'Most popular rolls you haven\'t voted on:', roll_type: 'not_voted_on'}
-  = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, title: 'You voted on', roll_type: 'voted_on'}
+  = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, the_title: 'Most popular new rolls:', roll_type: 'not_voted_on'}
+  = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, the_title: 'Your votes', roll_type: 'voted_on'}
 - else
   = render partial: 'rolls', locals: {the_rolls: @rolls, title: 'most popular rolls', roll_type: 'the_rolls'}
+
+

@@ -46,6 +46,7 @@ class Legislator
   has_many :district_constituents, :class_name => "User", :inverse_of => :representative
   has_many :legislator_votes
   has_and_belongs_to_many :state_constituents, :class_name => "User", :inverse_of => :senators
+
   has_many :comments, as: :commentable
 
   # scopes

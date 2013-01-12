@@ -1,7 +1,7 @@
 module UserVotingLogic
 
   def rolls_voted_on(chamber)
-    roll_ids = Vote.where(user_id: self.id).and(chamber: chamber.to_sym).map(&:roll_id)
+    roll_ids = Vote.where(votable_id: self.id).and(votable_type: "User").and(chamber: chamber.to_sym).map(&:roll_id)
     Roll.any_in(_id: roll_ids)
   end
 

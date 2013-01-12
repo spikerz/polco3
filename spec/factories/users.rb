@@ -7,7 +7,6 @@ FactoryGirl.define do
     name "Leopold"
     email "leopold@habsburgfamily.es"
     custom_groups {[FactoryGirl.create(:polco_group)]}
-    common_groups {[FactoryGirl.create(:common)]}
     state {FactoryGirl.create(:oh)}
     district {FactoryGirl.create(:district)}
   end

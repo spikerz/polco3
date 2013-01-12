@@ -29,7 +29,9 @@ class PolcoGroup
   has_and_belongs_to_many :common_members, :class_name => "User", :inverse_of => :common_groups # uniq: true
   has_and_belongs_to_many :followers, :class_name => "User", :inverse_of => :followed_groups #, uniq: true
   # groups have votes just like users do !
-  has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
+  #has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
+
+  has_many :votes, as: :votable
 
   def get_tally(roll)
     process_votes(self.votes.where(roll_id: roll.id))
@@ -59,17 +61,12 @@ class PolcoGroup
   scope :find_district, ->(district_name) { where(type: :district).and(name: district_name) }
 
   # time to create the ability to follow
-  before_update :update_counters
+  #before_update :update_counters
 
-  def update_counters
-    #self.reload
-    #puts "follower size #{self.follower_ids.size}"
+  def update_counters # not currently called . . . !
     self.follower_count = self.follower_ids.size
-    #puts "member size #{self.member_ids.size}"
     self.member_count = self.member_ids.size
     self.vote_count = self.votes.size
-    puts "now followers #{self.follower_count} and members #{self.member_count} for #{self.name}"
-    puts "is the model valid #{self.valid?}"
   end
 
   def has_activity?(roll)
@@ -137,7 +134,7 @@ class PolcoGroup
   end
 
   def proper_title
-    if self.type == :custom
+    if (self.type == :custom) && !self.name.nil?
       self.name.titlecase
     else
       self.name

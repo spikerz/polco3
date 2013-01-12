@@ -1,5 +1,5 @@
 - unless the_rolls.nil?
-  %h2= title
+  %h3= the_title
   %ul
     = render partial: 'roll', collection: the_rolls
   = paginate the_rolls, :param_name => roll_type

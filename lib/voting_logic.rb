@@ -3,36 +3,34 @@ module VotingLogic
   # this module contains everything related to rolls and voting
   # since all voting happens on rolls, we want to put all voting logic here
 
+  # most important method in the app . . .
   def vote_on(user, value)
+    # the user must vote
     unless self.voted_on?(user)
-      #ids = user.custom_group_ids
-      #ids.push(user.state.id)
-      #ids.push(user.district.id)
-      #Vote.create(value: value, user_id: user.id, polco_group_ids: ids.uniq, roll_id: self.id)
-      v = Vote.new
-      v.value = value
-      v.user = user
-      v.chamber = self.chamber
-      v.roll = self
-      # now store the groups
-      v.polco_groups << user.custom_groups
-      v.polco_groups << user.common_groups
-      v.polco_groups << user.state
-      v.polco_groups << user.district
-      #v.polco_group_ids = (user.custom_groups + user.common_groups + user.state + user.district).map(&:id)
-      # update all groups
-      # I don't like this, but the increments work
-      user.state.inc(:vote_count,1)
-      user.district.inc(:vote_count,1)
-      user.custom_groups.each do |jg|
-        jg.inc(:vote_count,1)
-      end
-      v.save
-      self.inc(:vote_count,1)
+      self.inc(:vote_count,1) # for roll
+      self.add_user_vote(user,value)
+      self.add_group_votes(user.voting_groups, value)
     else
       Rails.logger.warn "already voted on #{self}"
       puts "already voted on"
       false
+    end
+  end
+
+  def add_user_vote(user, value)
+    user.votes.create(value: value, roll_id: self.id, chamber: self.chamber)
+    user.inc(:vote_count,1)
+    user.save!
+  end
+
+  def add_group_votes(groups, value)
+    groups.each do |g|
+      g.votes.create(value: value, roll_id: self.id, chamber: self.chamber)
+      g.inc(:vote_count,1)
+      #puts "*************************"
+      #puts "adding votes for #{g.name}, current vote count: #{g.vote_count}"
+      #puts "*************************"
+      g.save!
     end
   end
 
@@ -43,7 +41,7 @@ module VotingLogic
   end
 
   def get_overall_users_vote
-    process_votes(self.votes)
+    process_votes(self.votes.users)
   end
 
   def find_member_vote(member)
@@ -67,7 +65,7 @@ module VotingLogic
   end
 
   def users_vote(user)
-    if vote = self.votes.all.select { |v| v.user = user }.first
+    if vote = self.votes.where(votable_id: user.id).and(votable_type: "User").first
       vote.value
     else
       "none"

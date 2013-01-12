@@ -52,6 +52,10 @@ class Roll
     self.the_question
   end
 
+  def district_votes
+    Vote.where(roll_id: self.id).groups.select{|v| v.votable.type == :district}.map{|v2| v2.votable}
+  end
+
   def category_description
     ROLL_CATEGORIES[self.category][:description]
   end

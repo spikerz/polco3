@@ -23,6 +23,11 @@ describe PolcoGroup do
     @grps = grps
   end
 
+  it "should have a working counter_cache with votes" do
+    r = FactoryGirl.create(:roll)
+    r.vote_on(@usrs[0], :aye)
+    @oh.vote_count.should eql(1)
+  end
   # Determine the atomic element  .. . roll
 
   # Every user is in the common polco group -- why don't we track this at the roll
@@ -44,14 +49,28 @@ describe PolcoGroup do
     @oh.state_constituents.size.should eq(3)
   end
 
-  it "should show the vote count in each group" do
-    r = FactoryGirl.create(:roll)
-    r.vote_on(@usrs[0], :aye)
-    r.vote_on(@usrs[1], :nay)
-    r.vote_on(@usrs[2], :aye)
-    # they get vote count from joined groups (0 and 2 are in 2)
-    @grps[2].vote_count.should eq(2)
-    PolcoGroup.where(type: :common).first.votes.size.should eq(3)
+  context "when users vote on rolls" do
+    before {
+      # make a roll and three votes
+      r = FactoryGirl.create(:roll)
+      r.vote_on(@usrs[0], :aye) # in group 2
+      r.vote_on(@usrs[1], :nay) # in group 1
+      r.vote_on(@usrs[2], :aye) # in group 2
+    }
+    it "should show the vote count for joined groups" do
+      puts "#||||||| group #{@grps[2].name} ||||||||#"
+      puts @grps.map{|g| [g.vote_count, g.name]}
+      @grps[2].vote_count.should eq(2)
+    end
+
+    it "should have the right vote count for the common group" do
+      PolcoGroup.where(type: :common).first.vote_count.should eq(3)
+    end
+
+    it "should record all votes in common" do
+      # it looks like the user doesn't join the common group
+      PolcoGroup.where(type: :common).first.votes.size.should eq(3)
+    end
   end
 
   it "should be able to show the rep for a district (and fail gracefully if it doesn't exist)" do
@@ -124,6 +143,7 @@ describe PolcoGroup do
 
   it "should assign the owner when one creates a custom group" do
     pg = PolcoGroup.new
+    pending "until we can focus on this"
     # create a custom group
     # it should have a user
   end

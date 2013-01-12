@@ -29,6 +29,7 @@ describe Legislator do
   end
 
   it "should be able to add constituents for state and district" do
+    FactoryGirl.create(:common)
     user = FactoryGirl.create(:user)
     @l.state_constituents << user
     @l.district_constituents << user
