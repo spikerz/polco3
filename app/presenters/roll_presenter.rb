@@ -6,7 +6,7 @@ class RollPresenter < BasePresenter
       unless vote = roll.voted_on?(user)
         h.render(partial: "rolls/vote_region", locals: {roll: roll})
       else
-        h.content_tag(:div, "You voted #{vote} on this roll already.")
+        h.content_tag(:div, "You voted #{vote}.")
       end
     else
       "#{link_to('log in', signin_path)} to vote".html_safe

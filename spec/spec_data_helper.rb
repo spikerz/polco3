@@ -11,4 +11,8 @@ module SpecDataHelper
     end
   end
 
+  def load_10_bills
+
+  end
+
 end

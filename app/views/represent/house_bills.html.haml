@@ -1,7 +1,8 @@
 - title '113th Congress'
 
-= link_to @roll.title, @roll
-%p sponsor and district
+%h4= link_to @roll.title, @roll
+
+%p= link_to @roll.bill.sponsor.name, @roll.bill.sponsor
 
 - present @roll do |roll_presenter|
   .well

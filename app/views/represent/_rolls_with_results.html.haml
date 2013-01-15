@@ -8,15 +8,17 @@
         %th Roll
         %th For
         %th Against
-        %th Abstain
+        %th Other
+        %th Rep's Vote
         %th Result
       - rolls.each do |roll|
         %tr
           %td= link_to roll.title, roll_path(roll)
-          - roll_result = roll.tally
+          - roll_result = roll.tally # is this the district tally
           %td= roll_result[:ayes]
           %td= roll_result[:nays]
-          %td= roll_result[:abstains]
-          %td= roll.bill.passed? ? "Yes" : "No"
+          %td= roll_result[:other]
+          %td= current_user.reps_vote_on(roll)
+          %td= roll.bill.passed? ? "Yes" : "No" # should be the full result
 
   = paginate rolls

@@ -6,7 +6,7 @@ module UserVotingLogic
   end
 
   def rolls_not_voted_on(chamber)
-    ids = Vote.where(user_id: self.id).map{|v| v.roll.id }
+    ids = Vote.where(votable_id: self.id).map{|v| v.roll.id }
     if chamber == :house
       Roll.house_rolls.not_in(_id: ids).desc(:vote_count)
     else

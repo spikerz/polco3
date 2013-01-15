@@ -55,15 +55,15 @@
                 %h2= yield(:title)
           = yield
         .span3
-          %ul.nav.nav-tabs.nav-stacked{style: "padding-top: 100px;"}
-            %li= link_to "House Rolls", represent_house_bills_path
-            %li= link_to "District + Reps", represent_legislators_districts_path
+          %ul.nav.nav-pills.nav-stacked{style: "padding-top: 100px;"}
+            %li{class: act('house_bills')}= link_to "House Rolls", represent_house_bills_path
+            %li{class: act('legislators_districts')}= link_to "District + Reps", represent_legislators_districts_path
             - if current_user
-              %li= link_to "H Representation", results_path(:house)
-            %li= link_to "Senate Rolls", represent_senate_bills_path
-            %li= link_to "States", represent_states_path
+              %li{class: act('results_house')}= link_to "H Representation", results_path(:house)
+            %li{class: act('senate_bills') }= link_to "Senate Rolls", represent_senate_bills_path
+            %li{class: act('states') }= link_to "States", represent_states_path
             - if current_user
-              %li= link_to "S Representation", results_path(:senate)
+              %li{class: act('results_senate') }= link_to "S Representation", results_path(:senate)
           - if content_for?(:sidebar)
             = yield(:sidebar)
     

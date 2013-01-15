@@ -22,6 +22,29 @@ describe Roll do
     @u = usrs.first
   end
 
+  context "when some bills have been voted on" do
+    before {
+      # create 10 house rolls
+      rolls = FactoryGirl.create_list(:roll, 10)
+      # vote on 5 of them
+      rolls[0..4].each do |roll|
+        roll.vote_on(@u, :aye)
+      end
+    }
+
+    it "should have 5 votes" do
+      Vote.users.size.should eq(5)
+    end
+
+    it "should have exactly 5 house rolls not voted on" do
+      @u.rolls_not_voted_on(:house).size.should be 5
+    end
+
+    it "should have exactly 5 house rolls voted on" do
+      @u.rolls_voted_on
+    end
+  end
+
   context "has basic properties and " do
 
     it "should be able to update the vote count on rolls" do

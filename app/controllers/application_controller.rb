@@ -8,6 +8,16 @@ class ApplicationController < ActionController::Base
     redirect_to root_url, :alert => exception.message
   end
 
+  def find_selected
+    if controller_name == 'represent' && ['house_bills', 'legislators_districts', 'results', 'senate_bills', 'states'].include?(action_name)
+      if params[:chamber]
+        @selected = "#{action_name}_#{params[:chamber]}"
+      else
+        @selected = action_name
+      end
+    end
+  end
+
   private
     def current_user
       begin

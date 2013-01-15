@@ -1,3 +1,9 @@
+house rolls
+----- -----
+- we need to bring in a complete subset of rolls, legislators bills
+-
+
+
 - page: "http://localhost:3001/rolls/50e87cd6d6f45fbc38000360", why:  AR		no votes
 - don't show empty fields on rolls.show
 - groups show: show group members and followers

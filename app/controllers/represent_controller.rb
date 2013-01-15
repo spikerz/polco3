@@ -1,6 +1,6 @@
 class RepresentController < ApplicationController
 
-  before_filter :check_geocode
+  before_filter :check_geocode, :find_selected
 
   def check_geocode
     if current_user && !current_user.geocoded?

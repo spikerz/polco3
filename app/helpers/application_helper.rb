@@ -19,4 +19,8 @@ module ApplicationHelper
     link_to title, {:sort => column, :direction => direction}, {:class => css_class}
   end
 
+  def act(action)
+    @selected == action ? 'active' : ''
+  end
+
 end
