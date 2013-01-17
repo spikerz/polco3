@@ -1,7 +1,7 @@
 house rolls
 ----- -----
 - we need to bring in a complete subset of rolls, legislators bills
--
+- we need to exclude quroms
 
 
 - page: "http://localhost:3001/rolls/50e87cd6d6f45fbc38000360", why:  AR		no votes

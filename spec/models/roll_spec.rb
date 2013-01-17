@@ -41,7 +41,7 @@ describe Roll do
     end
 
     it "should have exactly 5 house rolls voted on" do
-      @u.rolls_voted_on
+      @u.rolls_voted_on(:house).size.should be 5
     end
   end
 

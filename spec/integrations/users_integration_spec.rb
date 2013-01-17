@@ -7,6 +7,7 @@ describe "Users" do
   end
 
   it "should be able to get districts from a zip code (multiple)" do
+    pending "until we reinstate the zip code feature"
     zip = 45420
     districts = User.get_districts_by_zipcode(zip)
     districts.size.should eql(3)
@@ -20,7 +21,7 @@ describe "Users" do
 
   it "should be able to get all members from coords" do
     members = User.get_members_from_([38.7909,-77.0947])
-    members[:senior_senator].govtrack_id.should eql(412249)
+    members[:senior_senator].govtrack_id.should eql(412321)
     members[:junior_senator].govtrack_id.should eql(412321)
     members[:representative].govtrack_id.should eql(400283)
   end

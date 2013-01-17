@@ -1,4 +1,18 @@
-           represent_polco_info GET    /represent/polco_info(.:format)                         represent#polco_info
+                          roles GET    /roles(.:format)                                        roles#index
+                                POST   /roles(.:format)                                        roles#create
+                       new_role GET    /roles/new(.:format)                                    roles#new
+                      edit_role GET    /roles/:id/edit(.:format)                               roles#edit
+                           role GET    /roles/:id(.:format)                                    roles#show
+                                PUT    /roles/:id(.:format)                                    roles#update
+                                DELETE /roles/:id(.:format)                                    roles#destroy
+                home_polco_info GET    /home/polco_info(.:format)                              home#polco_info
+                  roll_comments GET    /rolls/:roll_id/comments(.:format)                      comments#index
+                                POST   /rolls/:roll_id/comments(.:format)                      comments#create
+               new_roll_comment GET    /rolls/:roll_id/comments/new(.:format)                  comments#new
+              edit_roll_comment GET    /rolls/:roll_id/comments/:id/edit(.:format)             comments#edit
+                   roll_comment GET    /rolls/:roll_id/comments/:id(.:format)                  comments#show
+                                PUT    /rolls/:roll_id/comments/:id(.:format)                  comments#update
+                                DELETE /rolls/:roll_id/comments/:id(.:format)                  comments#destroy
                           rolls GET    /rolls(.:format)                                        rolls#index
                                 POST   /rolls(.:format)                                        rolls#create
                        new_roll GET    /rolls/new(.:format)                                    rolls#new
@@ -20,13 +34,6 @@
                            bill GET    /bills/:id(.:format)                                    bills#show
                                 PUT    /bills/:id(.:format)                                    bills#update
                                 DELETE /bills/:id(.:format)                                    bills#destroy
-                       subjects GET    /subjects(.:format)                                     subjects#index
-                                POST   /subjects(.:format)                                     subjects#create
-                    new_subject GET    /subjects/new(.:format)                                 subjects#new
-                   edit_subject GET    /subjects/:id/edit(.:format)                            subjects#edit
-                        subject GET    /subjects/:id(.:format)                                 subjects#show
-                                PUT    /subjects/:id(.:format)                                 subjects#update
-                                DELETE /subjects/:id(.:format)                                 subjects#destroy
             legislator_comments GET    /legislators/:legislator_id/comments(.:format)          comments#index
                                 POST   /legislators/:legislator_id/comments(.:format)          comments#create
          new_legislator_comment GET    /legislators/:legislator_id/comments/new(.:format)      comments#new
@@ -41,6 +48,13 @@
                      legislator GET    /legislators/:id(.:format)                              legislators#show
                                 PUT    /legislators/:id(.:format)                              legislators#update
                                 DELETE /legislators/:id(.:format)                              legislators#destroy
+                       subjects GET    /subjects(.:format)                                     subjects#index
+                                POST   /subjects(.:format)                                     subjects#create
+                    new_subject GET    /subjects/new(.:format)                                 subjects#new
+                   edit_subject GET    /subjects/:id/edit(.:format)                            subjects#edit
+                        subject GET    /subjects/:id(.:format)                                 subjects#show
+                                PUT    /subjects/:id(.:format)                                 subjects#update
+                                DELETE /subjects/:id(.:format)                                 subjects#destroy
                   users_geocode        /users/geocode(.:format)                                users#geocode
              users_save_geocode        /users/save_geocode(.:format)                           users#save_geocode
                  users_district        /users/district(.:format)                               users#district
@@ -80,6 +94,13 @@ represent_legislators_districts GET    /represent/legislators_districts(.:format
                         results        /represent/:chamber(.:format)                           represent#results
                        add_vote POST   /rolls/add_vote(.:format)                               rolls#add_vote
                            root        /                                                       home#index
+                  user_comments GET    /users/:user_id/comments(.:format)                      comments#index
+                                POST   /users/:user_id/comments(.:format)                      comments#create
+               new_user_comment GET    /users/:user_id/comments/new(.:format)                  comments#new
+              edit_user_comment GET    /users/:user_id/comments/:id/edit(.:format)             comments#edit
+                   user_comment GET    /users/:user_id/comments/:id(.:format)                  comments#show
+                                PUT    /users/:user_id/comments/:id(.:format)                  comments#update
+                                DELETE /users/:user_id/comments/:id(.:format)                  comments#destroy
                           users GET    /users(.:format)                                        users#index
                       edit_user GET    /users/:id/edit(.:format)                               users#edit
                            user GET    /users/:id(.:format)                                    users#show

@@ -11,8 +11,10 @@ module SpecDataHelper
     end
   end
 
-  def load_10_bills
-
+  def load_bills(chamber, count = 10)
+    if ["house", "senate"].include?(chamber)
+      FactoryGirl.create_list(:roll, count, chamber: chamber)
+    end
   end
 
 end

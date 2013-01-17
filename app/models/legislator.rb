@@ -145,7 +145,7 @@ class Legislator
       leg.firstname = person.firstname
       leg.lastname = person.lastname
       leg.link = person.link
-      leg.metavidid = person.metavidid
+#      leg.metavidid = person.metavidid
       leg.middlename = person.middlename
       leg.name = person.name
       leg.name_no_details = person.name_no_details

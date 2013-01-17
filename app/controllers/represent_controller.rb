@@ -16,7 +16,7 @@ class RepresentController < ApplicationController
       @roll = @not_voted_on_rolls.first
       @vote = Vote.new
     else
-      @bills = Bill.introduced_house_bills.page params[:the_rolls]
+      @rolls = Roll.all.page(params[:voted_on]).per(5)
     end
   end
 

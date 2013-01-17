@@ -1,17 +1,16 @@
-- title '113th Congress'
+- title '113th Congress '
 
-%h4= link_to @roll.title, @roll
+- if @roll
+  %h4= link_to @roll.title, @roll
 
-%p= link_to @roll.bill.sponsor.name, @roll.bill.sponsor
+  %p= link_to @roll.bill.sponsor.name, @roll.bill.sponsor
 
-- present @roll do |roll_presenter|
-  .well
-    = roll_presenter.vote_region
+  - present @roll do |roll_presenter|
+    .well
+      = roll_presenter.vote_region
 
-- if @user = current_user
+- if @user.nil? #
+  = render partial: 'rolls', locals: {the_rolls: @rolls, the_title: 'most popular rolls', roll_type: 'the_rolls'}
+- else
   = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, the_title: 'Most popular new rolls:', roll_type: 'not_voted_on'}
   = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, the_title: 'Your votes', roll_type: 'voted_on'}
-- else
-  = render partial: 'rolls', locals: {the_rolls: @rolls, title: 'most popular rolls', roll_type: 'the_rolls'}
-
-

@@ -7,6 +7,7 @@ class RollsController < InheritedResources::Base
     @comment = Comment.new
     @author = current_user.nil? ? "" : current_user.name
     @email = current_user.nil? ? "" : current_user.email
+    @bill = @roll.bill
     show!
   end
 

@@ -1,5 +1,12 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
+
+
 FactoryGirl.define do
+
+  sequence :the_question do |n|
+    "HR #{n}: #{Faker::Lorem.sentence}"
+  end
+
   factory :roll do
     category "procedural"
     chamber "house"
@@ -9,7 +16,7 @@ FactoryGirl.define do
     link "http://www.govtrack.us/congress/votes/112-2011/h1"
     number 1
     options {{"+" => "Aye", "-"=>"No", "0"=>"Not Voting", "P"=>"Present"}}
-    the_question "Call of the House: QUORUM"
+    the_question
     required "QUORUM"
     resource_uri "/api/v1/vote/1015/"
     result "Passed"

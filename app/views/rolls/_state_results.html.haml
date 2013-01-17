@@ -1,14 +1,13 @@
 %table.table.table-striped
   %tr
-    %th District
-    %th Pie chart
-    %th Rep Vote
-    %th Rep Name
+    %th State
+    %th Tally
+    %th Senator Votes
+    %th Names
     %th Party
-  - districts.each do |d|
+  - states.each do |d|
     - # to do this row, we want to make sure there are results to show
-    - if d.the_rep && d.has_activity?(roll)
-      - rep = d.the_rep
+    - if d.has_activity?(roll)
       %tr
         %td= link_to d.name, d
         %td= d.format_votes_tally(roll)

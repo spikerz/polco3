@@ -85,7 +85,7 @@ class Roll
 
     def pull_in_votes(limit = 150, voter_limit = 500)
       GovTrack::Vote.find(order_by: "-created", limit: limit).each do |vote|
-        unless Roll.where(govtrack_id: vote.id).exists?
+        if !Roll.where(govtrack_id: vote.id).exists? && vote.vote_type != "Quorum Call"
           puts "Pulling in #{vote.question}"
           roll = from_govtrack(vote)
           roll.save

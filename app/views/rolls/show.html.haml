@@ -1,23 +1,16 @@
-- title "Roll: #{@roll.title}"
-
-- bill = @roll.bill
+- title "#{@roll.title}"
 
 - present @roll do |roll_presenter|
   .well
     = roll_presenter.vote_region
 
-  - if bill
+  - if @bill
     %h4
-      = link_to bill.title, bill_path(bill)
+      = link_to @bill.title, bill_path(@bill)
 
   %p
     %strong Chamber:
     = @roll.chamber
-
-  %h4 District Tallies
-
-  %p The fundamental question is how did all the 'polco' districts vote on this roll?
-  %p We need to make this apply to house as well as senate bills (meaning states)
 
   %h4 District Tallies
   .well
@@ -26,6 +19,8 @@
 %h4 Joined and Followed Groups
 
 %p Same thing, but for the joined and followed groups
+
+- # district_tallies
 
 %table.table.table-striped
   %tr
@@ -36,12 +31,7 @@
     %tr
       %td= group.name
       %td= truncate(group.description, length: 70)
-      %td= pie_chart(group.get_votes_tally(@roll))
-
-%ul
-  %li District Tallies
-  %li Joined and Followed Groups
-  %li Show individual rep votes
+      %td= group.format_votes_tally(@roll)
 
 = render partial: 'comments/comments_section', locals: {parent: @roll, comment: @comment, author: @author, author_email: @email}
 
@@ -49,4 +39,4 @@
   .form-actions
     = link_to 'back', rolls_path, :class => 'btn'
     = link_to 'Edit', edit_roll_path(@roll), :class => 'btn'
-    = link_to 'Destroy', roll_path(@roll), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+    = link_to 'Destroy', roll_path(@roll), :method => "delete", :data => { :confirm => 'Are you sure?' }, :class => 'btn btn-danger'
