@@ -72,4 +72,8 @@ module VotingLogic
     end
   end
 
+  def senators_vote
+
+  end
+
 end

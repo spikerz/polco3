@@ -2,7 +2,7 @@
   %tr
     %th State
     %th Tally
-    %th Senator Votes
+    %th
     %th Names
     %th Party
   - states.each do |d|
@@ -12,5 +12,5 @@
         %td= link_to d.name, d
         %td= d.format_votes_tally(roll)
         %td= roll.find_member_vote(rep)
-        %td= link_to rep.full_name, rep
+        %td= link_to senator.full_name, rep
         %td= rep.party

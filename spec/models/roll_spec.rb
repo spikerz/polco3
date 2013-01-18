@@ -22,7 +22,21 @@ describe Roll do
     @u = usrs.first
   end
 
-  context "when some bills have been voted on" do
+  context "when some senate bills have been voted on" do
+    before {
+      # create 10 senate rolls
+      rolls = FactoryGirl.create_list(:senate_roll, 10)
+      # vote on 5 of them
+      rolls[0..4].each do |roll|
+        roll.vote_on(@u, :aye)
+      end
+      # the legislators should vote on it
+    }
+
+    it "should "
+  end
+
+  context "when some house bills have been voted on" do
     before {
       # create 10 house rolls
       rolls = FactoryGirl.create_list(:roll, 10)
