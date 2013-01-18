@@ -11,4 +11,9 @@ FactoryGirl.define do
     vote_description "House Vote #183"
     value :aye
   end
+
+  factory :random_vote, class: LegislatorVote do
+    value { [:aye, :nay, :abstain][(0..2).to_a.sample] }
+    legislator
+  end
 end

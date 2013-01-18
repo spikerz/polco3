@@ -81,21 +81,35 @@ class Roll
     truncate(q, length: 30)
   end
 
+  def add_votes(voter_limit = 500)
+    # from mongo docs: If the parent is persisted, then the child documents will be automatically saved.
+    GovTrack::VoteVoter.find(vote: self.govtrack_id, limit: voter_limit).each do |vote_voter|
+      puts "Adding #{vote_voter.vote_description} for #{vote_voter.person_name} who voted #{vote_voter.option}"
+      l = LegislatorVote.from_govtrack(vote_voter)
+      self.legislator_votes << l
+    end
+    self.save
+  end
+
+  def senators_votes(state)
+    votes = []
+    state.senators.each do |s|
+      if vote = LegislatorVote.where(legislator_id: s.id).and(roll_id: self.id).first
+        votes.push("#{vote.legislator.name_no_details}: #{vote.value}")
+      end
+    end
+    votes.join(", ")
+  end
+
   class << self
 
     def pull_in_votes(limit = 150, voter_limit = 500)
-      GovTrack::Vote.find(order_by: "-created", limit: limit).each do |vote|
+      GovTrack::Vote.find(order_by: "-created", limit: limit, congress: 113).each do |vote|
         if !Roll.where(govtrack_id: vote.id).exists? && vote.vote_type != "Quorum Call"
           puts "Pulling in #{vote.question}"
           roll = from_govtrack(vote)
           roll.save
-          # from mongo docs: If the parent is persisted, then the child documents will be automatically saved.
-          GovTrack::VoteVoter.find(vote: roll.govtrack_id, limit: voter_limit).each do |vote_voter|
-            puts "Adding #{vote_voter.vote_description} for #{vote_voter.person_name} who voted #{vote_voter.option}"
-            l = LegislatorVote.from_govtrack(vote_voter)
-            roll.legislator_votes << l
-          end
-          roll.save
+          roll.add_votes(voter_limit)
         else
           puts "skipping #{vote.question} from #{vote.resource_uri}"
         end

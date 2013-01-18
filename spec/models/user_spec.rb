@@ -16,6 +16,20 @@ describe User do
 
   # A user should not be able to remove their baseline groups (on the site .. .)
 
+  context "when it has senators" do
+    before {
+    u = FactoryGirl.create(:user)
+    u.senators << FactoryGirl.create_list(:senator, 2, name_no_details: 'Ralf')
+    u.save!
+    }
+    it "should have exactly two" do
+      User.first.senators.size.should eq(2)
+    end
+    it "should be able to display their names" do
+      User.first.senators_names.should eq("Ralf & Ralf")
+    end
+  end
+
   it "should be able to get a list of rolls voted on" do
     u = FactoryGirl.create(:user)
     house_rolls = FactoryGirl.create_list(:house_roll, 10)

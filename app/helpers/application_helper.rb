@@ -5,6 +5,10 @@ module ApplicationHelper
     @show_title = show_title
   end
 
+  def admin?
+    true if current_user && current_user.admin?
+  end
+
   def present(object, klass = nil)
     klass ||= "#{object.class}Presenter".constantize
     presenter = klass.new(object, self)

@@ -20,14 +20,18 @@ class RollPresenter < BasePresenter
     end
   end
 
-  def activity
+  def districts_or_states
     # show all the activity for all the districts for this roll
     # what about senate bills?
     if roll.chamber == "house"
       render(partial: "district_results", locals: {roll: roll, districts: PolcoGroup.districts}) unless PolcoGroup.districts.empty?
     else
-      render(partial: "state_results", locals: {roll: roll})
+      render(partial: "state_results", locals: {roll: roll, states: PolcoGroup.states})
     end
+  end
+
+  def groups(voting_groups)
+    render(partial: "group_results", locals: {roll: roll, voting_groups: voting_groups, senators: current_user.senators})
   end
 
 end

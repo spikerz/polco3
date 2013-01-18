@@ -34,7 +34,7 @@ module UserVotingLogic
       votes = []
       self.senators.each do |senator|
         if vote = LegislatorVote.where(legislator_id: senator.id).and(roll_id: r.id).first
-        votes.push({name: vote.legislator.full_name, value: vote.value})
+        votes.push({name: vote.legislator.name_no_details, value: vote.value})
         end
       end
       votes

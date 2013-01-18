@@ -28,7 +28,16 @@ describe PolcoGroup do
     r.vote_on(@usrs[0], :aye)
     @oh.vote_count.should eql(1)
   end
-  # Determine the atomic element  .. . roll
+
+  it "should show its senators parties" do
+    l1 = FactoryGirl.create(:legislator, chamber: 'senate', state: "OH")
+    FactoryGirl.create(:legislator, chamber: 'senate', state: "OH")
+    cr = l1.current_role
+    cr.party = "Republican"
+    l1.current_role = cr
+    l1.save
+    @oh.senators_parties.should eq("D, R")
+  end
 
   # Every user is in the common polco group -- why don't we track this at the roll
   it "should record all votes in a common group" do

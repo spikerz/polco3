@@ -133,6 +133,10 @@ class PolcoGroup
     end
   end
 
+  def senators_parties
+    self.senators.map{|s| s.current_role.party[0]}.join(", ")
+  end
+
   def proper_title
     if (self.type == :custom) && !self.name.nil?
       self.name.titlecase

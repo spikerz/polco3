@@ -9,7 +9,8 @@
         %th For
         %th Against
         %th Other
-        %th Rep's Vote
+        - if current_user
+          %th Rep's Vote
         %th Result
       - rolls.each do |roll|
         %tr
@@ -18,7 +19,8 @@
           %td= roll_result[:ayes]
           %td= roll_result[:nays]
           %td= roll_result[:other]
-          %td= current_user.reps_vote_on(roll)
+          - if current_user
+            %td= current_user.reps_vote_on(roll)
           %td= roll.bill.passed? ? "Yes" : "No" # should be the full result
 
   = paginate rolls

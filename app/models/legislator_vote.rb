@@ -1,5 +1,4 @@
 class LegislatorVote
-  # this maps to VOTE_VOTER
   include Mongoid::Document
 
   field :value, :type => Symbol
@@ -13,7 +12,6 @@ class LegislatorVote
 
   belongs_to :legislator
   belongs_to :roll
-  #belongs_to :bill
 
   VOTER_TYPE = {1 => "Vice President", 2 => "Unknown", 3 => "Member of Congress"}
 

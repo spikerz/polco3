@@ -30,10 +30,23 @@ describe Roll do
       rolls[0..4].each do |roll|
         roll.vote_on(@u, :aye)
       end
-      # the legislators should vote on it
+      @roll = rolls.first
+      @roll.legislator_votes << FactoryGirl.create_list(:random_vote, 10)
+      senators = [FactoryGirl.create(:senator, name_no_details: 'Daymen Tiffany'), FactoryGirl.create(:senator, name_no_details: 'Mark Canlis')]
+      @roll.legislator_votes << FactoryGirl.create(:legislator_vote, legislator: senators.first, value: :aye)
+      @roll.legislator_votes << FactoryGirl.create(:legislator_vote, legislator: senators.last, value: :nay)
+      @roll.save
+      @u.senators << senators
+      @u.save
     }
 
-    it "should "
+    it "should be able to find how a users senators have voted on the roll" do
+      @u.senators_vote_on(@roll).should eq([{name: 'Daymen Tiffany', value: :aye}, {name: 'Mark Canlis', value: :nay}])
+    end
+
+    it "should show how the senators from a particular state voted on the bill" do
+      @roll.senators_votes(@oh).should eq([{name: 'Daymen Tiffany', value: :aye}, {name: 'Mark Canlis', value: :nay}])
+    end
   end
 
   context "when some house bills have been voted on" do

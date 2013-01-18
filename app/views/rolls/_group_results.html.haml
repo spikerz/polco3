@@ -1,0 +1,16 @@
+%h4 Joined and Followed Groups
+
+%p Same thing, but for the joined and followed groups
+
+- # district_tallies
+.well
+  %table.table.table-striped
+    %tr
+      %th Group name
+      %th Description
+      %th Tally
+    - voting_groups.each do |group| # here is where we do the magic . . how have we done this previously?
+      %tr
+        %td= group.name
+        %td= truncate(group.description, length: 70)
+        %td= group.format_votes_tally(roll)

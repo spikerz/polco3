@@ -37,17 +37,18 @@ describe Legislator do
     @l.district_constituents.count.should eq(1)
   end
 
-  #it "should show senators votes on a bill" do
-  #  r = FactoryGirl.create(:roll)
-  #  s1 = FactoryGirl.create(:legislator, firstname: "chad")
-  #  s2 = FactoryGirl.create(:legislator, firstname: "ryan")
-  #  u = FactoryGirl.create(:user)
-  #  LegislatorVote.create(legislator_id: s1.id, value: :aye, roll_id: r.id)
-  #  LegislatorVote.create(legislator_id: s2.id, value: :nay, roll_id: r.id)
-  #  u.senators << [s1, s2]
-  #  u.save
-  #  u.reload
-  #  u.senators_vote_on(r).should eq([{:name=>"chad Ackerman", :value=>"aye"}, {:name=>"ryan Ackerman", :value=>"nay"}])
-  #end
+  it "should show senators votes on a bill" do
+    FactoryGirl.create(:common)
+    r = FactoryGirl.create(:roll)
+    s1 = FactoryGirl.create(:legislator, name_no_details: "chad")
+    s2 = FactoryGirl.create(:legislator, name_no_details: "ryan")
+    u = FactoryGirl.create(:user)
+    LegislatorVote.create(legislator_id: s1.id, value: :aye, roll_id: r.id)
+    LegislatorVote.create(legislator_id: s2.id, value: :nay, roll_id: r.id)
+    u.senators << [s1, s2]
+    u.save
+    u.reload
+    u.senators_vote_on(r).should eq([{:name=>"chad", :value=>:aye}, {:name=>"ryan", :value=>:nay}])
+  end
 
 end

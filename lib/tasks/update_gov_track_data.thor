@@ -15,8 +15,13 @@ class UpdateGovTrackData < Thor
     DatabaseCleaner.clean
     system('rake db:seed')
     load_legislators
-    update_from_directory
-    update_rolls
+    #update_from_directory
+    #update_rolls
+  end
+
+  desc "load_rolls", "loads all rolls"
+  def load_rolls
+    Roll.pull_in_votes(300)
   end
 
   desc "load_legislators", "loads all members"

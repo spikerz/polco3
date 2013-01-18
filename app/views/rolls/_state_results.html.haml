@@ -1,16 +1,16 @@
-%table.table.table-striped
-  %tr
-    %th State
-    %th Tally
-    %th
-    %th Names
-    %th Party
-  - states.each do |d|
-    - # to do this row, we want to make sure there are results to show
-    - if d.has_activity?(roll)
-      %tr
-        %td= link_to d.name, d
-        %td= d.format_votes_tally(roll)
-        %td= roll.find_member_vote(rep)
-        %td= link_to senator.full_name, rep
-        %td= rep.party
+%h4 State Results
+.well
+  %table.table.table-striped
+    %tr
+      %th State
+      %th Tally
+      %th Senators
+      %th Party
+    - states.each do |s|
+      - # to do this row, we want to make sure there are results to show
+      - if s.has_activity?(roll)
+        %tr
+          %td= link_to s.name, s
+          %td= s.format_votes_tally(roll)
+          %td= roll.senators_votes(s)
+          %td= s.senators_parties

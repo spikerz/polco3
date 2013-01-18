@@ -5,8 +5,11 @@ class RollsController < InheritedResources::Base
   def show
     @vote = Vote.new
     @comment = Comment.new
-    @author = current_user.nil? ? "" : current_user.name
-    @email = current_user.nil? ? "" : current_user.email
+    if u = current_user
+      @author = u.nil? ? "" : current_user.name
+      @email = u.nil? ? "" : current_user.email
+      @voting_groups = u.voting_groups
+    end
     @bill = @roll.bill
     show!
   end

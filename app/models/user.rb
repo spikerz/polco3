@@ -89,6 +89,10 @@ class User
     self.save!
   end
 
+  def senators_names
+    self.senators.map{|s| s.name_no_details }.join(" & ")
+  end
+
   def add_baseline_groups(us_state, district)
     if district = PolcoGroup.where(name: district, type: :district).first
       self.district = district

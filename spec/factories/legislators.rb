@@ -22,6 +22,11 @@ FactoryGirl.define do
     chamber :house
     state 'NY'
     district '8'
+  end
 
+  factory :senator, class: Legislator do
+    chamber :senate
+    name "Fancy Man Senator"
+    state "OH"
   end
 end
