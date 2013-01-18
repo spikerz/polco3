@@ -60,7 +60,6 @@ group :development do
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
-  gem 'growl', :require => false if RUBY_PLATFORM =~ /darwin/i
   gem 'awesome_print'
 end
 
