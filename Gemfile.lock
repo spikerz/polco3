@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:tbbooher/govtrack.git
+  remote: git://github.com/tbbooher/govtrack.git
   revision: 185f546f03702524f40f5e0b1933ec46f44d1fad
   specs:
     govtrack (0.0.1)
@@ -117,7 +117,7 @@ GEM
     hashie (1.2.0)
     hike (1.2.1)
     hpricot (0.8.6)
-    httparty (0.9.0)
+    httparty (0.10.0)
       multi_json (~> 1.0)
       multi_xml
     hub (1.10.2)
@@ -165,7 +165,7 @@ GEM
       rspec (>= 2.9)
     moped (1.3.2)
     multi_json (1.5.0)
-    multi_xml (0.5.1)
+    multi_xml (0.5.2)
     nokogiri (1.5.6)
     oauth (0.4.7)
     omniauth (1.1.1)

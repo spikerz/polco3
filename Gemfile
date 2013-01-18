@@ -50,7 +50,7 @@ gem 'gon'
 
 #gem 'heroku'
 gem 'cancan'
-gem 'govtrack', git: 'git@github.com:tbbooher/govtrack.git'
+gem 'govtrack', git: 'git://github.com/tbbooher/govtrack.git'
 group :development do
   gem 'guard', require: false
   gem 'spork', '~> 1.0rc'
