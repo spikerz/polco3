@@ -4,8 +4,17 @@
   .form-inputs
     = f.input :user_id, as: :hidden, input_html: { value: current_user.id }
     = f.input :roll_id, as: :hidden, input_html: { value: roll.id }
-    = f.input :value, :collection => VOTE_VALUES.map{|v| [v,v]}, :label_method => :last,    |
-      :value_method => :first, :as => :radio_buttons, :item_wrapper_class => 'inline' |
-
-  .form-actions
-    = f.button :submit, class: 'btn btn-primary'
+    = f.input :value, as: :hidden, input_html: { value: :aye }
+    #vote_buttons.btn-group{"data-toggle" => "buttons-radio"}
+      = button_tag(type: 'button', class: 'btn btn-success', value: 'aye') do
+        %i.icon-thumbs-up
+        aye
+      = button_tag(type: 'button', class: 'btn btn-danger', value: 'nay') do
+        %i.icon-thumbs-down
+        nay
+      = button_tag(type: 'button', class: 'btn', value: 'abstain') do
+        %i.icon-minus
+        abstain
+    %p{style: 'margin-top: 20px'} &nbsp;
+    .form_actions
+      = f.button :submit, class: 'btn btn-primary'
