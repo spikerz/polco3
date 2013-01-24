@@ -35,6 +35,8 @@ class PolcoGroup
 
   has_many :votes, as: :votable
 
+  has_many :comments, as: :commentable
+
   def get_tally(roll)
     process_votes(self.votes.where(roll_id: roll.id))
   end

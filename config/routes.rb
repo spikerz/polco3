@@ -25,7 +25,9 @@ Polco3::Application.routes.draw do
 
   get "polco_groups/add_custom_group"
 
-  resources :polco_groups
+  resources :polco_groups do
+    resources :comments
+  end
 
   resources :legislator_votes # necessary?
   resources :votes

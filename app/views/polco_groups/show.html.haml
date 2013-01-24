@@ -28,6 +28,8 @@
   %strong Members:
   = @polco_group.member_count
 
+= render partial: 'comments/comments_section', locals: {parent: @polco_group, comment: @comment, author: @author, author_email: @email}
+
 - if current_user.admin? || current_user.id == @polco_group.owner_id
   .form-actions
     = link_to 'back', polco_groups_path, :class => 'btn'

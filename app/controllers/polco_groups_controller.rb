@@ -17,6 +17,13 @@ class PolcoGroupsController < InheritedResources::Base
     end
   end
 
+  def show
+    @comment = Comment.new
+    @author = current_user.nil? ? "" : current_user.name
+    @email = current_user.nil? ? "" : current_user.email
+    show!
+  end
+
   private
 
   def sort_column
