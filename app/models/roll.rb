@@ -102,7 +102,7 @@ class Roll
   end
 
   def voting_districts
-    self.votes.where(votable_type: "PolcoGroup").and(chamber: :house).select{|v| v.votable.type == :district}
+    self.votes.where(votable_type: "PolcoGroup").and(chamber: :house).select{|v| v.votable.type == :district}.map{|d| d.votable }
   end
 
   class << self
