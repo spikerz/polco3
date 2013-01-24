@@ -22,7 +22,7 @@ describe "Users" do
   it "should be able to get all members from coords" do
     members = User.get_members_from_([38.7909,-77.0947])
     members[:senior_senator].govtrack_id.should eql(412321)
-    members[:junior_senator].govtrack_id.should eql(412321)
+    members[:junior_senator].govtrack_id.should eql(412582)
     members[:representative].govtrack_id.should eql(400283)
   end
 end

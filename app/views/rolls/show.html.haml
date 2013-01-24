@@ -12,7 +12,7 @@
     %strong Chamber:
     = @roll.chamber
   - if current_user
-    = roll_presenter.districts_or_states
+    = roll_presenter.districts_or_states(@districts)
 
     = roll_presenter.groups(@voting_groups)
 

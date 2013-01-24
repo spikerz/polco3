@@ -7,17 +7,13 @@
       %th Rep. Name
       %th &nbsp;
       %th Rep. Party
-    - @districts.each do |district|
-      - legislator = district.the_rep
+    - @legislators.each do |legislator|
       %tr
-        %td= link_to district.name, district
-        - unless legislator == "Vacant"
-          %td= link_to legislator.full_name, legislator
-          %td= image_tag legislator.image_location_small
-          %td= legislator.party
-        - else
-          %td{colspan:3} Vacant
+        %td= link_to legislator.legislator_district.name, legislator.legislator_district
+        %td= link_to legislator.full_name, legislator
+        %td= image_tag legislator.image_location_small
+        %td= legislator.party
 
-= paginate @districts
+= paginate @legislators
 
 = render partial: "rolls_with_results", locals: {rolls: @rolls}

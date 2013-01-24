@@ -5,11 +5,12 @@ describe PolcoGroup do
     # need state and district
     @oh = FactoryGirl.create(:oh)
     @d = FactoryGirl.create(:district)
-    cg = FactoryGirl.create(:common)
-    usrs = FactoryGirl.create_list(:random_user, 3, {state: @oh, district: @d})
+    FactoryGirl.create(:common)
+    usrs = FactoryGirl.create_list(:random_user, 3)
     grps = FactoryGirl.create_list(:polco_group, 5)
     usrs.each do |u|
-      u.common_groups << cg
+      u.add_baseline_groups("OH", "VA08")
+      u.save!
     end
     usrs[0].joined_groups << [grps[0..2]]
     usrs[1].joined_groups << [grps[3..4]]
@@ -26,7 +27,8 @@ describe PolcoGroup do
   it "should have a working counter_cache with votes" do
     r = FactoryGirl.create(:roll)
     r.vote_on(@usrs[0], :aye)
-    @oh.vote_count.should eql(1)
+    PolcoGroup.find(@oh.id).vote_count.should eql(1)
+    #@oh.vote_count.should eql(1)
   end
 
   it "should show its senators parties" do
@@ -42,20 +44,18 @@ describe PolcoGroup do
   # Every user is in the common polco group -- why don't we track this at the roll
   it "should record all votes in a common group" do
     # this common group can't be removed so we make it a property of the roll
-    pending "until we test this"
-  end
-
-  it "should have a rep if it is a district" do
-    @d.the_rep.should eq("Vacant")
+    r = FactoryGirl.create(:roll)
+    r.vote_on(@usrs[0], :aye)
+    PolcoGroup.where(type: :common).first.votes.size.should eq(1)
   end
 
   it "should have constituents for a district" do
     #has_many :constituents, class_name: "User", inverse_of: :district
-    @d.constituents.size.should eq(3)
+    @d.district_citizens.size.should eq(3)
   end
 
   it "should have state constituents" do
-    @oh.state_constituents.size.should eq(3)
+    @oh.state_citizens.size.should eq(3)
   end
 
   context "when users vote on rolls" do
@@ -84,14 +84,15 @@ describe PolcoGroup do
 
   it "should be able to show the rep for a district (and fail gracefully if it doesn't exist)" do
     d = FactoryGirl.create(:polco_group, name: nil, type: :district)
-    d.the_rep.should eql("Only districts can have a representative")
+    d.find_the_rep.should eql("Only districts can have a representative")
   end
 
   it "should be able to find the rep for a district" do
     data = @d.name.match(/([A-Z]+)(\d+)/)
     state, district_num = data[1], data[2].to_i
     l = FactoryGirl.create(:legislator, chamber: :house, state: state, district: district_num)
-    @d.the_rep.should eql(l)
+    @d.find_the_rep
+    @d.rep.should eql(l)
   end
 
   it "should be able to display a list of representatives" do
@@ -148,13 +149,6 @@ describe PolcoGroup do
     pg.owner = @usrs[0]
     pg.save!
     pg.owner.should eql(@usrs[0])
-  end
-
-  it "should assign the owner when one creates a custom group" do
-    pg = PolcoGroup.new
-    pending "until we can focus on this"
-    # create a custom group
-    # it should have a user
   end
 
   context "can have followers and members and " do

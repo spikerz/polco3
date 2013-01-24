@@ -10,6 +10,28 @@ describe Legislator do
     @l.party.should eql("Democrat")
   end
 
+  it "should match the district for legislator" do
+    FactoryGirl.create(:district, name: "NY05")
+    FactoryGirl.create(:district) # VA08, just for confusion
+    Legislator.assign_districts
+    Legislator.first.legislator_district.name.should == "NY05"
+    PolcoGroup.where(name: "NY05").first.rep.name.should == @l.name
+  end
+
+  it "should correctly handle a legislator from a state with only one district" do
+    FactoryGirl.create(:district, name: "AK-AL")
+    l = FactoryGirl.create(:legislator, chamber: :house, district: "0", state: "AK", name: "foo")
+    l.district_name.should eq('AK-AL')
+    Legislator.assign_districts
+    Legislator.where(name: "foo").first.legislator_district.name.should eq("AK-AL")
+  end
+
+  it "when a representative should have a district" do
+    @l.legislator_district = FactoryGirl.create(:district)
+    @l.save
+    Legislator.first.legislator_district.name.should eq("VA08")
+  end
+
   it "should have a chamber" do
     @l.chamber_label.should eql("U.S. House of Representatives")
   end

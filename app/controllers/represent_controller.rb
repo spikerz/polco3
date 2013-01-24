@@ -30,7 +30,7 @@ class RepresentController < ApplicationController
   end
 
   def legislators_districts
-    @districts = PolcoGroup.districts.page(params[:page]).per(10)
+    @legislators = Legislator.representatives.page(params[:page]).per(10)
     @rolls = Roll.house_rolls.page(params[:page]).per(10)
   end
 

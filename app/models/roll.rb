@@ -101,12 +101,16 @@ class Roll
     votes.join(", ")
   end
 
+  def voting_districts
+    self.votes.where(votable_type: "PolcoGroup").and(chamber: :house).select{|v| v.votable.type == :district}
+  end
+
   class << self
 
     def pull_in_votes(limit = 150, voter_limit = 500)
       GovTrack::Vote.find(order_by: "-created", limit: limit, congress: 113).each do |vote|
-        if !Roll.where(govtrack_id: vote.id).exists? && vote.vote_type != "Quorum Call"
-          puts "Pulling in #{vote.question}"
+        if !Roll.where(govtrack_id: vote.id).exists? && %w{amendment passage cloture}.include?(vote.category)
+          puts "Pulling in #{vote.question} which is a #{vote.category}"
           roll = from_govtrack(vote)
           roll.save
           roll.add_votes(voter_limit)

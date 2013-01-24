@@ -40,12 +40,18 @@ class Legislator
   GENDERS = {1 => 'male', 2 => 'female'}
   CHAMBERS = [:house, :senate, :other]
 
-  has_many :bills, :inverse_of => :sponsor
+  has_many :bills, inverse_of: :sponsor
   embeds_many :roles
+
+  belongs_to :legislator_district, class_name: "PolcoGroup", inverse_of: :rep
+  belongs_to :legislator_state, class_name: "PolcoGroup", inverse_of: :state_legislators
+
   embeds_one :current_role, class_name: "Role", inverse_of: :elected_member
-  has_many :district_constituents, :class_name => "User", :inverse_of => :representative
+
   has_many :legislator_votes
+
   has_and_belongs_to_many :state_constituents, :class_name => "User", :inverse_of => :senators
+  has_many :district_constituents, :class_name => "User", :inverse_of => :representative
 
   has_many :comments, as: :commentable
 
@@ -92,12 +98,12 @@ class Legislator
     "#{first_or_nick} #{lastname}"
   end
 
-  def state
+  def current_state
     self.current_role.state
   end
 
   def state_name
-    state.to_us_state
+    current_state.to_us_state
   end
 
   class << self
@@ -105,9 +111,27 @@ class Legislator
     def update_legislators(limit = 800)
       # this method pulls the GovTrack api for all persons, loads each one into the database
       GovTrack::Person.find(roles__current: "true", limit: limit).each do |legislator|
-        puts "working on #{legislator.name}"
-        self.save_legislator(legislator)
+
+        unless Legislator.where(govtrack_id: legislator.id).exists?
+          puts "working on #{legislator.name}"
+          self.save_legislator(legislator)
+        else
+          puts "skipping #{legislator.name} because they exist"
+        end
       end
+    end
+
+    def assign_districts
+      Legislator.all.each do |l|
+        if d = PolcoGroup.districts.where(name: l.district_name).first
+          puts "Assigning #{d.name} to #{l.name}"
+          l.legislator_district = d
+          d.rep = l
+          l.save!
+          d.save!
+        end
+      end
+      true
     end
 
     def find_and_build(govtrack_id)
@@ -120,22 +144,22 @@ class Legislator
       end
     end
 
-    def update_current_role
-      Legislator.all.each do |leg|
-        person = GovTrack::Person.find_by_id(leg.govtrack_id)
-        if person.current_role
-          puts "updating #{leg.name}"
-          leg.current_role = Role.from_govtrack(person.current_role)
-          leg.state = person.current_role.state
-          leg.chamber = find_chamber(person.current_role.title)
-          leg.district = person.current_role.district.to_s
-          leg.save!
-        else
-          puts "no current role for #{person.name} with govtrack id #{person.id}??"
-        end
-      end
-      puts "Update successful"
-    end
+    #def update_current_role
+    #  Legislator.all.each do |leg|
+    #    person = GovTrack::Person.find_by_id(leg.govtrack_id)
+    #    if person.current_role
+    #      puts "updating #{leg.name}"
+    #      leg.current_role = Role.from_govtrack(person.current_role)
+    #      leg.state = person.current_role.state
+    #      leg.chamber = find_chamber(person.current_role.title)
+    #      leg.district = person.current_role.district.to_s
+    #      leg.save!
+    #    else
+    #      puts "no current role for #{person.name} with govtrack id #{person.id}??"
+    #    end
+    #  end
+    #  puts "Update successful"
+    #end
 
     def from_govtrack(person)
       leg = Legislator.new
@@ -145,7 +169,6 @@ class Legislator
       leg.firstname = person.firstname
       leg.lastname = person.lastname
       leg.link = person.link
-#      leg.metavidid = person.metavidid
       leg.middlename = person.middlename
       leg.name = person.name
       leg.name_no_details = person.name_no_details
@@ -168,6 +191,19 @@ class Legislator
       leg.gender = self.gender_integer(person.gender)
       person.roles.each do |gt_role|
         leg.roles << Role.from_govtrack(gt_role)
+      end
+      # now assign the legislator to a district
+      if leg.chamber == :house
+        d = PolcoGroup.find_or_create_by(type: :district, name: leg.district_name)
+        leg.legislator_district = d
+        d.rep = leg
+        d.save!
+      end
+      unless leg.chamber == :other
+        s = PolcoGroup.find_or_create_by(type: :state, name: leg.state)
+        leg.legislator_state = s
+        s.state_legislators << leg
+        s.save!
       end
       leg
     end
@@ -205,12 +241,20 @@ class Legislator
   end # self code
 
 
-  def district
-     self.current_role.district
-  end
+  #def district
+  #   self.current_role.district
+  #end
 
   def district_name
-    "#{self.state}#{"%02d" % self.district.to_i}"
+    unless self.chamber == :senate
+      if self.district == "0"
+        "#{self.state}-AL"
+      else
+        "#{self.state}#{"%02d" % self.district.to_i}"
+      end
+    else
+
+    end
   end
 
   def members_district

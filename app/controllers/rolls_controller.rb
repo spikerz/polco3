@@ -11,6 +11,7 @@ class RollsController < InheritedResources::Base
       @voting_groups = u.voting_groups
     end
     @bill = @roll.bill
+    @districts = @roll.voting_districts  # need to change to match senate possibility
     show!
   end
 

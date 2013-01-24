@@ -8,7 +8,8 @@ describe "Vote on rolls" do
   it "Voting on house bills" do
     load_bills("house", count = 10)
     visit '/represent/house_bills'
-    page.should have_content 'Most popular new rolls:'
+    # need to login
+    page.should have_content 'Nick, Tom, and Tim:'
   end
 
   #given(:other_user) { User.make(:email => 'other@example.com', :password => 'rous') }

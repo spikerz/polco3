@@ -30,9 +30,11 @@ class User
   # crazy number of associations
   has_many :votes, as: :votable
 
-  belongs_to :district, class_name: "PolcoGroup", inverse_of: :constituents
-  belongs_to :state, class_name: "PolcoGroup", inverse_of: :state_constituents
-  # these groups are groups that users have created -- a user must join these
+  belongs_to :district, class_name: "PolcoGroup", inverse_of: :district_citizens
+  belongs_to :state, class_name: "PolcoGroup", inverse_of: :state_citizens
+
+  # GROUPS -------------------------------------
+  # these groups are groups that users have created -- a user is automatically a member of these
   has_many :custom_groups, class_name: "PolcoGroup", inverse_of: :owner
   # these are groups that all users are in
   has_and_belongs_to_many :common_groups, class_name: "PolcoGroup", inverse_of: :common_members
@@ -40,10 +42,10 @@ class User
   has_and_belongs_to_many :followed_groups, class_name: "PolcoGroup", inverse_of: :followers
   # these are groups that a user has joined
   has_and_belongs_to_many :joined_groups, class_name: "PolcoGroup", inverse_of: :members
-  # so where are the 'joined groups' ?? looks like we still need this . . .
 
   has_and_belongs_to_many :senators, class_name: "Legislator", inverse_of: :state_constituents
   belongs_to :representative, class_name: "Legislator", inverse_of: :district_constituents
+
   has_many :comments, as: :commentable
 
   # a user can only join or follow a group once
@@ -55,15 +57,18 @@ class User
 
   # attributes
 
-  after_save do |user|
-    if cg = PolcoGroup.where(type: :common).first
-      user.common_groups << cg
-    else
-      raise "common group does not exist"
-    end
-  end
+  #after_save do |user|
+  #  # not sure if we need this -- the common group is added with
+  #  # default groups
+  #  if cg = PolcoGroup.where(type: :common).first
+  #    user.common_groups << cg
+  #  else
+  #    raise "common group does not exist"
+  #  end
+  #end
 
   def voting_groups
+    # these are the groups that have voting power
     self.custom_groups + self.joined_groups + self.common_groups + [self.district, self.state]
   end
 
@@ -115,8 +120,6 @@ class User
   def get_ip(ip)
     Geocoder.coordinates(ip)
   end
-
-
 
   class << self
 

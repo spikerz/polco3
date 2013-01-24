@@ -7,7 +7,8 @@ describe Roll do
     @oh = FactoryGirl.create(:oh)
     @d = FactoryGirl.create(:district)
     FactoryGirl.create(:common)
-    usrs = FactoryGirl.create_list(:random_user, 4, {state: @oh, district: @d})
+    usrs = FactoryGirl.create_list(:random_user, 4)
+    usrs.each {|u| u.add_baseline_groups('OH','VA08')}
     grps = FactoryGirl.create_list(:polco_group, 5)
     usrs[0].joined_groups << [grps[0..2]]
     usrs[1].joined_groups << [grps[3..4]]
@@ -45,7 +46,7 @@ describe Roll do
     end
 
     it "should show how the senators from a particular state voted on the bill" do
-      @roll.senators_votes(@oh).should eq([{name: 'Daymen Tiffany', value: :aye}, {name: 'Mark Canlis', value: :nay}])
+      @roll.senators_votes(@oh).should == "Daymen Tiffany: aye, Mark Canlis: nay"
     end
   end
 
@@ -69,6 +70,14 @@ describe Roll do
 
     it "should have exactly 5 house rolls voted on" do
       @u.rolls_voted_on(:house).size.should be 5
+    end
+
+    it "should have one voting district" do
+      Roll.first.voting_districts.size.should eq(1)
+    end
+
+    it "should have a voting district named VA08" do
+      Roll.first.voting_districts.first.votable.name.should eq("VA08")
     end
   end
 
@@ -226,7 +235,7 @@ describe Roll do
     end
 
     it "should have a bunch of group votes" do
-      Vote.groups.size.should be 16
+      Vote.groups.size.should be 19
     end
 
     it "should have the proper vote count matching the number of users" do

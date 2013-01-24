@@ -1,9 +1,7 @@
 - title "#{@chamber.titleize} Results for 112 Congress"
 
 - unless @rolls.empty? || @user.district.nil?
-  =# paginate @bills
-  / this page displays the representation table to compare user and rep votes
-  / it lists the bills the user has voted on, the user’s vote, the rep’s vote, and bill house result
+
   %table.table.zebra-striped
     %tr
       %th Roll
@@ -32,4 +30,4 @@
           = roll.result
 
 - else
-  There are no rolls that have been voted on by anyone (sounds like I need to pull rolls)
+  We are early in the 113th congress and there are no results yet for this area.

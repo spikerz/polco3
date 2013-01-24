@@ -4,7 +4,8 @@ class PolcoGroup
   include VotingMethods
   #include Origin::Queryable
 
-  attr_accessible :name, :type, :description, :vote_count, :follower_count, :member_count, :owner_id, :member_ids, :common_member_ids, :follower_ids, :vote_ids
+  # verify this list!
+  #attr_accessible :name, :type, :description, :vote_count, :follower_count, :member_count, :owner_id, :member_ids, :common_member_ids, :follower_ids, :vote_ids, :rep_id
 
   field :name, :type => String
   field :type, :type => Symbol, :default => :custom
@@ -22,14 +23,15 @@ class PolcoGroup
   # this might be trouble, a user might not "own" this if they are just in the custom groups (by the way i understood it)
   belongs_to :owner, :class_name => "User", :inverse_of => :custom_groups
 
-  has_many :constituents, class_name: "User", inverse_of: :district
-  has_many :state_constituents, class_name: "User", inverse_of: :state
+  has_many :district_citizens, class_name: "User", inverse_of: :district
+  has_many :state_citizens, class_name: "User", inverse_of: :state
+
+  belongs_to :rep, class_name: "Legislator", inverse_of: :legislator_district
+  has_many :state_legislators, class_name: "Legislator", :inverse_of => :legislator_state
 
   has_and_belongs_to_many :members, :class_name => "User", :inverse_of => :joined_groups # uniq: true
   has_and_belongs_to_many :common_members, :class_name => "User", :inverse_of => :common_groups # uniq: true
   has_and_belongs_to_many :followers, :class_name => "User", :inverse_of => :followed_groups #, uniq: true
-  # groups have votes just like users do !
-  #has_and_belongs_to_many :votes, index: true # , inverse_of: :polco_groups
 
   has_many :votes, as: :votable
 
@@ -98,8 +100,10 @@ class PolcoGroup
   #  (self.type == :state) && (!self.senators_hash.all? {|k,v| v.nil?})
   #end
 
-  def the_rep
+  def find_the_rep
+    # just in case we need to match a district to a legislator
     # this method finds the rep of a district
+    # not used for current code base
     if self.type == :district && self.name
       if self.name =~ /([A-Z]{2})-AL/ # then there is only one district
         puts "The district is named #{self.name}"
@@ -108,6 +112,8 @@ class PolcoGroup
         data = self.name.match(/([A-Z]+)(\d+)/)
         state, district_num = data[1], data[2].to_i
         l = Legislator.representatives.where(state: state).and(district: district_num).first
+        self.rep = l
+        self.save!
         #l = Legislator.all.select { |l| l.district_name == self.name }.first
       end
     else

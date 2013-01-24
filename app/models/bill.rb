@@ -33,11 +33,11 @@ class Bill
   field :hidden, :type => Boolean
   field :roll_time, :type => DateTime
 
-  index({ title: 1}, {unique: true})
-  index({ bill_type: 1}, {unique: true})
-  index({ created_at: 1}, {unique: true})
-  index({ govtrack_name: 1}, {unique: true})
-  index({ roll_time: 1}, {unique: true})
+  index({title: 1}, {unique: true})
+  index({bill_type: 1}, {unique: true})
+  index({created_at: 1}, {unique: true})
+  index({govtrack_name: 1}, {unique: true})
+  index({roll_time: 1}, {unique: true})
 
   # #####################
   # SCOPES
@@ -115,7 +115,7 @@ class Bill
       end
     end
 
-    def from_govtrack(bill, add_rolls = false)
+    def from_govtrack(bill, add_rolls = false, limit = 500)
       b = Bill.new
       b.govtrack_id = bill.id
       b.bill_resolution_type = bill.bill_resolution_type
@@ -142,26 +142,27 @@ class Bill
       if legislator = Legislator.where(govtrack_id: bill.sponsor.id).first
         b.sponsor = legislator
       else
-        legislator = Legislator.find_and_build(bill.sponsor.id)
-        legislator.save!
-        b.sponsor = legislator
-        #raise "sponsor not found"
+        if legislator = Legislator.find_and_build(bill.sponsor.id)
+          legislator.save!
+          b.sponsor = legislator
+        else
+          raise "sponsor not found"
+        end
       end
       # add rolls ?
       b.save
       if add_rolls
+        #GovTrack::Vote.find(related_bill__congress: b.congress, related_bill__bill_type: b.bill_type, related_bill__number: b.number, order_by: "-created").each do |vote|
         GovTrack::Vote.find(related_bill: bill.id, order_by: "-created").each do |vote|
           roll = Roll.from_govtrack(vote)
+          roll.add_votes(limit)
+          roll.save!
           b.rolls << roll
         end
-      end
+      end # add rolls
       b
-    end
-  end
+    end # from govtrack
 
-  ############################################################################################################
-  #########################################      OLD METHODS        ##########################################
-  ############################################################################################################
-
+  end # class self
 
 end

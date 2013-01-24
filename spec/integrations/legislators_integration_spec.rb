@@ -12,6 +12,14 @@ describe "Legislators" do
     l.roles.size.should eql(7)
   end
 
+  it "should not create duplicates while updating" do
+    FactoryGirl.create(:oh, name: "MO")
+    FactoryGirl.create(:oh, name: "AR")
+    Legislator.update_legislators(2)
+    Legislator.update_legislators(2)
+    Legislator.all.size.should eq(2)
+  end
+
   it "should not duplicate an existing legislator" do
     john = GovTrack::Person.find_by_firstname_and_lastname('John','McCain')
     Legislator.save_legislator(john)

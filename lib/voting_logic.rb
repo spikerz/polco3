@@ -27,9 +27,6 @@ module VotingLogic
     groups.each do |g|
       g.votes.create(value: value, roll_id: self.id, chamber: self.chamber)
       g.inc(:vote_count,1)
-      #puts "*************************"
-      #puts "adding votes for #{g.name}, current vote count: #{g.vote_count}"
-      #puts "*************************"
       g.save!
     end
   end
