@@ -7,6 +7,6 @@
     - members.each do |member|
       %tr
         %td
-          = member.name
+          = link_to member.name, member
         %td
-          date_joined
+          member since

@@ -71,6 +71,10 @@ class User
     self.custom_groups + self.joined_groups + self.common_groups + [self.district, self.state]
   end
 
+  def votes_in_(group)
+    group.votes.where(user)
+  end
+
   def us_state
     self.state.name if self.state
   end
