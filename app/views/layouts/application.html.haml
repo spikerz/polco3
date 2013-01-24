@@ -31,10 +31,10 @@
             %ul.nav
               %li= link_to "info", home_polco_info_path
               %li= link_to "bills", bills_path
+              %li= link_to "polco groups", polco_groups_path
               - if current_user && current_user.admin?
                 %li= link_to "legislators", legislators_path
                 %li= link_to "legislator votes", legislator_votes_path
-                %li= link_to "polco groups", polco_groups_path
                 %li= link_to "rolls", rolls_path
                 %li= link_to "subjects", subjects_path
                 %li= link_to "vote", votes_path

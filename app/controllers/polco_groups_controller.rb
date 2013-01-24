@@ -18,9 +18,11 @@ class PolcoGroupsController < InheritedResources::Base
   end
 
   def show
+    @polco_group = PolcoGroup.find(params[:id])
     @comment = Comment.new
     @author = current_user.nil? ? "" : current_user.name
     @email = current_user.nil? ? "" : current_user.email
+    @rolls =  @polco_group.votes.map{|v| v.roll}.uniq
     show!
   end
 

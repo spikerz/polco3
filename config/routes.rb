@@ -46,7 +46,7 @@ Polco3::Application.routes.draw do
   # helper to add vote
   post "rolls/add_vote", as: :add_vote
 
-  root :to => "home#index"
+  root to: "represent#house_bills"
   resources :users, :only => [:index, :show, :edit, :update ] do
     resources :comments
   end

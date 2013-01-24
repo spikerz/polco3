@@ -1,0 +1,12 @@
+- if members.size > 0
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Name
+        %th Member Since
+    - members.each do |member|
+      %tr
+        %td
+          = member.name
+        %td
+          date_joined
