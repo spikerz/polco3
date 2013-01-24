@@ -52,7 +52,7 @@ class User
   validates :custom_group_ids, :allow_blank => true, :uniqueness => true
   validates :joined_group_ids, :allow_blank => true, :uniqueness => true
   validates :followed_group_ids, :allow_blank => true, :uniqueness => true
-  validates :email, :email => true
+  #validates :email, :email => true
 
   # attributes
 
