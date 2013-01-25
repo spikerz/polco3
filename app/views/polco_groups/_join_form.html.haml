@@ -1,0 +1,4 @@
+= simple_form_for :join_group, url: '/polco_groups/join_group', :html => { class: 'form-horizontal', id: 'join_group_form'}, remote: true do |f|
+  = f.input :user_id, as: :hidden, input_html: {value: u.id}
+  = f.input :polco_group_id, as: :hidden, input_html: {value: g.id}
+  = f.button :submit, 'Join Group', class: 'btn btn-danger'

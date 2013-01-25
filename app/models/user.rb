@@ -97,6 +97,14 @@ class User
     self.save!
   end
 
+  def has_followed(group)
+    self.followed_groups.where(_id: group.id).exists?
+  end
+
+  def has_joined(group)
+    self.joined_groups.where(_id: group.id).exists?
+  end
+
   def senators_names
     self.senators.map{|s| s.name_no_details }.join(" & ")
   end

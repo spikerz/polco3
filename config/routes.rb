@@ -24,6 +24,8 @@ Polco3::Application.routes.draw do
   match "/users/district" => "users#district"
 
   get "polco_groups/add_custom_group"
+  post "polco_groups/follow_group"
+  post "polco_groups/join_group"
 
   resources :polco_groups do
     resources :comments

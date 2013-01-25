@@ -3,10 +3,7 @@
     %thead
       %tr
         %th Name
-        %th Member Since
     - members.each do |member|
       %tr
         %td
           = link_to member.name, member
-        %td
-          member since

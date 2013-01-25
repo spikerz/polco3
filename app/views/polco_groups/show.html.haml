@@ -9,19 +9,22 @@
   = @polco_group.created_at.strftime('%B %e, %Y')
 
 - if (@polco_group.type == :custom) && @polco_group.owner
-  %h3
+  %h4
     Owned by:
     = link_to @polco_group.owner.name, @polco_group.owner
 
-- if @polco_group.type == :district
-  = render partial: "district_info", locals: {group: @polco_group}
+- case @polco_group.type
+  - when :district
+    = render partial: "district_info", locals: {group: @polco_group}
+  - when :state
+    = render partial: "state_info", locals: {state: @polco_group}
 
 %p
   %strong Votes:
   = @polco_group.vote_count
 
-%h3 Group Tally
 - if @rolls.size > 0
+  %h3 Group Tally
   .well
     %table.table.table-striped
       %tr
@@ -42,18 +45,37 @@
 = render partial: 'comments/comments_section', locals: {parent: @polco_group, comment: @comment, author: @author, author_email: @email}
 
 %h4
-  = @polco_group.member_count
+  %span#member_count
+    = @polco_group.member_count
   members
 
-= render partial: "show_member", locals: {members: @polco_group.members}
+#the_members
+  = render partial: "show_member", locals: {members: @polco_group.members}
+
+- unless @user.has_joined(@polco_group)
+  #join_group_region
+    = render partial: "join_form", locals: {g: @polco_group, u: @user}
+- else
+  %p You have joined this group
 
 %h4
-  = @polco_group.follower_count
+  %span#follower_count
+    = @polco_group.follower_count
   followers
 
-= render partial: "show_member", locals: {members: @polco_group.followers}
+#the_followers
+  = render partial: "show_member", locals: {members: @polco_group.followers}
 
-- if current_user.admin? || current_user.id == @polco_group.owner_id
+- unless @user.has_followed(@polco_group)
+  #follow_group_region
+    = simple_form_for :follow_group, url: '/polco_groups/follow_group', :html => { class: 'form-horizontal', id: 'follow_group_form' }, remote: true do |f|
+      = f.input :user_id, as: :hidden, input_html: {value: @user.id}
+      = f.input :polco_group_id, as: :hidden, input_html: {value: @polco_group.id}
+      = f.button :submit, 'Follow Group', class: 'btn btn-danger'
+- else
+  %p You are following this group
+
+- if @user.admin? || @user.id == @polco_group.owner_id
   .form-actions
     = link_to 'back', polco_groups_path, :class => 'btn'
     = link_to 'edit', edit_polco_group_path(@polco_group), :class => 'btn'

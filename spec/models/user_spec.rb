@@ -16,6 +16,30 @@ describe User do
 
   # A user should not be able to remove their baseline groups (on the site .. .)
 
+  context "should tell if they have joined or followed a group" do
+    before {
+      @u = FactoryGirl.create(:user)
+      @a = FactoryGirl.create(:polco_group, name: "groupA")
+      @b = FactoryGirl.create(:polco_group, name: "groupB")
+      @c = FactoryGirl.create(:polco_group, name: "groupC")
+      @a.add_member(@u)
+      @b.add_follower(@u)
+      @a.add_follower(@u)
+    }
+    it "should show a user has followed" do
+      @u.has_followed(@b).should eq(true)
+    end
+    it "should show c has not followed" do
+      @u.has_followed(@c).should eq(false)
+    end
+    it "should show u has joined a" do
+      @u.has_joined(@a).should eq(true)
+    end
+    it "should show u has not joined b" do
+      @u.has_joined(@b).should eq(false)
+    end
+  end
+
   context "when it has senators" do
     before {
     u = FactoryGirl.create(:user)
@@ -27,6 +51,10 @@ describe User do
     end
     it "should be able to display their names" do
       User.first.senators_names.should eq("Ralf & Ralf")
+    end
+    it "should join any group they create" do
+      u = User.first
+      u.custom_groups
     end
   end
 

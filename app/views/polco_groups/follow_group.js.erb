@@ -1,0 +1,4 @@
+$("#follow_group_region").html("<p>You are following this group.</p>")
+$("#follower_count").html(parseInt($("#follower_count").html()) + 1);
+var html = "<%= escape_javascript(render(partial: "show_member", locals: {members: @followers})) %>";
+$("#the_followers").html(html);

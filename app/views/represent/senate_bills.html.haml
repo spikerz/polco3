@@ -1,7 +1,10 @@
 - title 'Senate Bills'
 
-- if current_user
-  = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, the_title: 'Most popular rolls you haven\'t voted on:', roll_type: 'not_voted_on'} unless @not_voted_on_rolls.nil?
-  = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, the_title: 'You voted on', roll_type: 'voted_on'} unless @voted_on_rolls.nil?
+- unless @rolls.nil?
+  - if current_user
+    = render partial: 'rolls', locals: {the_rolls: @not_voted_on_rolls, the_title: 'Most popular rolls you haven\'t voted on:', roll_type: 'not_voted_on'} unless @not_voted_on_rolls.nil?
+    = render partial: 'rolls', locals: {the_rolls: @voted_on_rolls, the_title: 'You voted on', roll_type: 'voted_on'} unless @voted_on_rolls.nil?
+  - else
+    = render partial: 'rolls', locals: {the_rolls: @rolls, the_title: 'most popular rolls', roll_type: 'the_rolls'}
 - else
-  = render partial: 'rolls', locals: {the_rolls: @rolls, the_title: 'most popular rolls', roll_type: 'the_rolls'}
+  %p No votes have yet been taken in this congress.

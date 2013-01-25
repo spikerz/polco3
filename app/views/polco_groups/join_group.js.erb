@@ -1,0 +1,4 @@
+$("#join_group_region").html("<p>You have joined this group.</p>")
+$("#member_count").html(parseInt($("#member_count").html()) + 1);
+var html = "<%= escape_javascript(render(partial: "show_member", locals: {members: @members})) %>";
+$("#the_members").html(html);

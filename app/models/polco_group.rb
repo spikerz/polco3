@@ -51,6 +51,12 @@ class PolcoGroup
     self.save
   end
 
+  def add_follower(user_obj)
+    self.followers.push(user_obj)
+    self.follower_count += 1
+    self.save
+  end
+
   # some validations
   validates_uniqueness_of :name, :scope => :type
   validates_inclusion_of :type, :in => [:custom, :state, :district, :common, :country], :message => 'Only valid groups are custom, state, district, common, country'
